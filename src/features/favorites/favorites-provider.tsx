@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Suspense,
   createContext,
   useContext,
   useEffect,
@@ -18,8 +19,13 @@ const FavoritesContext = createContext<{
   ready: boolean;
   toggleFavorite: (id: string) => void;
 } | null>(null);
-export function FavoritesProvider({ children }: { children: ReactNode }) {
+function RouteObserver({ onChange }: { onChange: (path: string) => void }) {
   const pathname = usePathname();
+  useEffect(() => onChange(pathname), [pathname, onChange]);
+  return null;
+}
+export function FavoritesProvider({ children }: { children: ReactNode }) {
+  const [pathname, setPathname] = useState("");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [ready, setReady] = useState(false);
   const [notice, setNotice] = useState("");
@@ -112,6 +118,9 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   }
   return (
     <FavoritesContext.Provider value={{ favorites, ready, toggleFavorite }}>
+      <Suspense fallback={null}>
+        <RouteObserver onChange={setPathname} />
+      </Suspense>
       {children}
       {notice && (
         <aside
