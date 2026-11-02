@@ -1,4 +1,5 @@
 "use client";
+import { UnreadBadge } from "@/features/messages/unread-provider";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -23,6 +24,7 @@ export function AccountLink() {
       href={signedIn ? "/account" : "/login"}
     >
       {signedIn ? "Account" : "Log in"}
+      {signedIn && <UnreadBadge />}
     </Link>
   );
 }

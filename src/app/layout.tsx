@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { UnreadProvider } from "@/features/messages/unread-provider";
 import { FavoritesProvider } from "@/features/favorites/favorites-provider";
 
 const geistSans = Geist({
@@ -26,7 +27,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <FavoritesProvider>{children}</FavoritesProvider>
+        <FavoritesProvider>
+          <UnreadProvider>{children}</UnreadProvider>
+        </FavoritesProvider>
       </body>
     </html>
   );

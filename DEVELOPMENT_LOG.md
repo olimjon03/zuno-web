@@ -81,3 +81,9 @@ Validation: nine Node tests, lint/build, disposable PostgreSQL privacy/ownership
 Branch: `codex/fix-production-google-login`. Reproduced the reported Vercel startup error before any Google handoff. The deployed public bundle has unresolved Supabase URL/publishable-key environment reads; the local handoff works and includes `prompt=select_account`. Production env setup and redeployment remain necessary owner actions.
 
 Added a trusted Vercel site-origin fallback, safe configuration-presence diagnostics and tests for explicit-origin precedence, production/preview domains and invalid domains. No dependencies or Next configuration changes. This does not change Google account selection behavior or claim a completed real account login. Production setup is documented in `docs/supabase-setup.md`.
+
+## 2026-11-02 — Unread message counts
+
+Branch: `codex/unread-messages`. Added private monotonic message-read cursors and participant-checked RPCs. Shared account/inbox badges count incoming messages, poll only while visible and refresh after reads. Visible conversations acknowledge rendered messages, with retry feedback. No dependencies or Next configuration changes. The new SQL migration is prepared but not applied to the hosted project.
+
+Validation: lint, build, ten existing Node tests, disposable PostgreSQL privacy/counting/cursor tests and local browser fixtures. See `docs/unread-messages.md` for setup, polling behavior and hosted follow-up.

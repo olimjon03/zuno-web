@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { markMessagesRead } from "./unread-actions";
 import { postMessage, readMessages } from "./actions";
 import type { Message } from "./validation";
 export function Chat({
@@ -25,6 +26,48 @@ export function Chat({
   const locked = useRef(false);
   const alive = useRef(true);
   const end = useRef<HTMLDivElement>(null);
+  const [readError, setReadError] = useState("");
+  const newest = messages.at(-1)?.id;
+  useEffect(() => {
+    let active = true,
+      busy = false;
+    async function acknowledge() {
+      if (document.hidden || !newest || busy) return;
+      busy = true;
+      try {
+        const result = await markMessagesRead(conversationId, newest);
+        if (!active) return;
+        if (result.error)
+          setReadError(
+            "Read status could not be saved. It will retry shortly.",
+          );
+        else {
+          setReadError("");
+          window.dispatchEvent(new Event("zuno:messages-read"));
+        }
+      } catch {
+        if (active)
+          setReadError(
+            "Read status could not be saved. It will retry shortly.",
+          );
+      } finally {
+        busy = false;
+      }
+    }
+    void acknowledge();
+    const timer = setInterval(() => {
+      void acknowledge();
+    }, 15000);
+    const visible = () => {
+      void acknowledge();
+    };
+    document.addEventListener("visibilitychange", visible);
+    return () => {
+      active = false;
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", visible);
+    };
+  }, [conversationId, newest]);
   function merge(items: Message[]) {
     setMessages((current) => {
       const map = new Map(current.map((m) => [m.id, m]));
@@ -127,6 +170,11 @@ export function Chat({
         >
           {loadingOlder ? "Loading…" : "Load older messages"}
         </button>
+      )}
+      {readError && (
+        <p role="status" className="auth-hint">
+          {readError}
+        </p>
       )}
       <p className="sr-only" role="status">
         {messages.length} messages loaded.

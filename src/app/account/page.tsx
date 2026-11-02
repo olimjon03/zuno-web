@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { UnreadBadge } from "@/features/messages/unread-provider";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
@@ -62,7 +63,7 @@ async function Account() {
       </p>
       <p>
         <Link className="button button-outline" href="/messages">
-          Messages
+          Messages <UnreadBadge />
         </Link>
       </p>
       <LogoutButton />

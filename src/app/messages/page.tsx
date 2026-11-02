@@ -1,3 +1,4 @@
+import { UnreadBadge } from "@/features/messages/unread-provider";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -41,7 +42,9 @@ async function Inbox() {
           {data.map((c) => (
             <li key={c.id}>
               <Link href={`/messages/${c.id}`}>
-                <strong>{c.listing_title}</strong>
+                <strong>
+                  {c.listing_title} <UnreadBadge conversationId={c.id} />
+                </strong>
                 <span>
                   {c.buyer_id === user.id ? c.seller_name : c.buyer_name}
                 </span>
