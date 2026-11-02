@@ -54,7 +54,23 @@ do $$ begin
   raise exception 'Other image publish allowed';
  exception when insufficient_privilege then null; end;
 end $$;
+-- Another authenticated user cannot edit, mark sold or remove an owner's item.
+do $$ begin
+ update public.listings set title='Forged title', price=0 where id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+ if found then raise exception 'Cross-owner edit allowed'; end if;
+ update public.listings set status='sold' where id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+ if found then raise exception 'Cross-owner sold allowed'; end if;
+ update public.listings set status='removed' where id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+ if found then raise exception 'Cross-owner removal allowed'; end if;
+end $$;
 select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
+do $$ begin
+ update public.listings set title='Updated chair',price=200,status='sold' where id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+ if not found then raise exception 'Owner edit denied'; end if;
+ if not exists (select 1 from public.listings where id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa' and title='Updated chair' and price=200 and status='sold') then raise exception 'Owner changes not persisted'; end if;
+ update public.listings set status='active' where id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+ if not found then raise exception 'Owner relist denied'; end if;
+end $$;
 update public.listings set status='removed' where id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 set local role anon;
 select set_config('request.jwt.claim.sub','',true);

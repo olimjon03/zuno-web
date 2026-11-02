@@ -44,6 +44,13 @@ export function ListingDetail({
           <span aria-hidden="true">/</span>
           <span>{listing.category}</span>
         </nav>
+        {listing.status && listing.status !== "active" && (
+          <p className="listing-status" role="status">
+            {listing.status === "sold"
+              ? "This item has been sold."
+              : "This item is reserved."}
+          </p>
+        )}
         <p className="detail-demo">
           {real
             ? "Local pickup · Inspect the item before exchanging. Messaging is coming soon."

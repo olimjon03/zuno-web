@@ -57,3 +57,9 @@ Branch: `codex/create-listings`.
 Added authenticated `/sell`, bounded upload API, image normalization, private Storage policies and atomic/idempotent publishing RPC. Homepage and detail pages read live listings with labelled sample fallback. New reusable form/gallery components support mobile layouts. Added `sharp` directly for safe decoding; Next configuration remains unchanged.
 
 Validation: eight Node tests, lint, build, disposable PostgreSQL RLS/storage-policy tests and fixture-backed browser checks. Hosted second migration and real hosted publishing remain pending owner SQL Editor setup; see `docs/listing-setup.md`.
+
+## 2026-11-02 — Owner listing management
+
+Branch: `codex/manage-listings`. Added protected `/account/listings` and reusable management forms with validated server actions. Owners can edit item details, mark sold/available and confirm removal. Removal hides items/photos while retaining private storage; photo replacement and permanent deletion are not included. Account now links to management, and marketplace cards/details display sold/reserved labels. No new dependencies, Next configuration changes or migrations.
+
+Validation: lint, build, eight existing Node tests, extended PostgreSQL ownership/privacy tests and fixture-backed browser checks including failure recovery and responsive layouts. Real hosted listings were not changed by tests.

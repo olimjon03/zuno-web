@@ -25,6 +25,7 @@ export type Listing = {
   image: string;
   imageAlt: string;
   photos?: { src: string; alt: string }[];
+  status?: "active" | "reserved" | "sold";
   source?: "sample" | "database";
 };
 export const sampleListings: Listing[] = [
