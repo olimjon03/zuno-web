@@ -40,30 +40,20 @@ async function OwnedListings() {
   ]);
   if (error) throw new Error("Your listings are temporarily unavailable.");
   return (
-    <main className="shell manage-page">
-      <header className="detail-header">
+    <main className="shell manage-page owned-listings-page">
+      <header className="detail-header owned-listings-header">
         <Link className="wordmark" href="/">
           <Brand/>
         </Link><BackHomeNav/></header>
-      <h1>Your listings</h1>
-      <p>
-        Edit your items, mark them sold or remove them from the marketplace.
-      </p>
-      <p>
-        <Link className="button button-primary" href="/sell">
-          Sell an Item
-        </Link>
-      </p>
+      <div className="owned-listings-title-row"><h1>Your listings</h1><Link className="button button-primary" href="/sell">Sell an Item</Link></div>
       {!data?.length ? (
         <p>You have no listings yet.</p>
       ) : (
         <>
-          <p className="auth-hint">
-            Showing your latest {data.length} listings.
-          </p>
           {(data as OwnedListing[]).map((item) => (
             <ManageListing key={item.id} item={item} {...options} />
           ))}
+          <p className="auth-hint">Showing your latest {data.length} {data.length === 1 ? "listing" : "listings"}.</p>
         </>
       )}
     </main>

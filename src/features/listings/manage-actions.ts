@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { isUuid, parseListingInput } from "./validation";
+import { isUuid, parseListingInput, parseAvailability } from "./validation";
 
 export type ManageResult = { error?: string; message?: string };
 export async function manageListing(
@@ -21,6 +21,7 @@ export async function manageListing(
   if (intent === "edit") {
     try {
       const input = parseListingInput(form);
+      const status = parseAvailability(form.get("status"));
       changes = {
         title: input.title,
         description: input.description,
@@ -28,6 +29,7 @@ export async function manageListing(
         condition: input.condition,
         category_id: input.categoryId,
         neighborhood_id: input.neighborhoodId,
+        ...(status ? { status } : {}),
       };
     } catch (error) {
       return {

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import sharp from "sharp";
 import {
   parseListingInput,
+  parseAvailability,
   validatePhotos,
   MAX_BODY_BYTES,
   MAX_PHOTO_BYTES,
@@ -135,4 +136,10 @@ test("image processing rejects spoofed bytes and strips metadata while resizing"
       MAX_PHOTO_BYTES,
     ),
   );
+});
+
+test("availability edits cannot use removal or arbitrary status values",()=>{
+  assert.equal(parseAvailability(null),undefined);
+  for(const status of ["active","reserved","sold"])assert.equal(parseAvailability(status),status);
+  for(const status of ["removed","moderated","",new File(["active"],"status.txt")])assert.throws(()=>parseAvailability(status));
 });
