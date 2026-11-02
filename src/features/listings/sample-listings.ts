@@ -105,9 +105,4 @@ export const sampleListings: Listing[] = [
     imageAlt: "Gray adjustable desk lamp against a light wall",
   },
 ];
-export const formatPrice = (price: number) =>
-  new Intl.NumberFormat("ko-KR", {
-    style: "currency",
-    currency: "KRW",
-    maximumFractionDigits: 0,
-  }).format(price);
+export { formatMoney as formatPrice } from "./currency";

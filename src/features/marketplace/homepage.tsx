@@ -1,9 +1,11 @@
 "use client";
+import { priceLabel } from "@/features/listings/currency";
+import { filterMarketplace } from "@/features/locations/catalog";
 import { Brand } from "@/components/ui/brand";
 import Image from "next/image";
 import Link from "next/link";
 import { useLocation } from "@/features/locations/location-provider";
-import { matchesLocation, countries, findRegion } from "@/features/locations/catalog";
+import { countries, findRegion } from "@/features/locations/catalog";
 import { useState } from "react";
 import { useFavorites } from "@/features/favorites/favorites-provider";
 import { Header } from "@/components/layout/header";
@@ -29,18 +31,15 @@ export function Homepage({
   const {location,changeCountry,changeRegion,resetLocation}=useLocation();
   const [query, setQuery] = useState("");
   const { favorites, toggleFavorite } = useFavorites();
-  const listings = initialListings.filter(
-    (listing) =>
-      (category === "All items" || listing.category === category) &&
-      matchesLocation(listing,location) &&
-      `${listing.title} ${listing.neighborhood} ${listing.category}`
-        .toLocaleLowerCase()
-        .includes(query.trim().toLocaleLowerCase()),
-  );
+  const [minPrice,setMinPrice]=useState("");
+  const [maxPrice,setMaxPrice]=useState("");
+  const [availableOnly,setAvailableOnly]=useState(false);
+  const listings = filterMarketplace(initialListings,{category,location,query,minPrice,maxPrice,availableOnly});
   function resetFilters() {
     setCategory("All items");
     resetLocation();
     setQuery("");
+    setMinPrice("");setMaxPrice("");setAvailableOnly(false);
   }
   return (
     <>
@@ -50,7 +49,7 @@ export function Homepage({
       <div className="utility-bar"><div className="shell"><span>Buy · Sell · Connect Locally</span><span>{location.region ? findRegion(location.region)?.regionName : location.country ? countries.find(country=>country.code===location.country)?.name : "Choose your local area"}</span></div></div>
       <Header
         location={location}
-        onCountryChange={changeCountry}
+        onCountryChange={value=>{changeCountry(value);setMinPrice("");setMaxPrice("");}}
         onRegionChange={changeRegion}
         query={query}
         onQueryChange={setQuery}
@@ -84,6 +83,14 @@ export function Homepage({
           aria-labelledby="listings-title"
         >
           <CategoryNav selected={category} onChange={setCategory} />
+          <div className="market-price-filters">
+            <label>Min price ({location.country ? priceLabel(location.country) : "local currency"})<input type="number" inputMode="numeric" min="0" max="1000000000000" step="1" value={minPrice} onChange={e=>setMinPrice(e.target.value)} disabled={!location.country}/></label>
+            <label>Max price ({location.country ? priceLabel(location.country) : "local currency"})<input type="number" inputMode="numeric" min="0" max="1000000000000" step="1" value={maxPrice} onChange={e=>setMaxPrice(e.target.value)} disabled={!location.country}/></label>
+            <label className="remove-confirm"><input type="checkbox" checked={availableOnly} onChange={e=>setAvailableOnly(e.target.checked)}/>Available only</label>
+            <button className="button button-outline" onClick={resetFilters}>Clear filters</button>
+          </div>
+          {!location.country && <p className="auth-hint">Choose a country to filter prices in its local currency.</p>}
+          {minPrice && maxPrice && Number(minPrice)>Number(maxPrice) && <p role="alert">Minimum price must not exceed maximum price.</p>}
           <div className="section-heading">
             <h2 id="listings-title">Fresh finds nearby</h2>
             <p role="status" aria-live="polite">
