@@ -15,7 +15,17 @@ export function getSupabaseConfig() {
 
 export function getSiteUrl() {
   // A configured origin avoids trusting a user-supplied Host header for auth links.
-  const value = process.env.NEXT_PUBLIC_SITE_URL;
+  let value = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  // Vercel supplies these trusted deployment values. Never derive auth redirects
+  // from request Host/forwarded headers, which visitors can influence.
+  if (!value && process.env.VERCEL === "1") {
+    const domain =
+      process.env.VERCEL_ENV === "production"
+        ? process.env.VERCEL_PROJECT_PRODUCTION_URL
+        : process.env.VERCEL_URL;
+    if (domain && /^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$/i.test(domain))
+      value = `https://${domain}`;
+  }
   if (!value) throw new Error("NEXT_PUBLIC_SITE_URL is not configured.");
   const url = new URL(value);
   if (

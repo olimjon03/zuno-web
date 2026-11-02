@@ -66,3 +66,19 @@ Verification: hosted Auth settings show Google enabled; a read-only authorizatio
 Reference: https://supabase.com/docs/guides/auth/social-sign-in/auth-google
 
 Successful email/password login, an immediately confirmed signup, and both email/OAuth confirmation callbacks now land on the marketplace `/`. The signed-in header links to `/account`, which remains protected.
+
+## Vercel Google sign-in startup failure
+
+The deployed `zuno-web-wine.vercel.app` login reproduced the generic Google startup error. Public loaded browser chunks still contained unresolved reads of `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, unlike the working local build. This indicates those public variables were absent at build time; the ignored local `.env.local` is not deployed. The production environment was not changed by automation because no Vercel project-management connection is available.
+
+In Vercel → Project Settings → Environment Variables, configure Production:
+
+- `NEXT_PUBLIC_SUPABASE_URL`: the same Supabase project URL as local `.env.local`.
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: the same publishable key as local `.env.local` (never a service-role key).
+- `NEXT_PUBLIC_SITE_URL`: `https://zuno-web-wine.vercel.app`.
+
+Redeploy after saving; Next public values are embedded during build. In Supabase Authentication → URL Configuration, set the production Site URL to `https://zuno-web-wine.vercel.app` and allow `https://zuno-web-wine.vercel.app/auth/callback`. Retain the existing local callback for local testing. Google Cloud's OAuth redirect stays the Supabase `/auth/v1/callback` URL, not the ZUNO URL.
+
+As a fallback when explicit site configuration is absent, the app now derives HTTPS origins from trusted Vercel system environment variables: production uses `VERCEL_PROJECT_PRODUCTION_URL`, previews use `VERCEL_URL`. Preview callbacks must be separately allowlisted to use preview login. Request Host headers are never used. Explicit site configuration remains preferred and takes precedence. This fallback does not replace the required Supabase URL/key.
+
+References: https://vercel.com/docs/environment-variables/system-environment-variables and https://vercel.com/docs/environment-variables.

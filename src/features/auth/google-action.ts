@@ -33,6 +33,15 @@ export async function loginWithGoogle(): Promise<AuthState> {
     }
     destination = url.href;
   } catch {
+    // Configuration names only: never log keys, OAuth codes or session cookies.
+    console.error("[ZUNO Google sign-in] Startup failed", {
+      supabaseUrlConfigured: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+      publishableKeyConfigured: Boolean(
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+      ),
+      siteUrlConfigured: Boolean(process.env.NEXT_PUBLIC_SITE_URL),
+      vercelDeployment: process.env.VERCEL === "1",
+    });
     return {
       error: "We couldn’t start Google sign-in. Please try again or use email.",
     };
