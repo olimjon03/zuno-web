@@ -42,6 +42,7 @@ function mapRow(row: Row): { listing: Listing; details: ListingDetails } {
       imageAlt: photos[0]?.alt ?? row.title,
       photos,
       source: "database",
+      status: row.status as "active" | "reserved" | "sold",
     },
     details: {
       condition: conditionLabels[row.condition] ?? "Used",

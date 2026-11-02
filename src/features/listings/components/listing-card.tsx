@@ -39,6 +39,11 @@ export function ListingCard({
       <h3>
         <Link href={`/listings/${listing.id}`}>{listing.title}</Link>
       </h3>
+      {listing.status && listing.status !== "active" && (
+        <p className="listing-status">
+          {listing.status === "sold" ? "Sold" : "Reserved"}
+        </p>
+      )}
       <p className="price">{formatPrice(listing.price)}</p>
       <p className="listing-location">
         <Icon name="pin" />

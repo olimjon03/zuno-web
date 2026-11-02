@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
@@ -47,8 +48,12 @@ async function Account() {
         </div>
       </dl>
       <p className="auth-hint">
-        You’re signed in. Marketplace listings are still samples; posting and
-        messaging are coming next.
+        Manage the items you share with your neighborhood.
+      </p>
+      <p>
+        <Link className="button button-primary" href="/account/listings">
+          Your listings
+        </Link>
       </p>
       <LogoutButton />
     </AuthShell>
