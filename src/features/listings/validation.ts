@@ -1,27 +1,9 @@
-export const MAX_PHOTOS = 10;
-export const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
-export const MAX_TOTAL_PHOTO_BYTES = 3.5 * 1024 * 1024;
-export const MAX_BODY_BYTES = 4 * 1024 * 1024;
-export const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
-export const conditions = ["like_new", "good", "used"] as const;
-export const conditionLabels = {
-  like_new: "Like new",
-  good: "Good",
-  used: "Used",
-};
+import { conditions, MAX_PHOTOS, MAX_PHOTO_BYTES, MAX_TOTAL_PHOTO_BYTES, PHOTO_TYPES } from "./constants";
+import type { ListingInput } from "./types";
 export const isUuid = (value: string) =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
     value,
   );
-export type ListingInput = {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  categoryId: number;
-  neighborhoodId: number;
-  condition: (typeof conditions)[number];
-};
 export function parseListingInput(data: FormData): ListingInput {
   const text = (name: string) =>
     typeof data.get(name) === "string" ? (data.get(name) as string).trim() : "";

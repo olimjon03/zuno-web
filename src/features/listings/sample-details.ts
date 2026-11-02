@@ -1,11 +1,4 @@
-export type ListingDetails = {
-  condition: string;
-  description: string;
-  seller: string;
-  sellerId?: string;
-  joined: string;
-  postedAt?: string;
-};
+import type { ListingDetails } from "./types";
 export const sampleDetails: Record<string, ListingDetails> = {
   laptop: {
     condition: "Good",

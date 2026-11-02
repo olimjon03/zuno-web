@@ -1,7 +1,8 @@
 "use client";
 import { useEffect,useMemo,useRef,useState,useSyncExternalStore } from "react";
-import type { FeedPage } from "./feed-data";
-import { feedIssue,feedParams,mergeFeedItems,parseFeedFilters,type FeedFilters } from "./feed-model";
+import type { FeedPage,FeedFilters } from "../types";
+import { feedIssue,feedParams,parseFeedFilters } from "../validation";
+import { mergeFeedItems } from "../pagination";
 const eventName="zuno:feed-url";
 function subscribe(callback:()=>void){window.addEventListener("popstate",callback);window.addEventListener(eventName,callback);return()=>{window.removeEventListener("popstate",callback);window.removeEventListener(eventName,callback);};}
 function snapshot(){return window.location.search;}

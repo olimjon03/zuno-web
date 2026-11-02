@@ -1,10 +1,11 @@
 "use server";
+import "server-only";
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { isUuid, parseListingInput, parseAvailability } from "./validation";
+import { isUuid, parseListingInput, parseAvailability } from "../validation";
 
-export type ManageResult = { error?: string; message?: string };
+import type { ManageResult } from "../types";
 export async function manageListing(
   _previous: ManageResult,
   form: FormData,

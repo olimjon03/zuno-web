@@ -1,6 +1,6 @@
 "use client";
 import { countries, regions, resolveLocation, type CountryCode } from "@/features/locations/catalog";
-import type { LookupOption } from "../server/data";
+import type { LookupOption } from "../types";
 export function optionCountry(option?:LookupOption) { return option ? resolveLocation(option.name,option.regionCode).countryCode : undefined; }
 export function ListingLocationFields({id,country,neighborhoodId,options,onCountry,onNeighborhood}:{id:string;country:CountryCode|"";neighborhoodId:string;options:LookupOption[];onCountry:(value:CountryCode|"")=>void;onNeighborhood:(value:string)=>void}) {
  const available=options.filter(option=>optionCountry(option)===country);

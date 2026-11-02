@@ -2,8 +2,8 @@
 import { useState, useRef, useImperativeHandle, type Ref } from "react";
 import { useRouter } from "next/navigation";
 import { PhotoPicker, type PhotoChoice } from "./photo-picker";
-import { preparePhotos } from "../prepare-photos";
-export type ListingPhoto = { id: string; sort_order: number };
+import { preparePhotos } from "../client/prepare-photos";
+import type { ListingPhoto } from "../types";
 export type PhotoEditorHandle = {
   validate: () => string | null;
   save: () => Promise<{ error?: string }>;

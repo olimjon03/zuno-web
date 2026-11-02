@@ -1,5 +1,7 @@
+import "server-only";
 import { createHash } from "node:crypto";
-import { feedParams,type FeedFilters } from "./feed-model";
+import { feedParams } from "../validation";
+import type { FeedFilters } from "../types";
 export class InvalidFeedCursor extends Error {}
 type Cursor={v:1;key:string;id:string;createdAt:string;price:number};
 function key(filters:FeedFilters){return createHash("sha256").update(feedParams(filters).toString()).digest("hex");}

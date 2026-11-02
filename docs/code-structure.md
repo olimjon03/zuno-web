@@ -1,0 +1,60 @@
+# Feature boundaries — phase 1
+
+ZUNO remains one Next.js repository. This refactor standardizes **listings and search**, keeping existing routes, UI, HTTP responses, authentication, RLS checks, upload limits, cache lifetimes and SQL unchanged. Auth, profile, favorites, messages and moderation remain in their established feature folders; their broader reorganization is a later phase.
+
+```text
+src/
+  app/                              # Thin page and HTTP adapters
+  features/
+    listings/
+      components/                   # React UI and view-specific state
+      client/prepare-photos.ts      # Browser image preparation (client-only)
+      constants.ts                  # Shared choices, labels and limits
+      types.ts                      # Public/owner DTOs, inputs and results
+      validation.ts                 # Pure input validation
+      currency.ts                   # Shared display helpers
+      sample-*.ts                   # Demo data only
+      server/
+        actions.ts                  # Authenticated Next Server Actions
+        create-listing.ts           # POST workflow, uploads/publishing/cleanup
+        update-photos.ts            # PATCH workflow and photo conflict handling
+        read-photo.ts              # Public photo response with RLS
+        data.ts                     # Public/detail/saved/profile readers
+        owned-data.ts               # Verified owner query and form options
+        mapper.ts                   # Database row → safe display DTO
+        types.ts                    # Database row shape
+        constants.ts                # Server query fields and bucket name
+        request-body.ts             # Bounded multipart parsing
+        process-photo.ts            # Sharp decoding and normalization
+    search/
+      client/use-marketplace-feed.ts # URL state, cancellation and UI pagination
+      types.ts                      # Shared filter/page DTOs
+      validation.ts                 # Pure URL/filter validation
+      pagination.ts                 # Pure append/deduplication helper
+      server/
+        data.ts                     # Public database search
+        cursor.ts                   # Node crypto and opaque cursor validation
+        page-data.ts                # Server page orchestration
+        http.ts                     # Public API response/error policy
+```
+
+The dependency flow is UI → Server Action or HTTP route → feature server service → Supabase. Server readers may import shared types/constants/validation. Shared modules must not import browser-only or server-only services. Demo fixture modules no longer define application contracts or formatting helpers.
+
+## Enforced rules
+
+- Server services have `import "server-only"`, so Next rejects accidental client runtime imports. Browser image preparation has `import "client-only"`.
+- Client UI in the standardized features cannot import Node, Sharp, server database clients, server services or server-only row types. The explicit `server/actions` entry point is permitted because Next serializes the action reference rather than shipping its implementation.
+- Shared contract/validation modules cannot import infrastructure or browser-specific code.
+- The standardized page/route adapters cannot instantiate Supabase clients or import Node/Sharp directly.
+- Put authorization checks inside every exposed action/handler. Folder placement and type definitions do not replace authentication or database RLS.
+- Import client-facing DTOs from `types.ts`; do not use type-only imports from server modules as a shortcut. Avoid mixed client/server barrel exports.
+
+The lint rules are deliberately scoped to phase 1. Auth and Realtime browser clients remain legitimate in their existing features; this phase does not replace them with server-only APIs.
+
+## Verification
+
+ESLint boundary tests prove that action/shared-type imports remain allowed while server services, database clients and Node imports are rejected in the wrong layer. Existing behavioral unit tests use a native-Node loader that resolves TS paths and substitutes only Next's build-time `server-only` sentinel; production imports retain the real marker. No dependency is installed for this test setup.
+
+Behavior checks cover existing listing validation, bounded bodies, image decoding, search/cursor precision and pagination. Build/type checks validate the actual server/client dependency graph. Browser smoke checks use isolated local data; no real user records are modified.
+
+Phase 1 validation: lint, TypeScript/production build and all 32 Node tests pass. Isolated browser checks cover login, owner status/detail/photo editing, publishing and serving an uploaded image, Saved, sending a chat message, server-rendered search, Load more, invalid cursors and Unicode query reloads. The five extracted HTTP/action implementations were also compared with their original bodies. Hosted Supabase policies/provider configuration were not changed or revalidated by these local fixtures. No SQL migration, dependency, Next configuration or intentional visual change is part of this refactor.

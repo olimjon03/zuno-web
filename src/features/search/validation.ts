@@ -1,10 +1,8 @@
-import { findRegion, isCountryCode, type CountryCode } from "../locations/catalog";
-import { categories, type Category } from "../listings/sample-listings";
-export const feedSorts = ["newest", "price-asc", "price-desc"] as const;
-export type FeedFilters = {
- query:string; category:Category; country:CountryCode|""; region:string;
- minPrice:string; maxPrice:string; availableOnly:boolean; sort:(typeof feedSorts)[number];
-};
+import { findRegion,isCountryCode } from "../locations/catalog";
+import { categories } from "../listings/constants";
+import type { Category } from "../listings/types";
+import type { FeedFilters } from "./types";
+export const feedSorts = ["newest","price-asc","price-desc"] as const;
 export function parseFeedFilters(params:URLSearchParams):FeedFilters {
  const candidate=params.get("country")??"";
  const country=isCountryCode(candidate)?candidate:"";
@@ -39,8 +37,4 @@ export function feedIssue(filters:FeedFilters) {
  }
  if(filters.minPrice&&filters.maxPrice&&Number(filters.minPrice)>Number(filters.maxPrice))return "Minimum price must not exceed maximum price.";
  return null;
-}
-export function mergeFeedItems<T extends {id:string}>(current:T[],incoming:T[]) {
- const existing=new Set(current.map(item=>item.id));
- return [...current,...incoming.filter(item=>{if(existing.has(item.id))return false;existing.add(item.id);return true;})];
 }

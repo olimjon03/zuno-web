@@ -1,6 +1,6 @@
 "use client";
 import { ListingCard } from "@/features/listings/components/listing-card";
-import type { Listing } from "@/features/listings/sample-listings";
+import type { Listing } from "@/features/listings/types";
 import { useFavorites } from "@/features/favorites/favorites-provider";
 export function ProfileListings({ listings }: { listings: Listing[] }) {
  const {favorites,toggleFavorite}=useFavorites();
