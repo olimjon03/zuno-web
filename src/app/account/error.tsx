@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function AccountError({ reset }: { reset: () => void }) {
   return (
     <main className="shell detail-message">
-      <h1>We couldn’t load your account</h1>
+      <h1>Your profile is temporarily unavailable</h1>
       <p>Please try again in a moment.</p>
       <button className="button button-primary" onClick={reset}>
         Try again

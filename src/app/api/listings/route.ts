@@ -73,6 +73,16 @@ export async function POST(request: NextRequest) {
       { id: existing.id },
       { headers: { "Cache-Control": "no-store" } },
     );
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("display_name")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (profileError || !profile)
+    return reply(
+      "Your profile is temporarily unavailable. Please try again.",
+      503,
+    );
   let processed: Buffer[];
   try {
     processed = await Promise.all(
@@ -95,14 +105,7 @@ export async function POST(request: NextRequest) {
         .upload(path, bytes, { contentType: "image/webp", upsert: false });
       if (error) throw new Error("Upload failed");
     }
-    const name =
-      [
-        user.user_metadata.display_name,
-        user.user_metadata.full_name,
-        user.user_metadata.name,
-      ].find(
-        (value) => typeof value === "string" && value.trim().length >= 2,
-      ) ?? "Neighbor";
+    const name = profile.display_name;
     const { error } = await supabase.rpc("publish_listing", {
       p_id: input.id,
       p_title: input.title,
@@ -130,12 +133,21 @@ export async function POST(request: NextRequest) {
     committed = Boolean(published);
     let unused = paths;
     if (published) {
-      const { data: attached, error } = await supabase.from("listing_images").select("storage_path").eq("listing_id", input.id);
+      const { data: attached, error } = await supabase
+        .from("listing_images")
+        .select("storage_path")
+        .eq("listing_id", input.id);
       // Never remove a referenced photo, including when a concurrent retry succeeded.
-      unused = error ? [] : paths.filter(path => !attached?.some(image => image.storage_path === path));
+      unused = error
+        ? []
+        : paths.filter(
+            (path) => !attached?.some((image) => image.storage_path === path),
+          );
     }
     if (unused.length) {
-      const { error } = await supabase.storage.from(PHOTO_BUCKET).remove(unused);
+      const { error } = await supabase.storage
+        .from(PHOTO_BUCKET)
+        .remove(unused);
       if (error)
         console.error(
           "[ZUNO listing] Unattached photo cleanup requires retry.",

@@ -7,6 +7,7 @@ import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { AuthShell } from "@/features/auth/auth-shell";
+import { ProfileForm } from "@/features/profile/profile-form";
 import { LogoutButton } from "@/features/auth/logout-button";
 export const metadata: Metadata = {
   title: "Your account | ZUNO",
@@ -24,15 +25,21 @@ async function Account() {
     error,
   } = await supabase.auth.getUser();
   if (error || !user) redirect("/login?notice=session");
-  const name =
-    [
-      user.user_metadata.display_name,
-      user.user_metadata.full_name,
-      user.user_metadata.name,
-    ].find(
-      (value): value is string =>
-        typeof value === "string" && value.trim().length > 0,
-    ) ?? "Neighbor";
+  const [profileResult, areaResult] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("display_name,neighborhood_id")
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase.from("neighborhoods").select("id,name").order("id"),
+  ]);
+  if (profileResult.error || !profileResult.data || areaResult.error)
+    throw new Error("Your profile is temporarily unavailable.");
+  const profile = profileResult.data;
+  const neighborhoods = (areaResult.data ?? []).map((area) => ({
+    id: Number(area.id),
+    name: area.name as string,
+  }));
   return (
     <AuthShell
       title="Your account"
@@ -41,32 +48,43 @@ async function Account() {
       <dl className="account-facts">
         <div>
           <dt>Display name</dt>
-          <dd>{name}</dd>
+          <dd>{profile.display_name}</dd>
         </div>
         <div>
           <dt>Email</dt>
           <dd>{user.email}</dd>
         </div>
       </dl>
+      <ProfileForm
+        displayName={profile.display_name}
+        neighborhoodId={
+          profile.neighborhood_id === null
+            ? null
+            : Number(profile.neighborhood_id)
+        }
+        neighborhoods={neighborhoods}
+      />
       <p className="auth-hint">
         Manage the items you share with your neighborhood.
       </p>
-      <p>
-        <Link className="button button-primary" href="/account/listings">
-          Your listings
-        </Link>
-      </p>
-      <p>
-        <Link className="button button-outline" href="/account/saved">
-          Saved items
-        </Link>
-      </p>
-      <p>
-        <Link className="button button-outline" href="/messages">
-          Messages <UnreadBadge />
-        </Link>
-      </p>
-      <LogoutButton />
+      <nav className="account-nav" aria-label="Account navigation">
+        <p>
+          <Link className="button button-primary" href="/account/listings">
+            Your listings
+          </Link>
+        </p>
+        <p>
+          <Link className="button button-outline" href="/account/saved">
+            Saved items
+          </Link>
+        </p>
+        <p>
+          <Link className="button button-outline" href="/messages">
+            Messages <UnreadBadge />
+          </Link>
+        </p>
+        <LogoutButton />
+      </nav>
     </AuthShell>
   );
 }

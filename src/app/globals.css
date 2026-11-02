@@ -1099,3 +1099,14 @@ h2 {
  .site-header .login { gap:4px; }
  .site-header .login .unread-badge { margin-left:0; }
 }
+
+.profile-form { margin: 24px 0; padding: 24px 0; border-top: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; }
+.profile-form h2 { font-size: 22px; margin-bottom: 20px; }
+.profile-form fieldset { border: 0; padding: 0; min-width: 0; }
+.profile-form .auth-hint { margin-top: 8px; }
+.profile-success { color: #256337; }
+.account-facts dd { overflow-wrap: anywhere; }
+
+.account-nav { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+.account-nav p { margin: 0; }
+.account-nav .button { width: 100%; }

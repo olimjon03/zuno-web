@@ -4,7 +4,7 @@
 
 Email/password signup, login, local logout, PKCE email callback, optional token-hash email confirmation, and a protected `/account` page are connected to Supabase Auth. The homepage navigation changes to Account when a browser session exists. Protected server content independently calls `auth.getUser()`; browser state is never used for authorization. `src/proxy.ts` refreshes cookies on auth/account routes with `getClaims()` and marks those responses private/no-store. Dynamic account content is behind Suspense to preserve the existing Cache Components configuration.
 
-The account page displays Auth's email and display name. Database-backed profile editing remains future work. Real listing creation and photos are described in [listing-setup.md](listing-setup.md); favorites and seller contact remain demo behavior.
+The account page displays Auth's email and display name. Account profile editing is now documented in [profile-editing.md](profile-editing.md). Real listing creation and photos are described in [listing-setup.md](listing-setup.md); favorites and seller contact remain demo behavior.
 
 ## Local environment
 
