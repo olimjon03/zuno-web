@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useFavorites } from "@/features/favorites/favorites-provider";
 import { Header } from "@/components/layout/header";
 import { Icon } from "@/components/ui/icon";
 import { DemoDialog } from "@/components/ui/demo-dialog";
@@ -9,18 +10,16 @@ import { CategoryNav } from "@/features/categories/components/category-nav";
 import { ListingCard } from "@/features/listings/components/listing-card";
 import {
   sampleListings,
-  formatPrice,
   type Category,
   type Neighborhood,
-  type Listing,
 } from "@/features/listings/sample-listings";
 
 export function Homepage() {
   const [category, setCategory] = useState<Category>("All items");
   const [neighborhood, setNeighborhood] = useState<Neighborhood>("All nearby");
   const [query, setQuery] = useState("");
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [dialog, setDialog] = useState<"login" | "sell" | Listing | null>(null);
+  const { favorites, toggleFavorite } = useFavorites();
+  const [dialog, setDialog] = useState<"login" | "sell" | null>(null);
   const listings = sampleListings.filter(
     (listing) =>
       (category === "All items" || listing.category === category) &&
@@ -93,14 +92,7 @@ export function Homepage() {
                   key={listing.id}
                   listing={listing}
                   favorite={favorites.includes(listing.id)}
-                  onToggleFavorite={() =>
-                    setFavorites((current) =>
-                      current.includes(listing.id)
-                        ? current.filter((id) => id !== listing.id)
-                        : [...current, listing.id],
-                    )
-                  }
-                  onOpen={() => setDialog(listing)}
+                  onToggleFavorite={() => toggleFavorite(listing.id)}
                 />
               ))}
             </div>
@@ -133,37 +125,15 @@ export function Homepage() {
       {dialog && (
         <DemoDialog
           title={
-            typeof dialog === "object"
-              ? dialog.title
-              : dialog === "sell"
-                ? "Your next sale starts here"
-                : "Welcome to ZUNO"
+            dialog === "sell" ? "Your next sale starts here" : "Welcome to ZUNO"
           }
           onClose={() => setDialog(null)}
         >
-          {typeof dialog === "object" ? (
-            <>
-              <Image
-                className="dialog-image"
-                src={dialog.image}
-                alt={dialog.imageAlt}
-                width={640}
-                height={420}
-              />
-              <p className="price">{formatPrice(dialog.price)}</p>
-              <p>Seoul · {dialog.neighborhood}</p>
-              <p>
-                This is a sample listing. Messaging and purchases are not
-                available in this demo.
-              </p>
-            </>
-          ) : (
-            <p>
-              {dialog === "sell"
-                ? "Listing an item is coming soon. This sample marketplace lets you explore local finds; no items or personal information are submitted."
-                : "Login is coming soon. For now, explore the sample listings and save your favorites during this visit. No account is needed."}
-            </p>
-          )}
+          <p>
+            {dialog === "sell"
+              ? "Listing an item is coming soon. This sample marketplace lets you explore local finds; no items or personal information are submitted."
+              : "Login is coming soon. For now, explore the sample listings and save your favorites during this visit. No account is needed."}
+          </p>
         </DemoDialog>
       )}
     </>
