@@ -55,6 +55,11 @@ async function Account() {
           Your listings
         </Link>
       </p>
+      <p>
+        <Link className="button button-outline" href="/account/saved">
+          Saved items
+        </Link>
+      </p>
       <LogoutButton />
     </AuthShell>
   );

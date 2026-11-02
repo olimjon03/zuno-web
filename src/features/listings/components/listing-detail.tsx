@@ -140,8 +140,12 @@ export function ListingDetail({
             </div>
             <p role="status" className="detail-save-status">
               {saved
-                ? "Saved for this visit."
-                : "Save a find to come back to it during this visit."}
+                ? real
+                  ? "Saved to your account."
+                  : "Sample saved for this visit."
+                : real
+                  ? "Save this find to your account."
+                  : "Save a sample for this visit."}
             </p>
             <div className="detail-seller">
               <span className="seller-avatar" aria-hidden="true">

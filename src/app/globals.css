@@ -1070,3 +1070,7 @@ h2 {
 .sell-form .remove-confirm input { width: 20px; height: 20px; }
 .listing-status { color: #764000; background: #FFF3E6; padding: 4px 10px; border-radius: 6px; width: fit-content; font-weight: 600; }
 @media (max-width: 480px) { .owned-item { padding: 16px; } }
+
+.favorite-notice { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 100; background: #1F2328; color: white; padding: 16px 48px 16px 20px; border-radius: 12px; width: min(440px, calc(100% - 32px)); box-shadow: 0 8px 30px #0002; }
+.favorite-notice a { color: #ffb36b; text-decoration: underline; }
+.favorite-notice button { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; font-size: 24px; }

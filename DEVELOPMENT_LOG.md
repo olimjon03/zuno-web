@@ -63,3 +63,9 @@ Validation: eight Node tests, lint, build, disposable PostgreSQL RLS/storage-pol
 Branch: `codex/manage-listings`. Added protected `/account/listings` and reusable management forms with validated server actions. Owners can edit item details, mark sold/available and confirm removal. Removal hides items/photos while retaining private storage; photo replacement and permanent deletion are not included. Account now links to management, and marketplace cards/details display sold/reserved labels. No new dependencies, Next configuration changes or migrations.
 
 Validation: lint, build, eight existing Node tests, extended PostgreSQL ownership/privacy tests and fixture-backed browser checks including failure recovery and responsive layouts. Real hosted listings were not changed by tests.
+
+## 2026-11-02 — Persistent saved items
+
+Branch: `codex/saved-items`. Added account-owned favorites migration and RLS, authenticated server reads/writes, shared persistent heart state and `/account/saved`. Saves require login, duplicate inserts are ignored, errors preserve the existing state, and removed listings are omitted. Sample favorites stay in memory. No dependencies or Next configuration changes.
+
+Lint/build, eight existing Node tests, disposable PostgreSQL privacy/ownership tests and local fixture browser save/reload/unsave checks passed. The new hosted migration is pending SQL Editor execution by the owner; setup is in `docs/saved-items.md`.
