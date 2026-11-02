@@ -24,7 +24,7 @@ export async function beginConversation(
       if (startError || typeof data !== "string" || !isUuid(data))
         return {
           error:
-            startError?.code === "22023"
+            startError?.code === "P0002" ? "Messaging is unavailable between you and this user." : startError?.code === "22023"
               ? "This item is unavailable for a new conversation, or it’s your own listing."
               : "Chat is temporarily unavailable. Please try again.",
         };
@@ -62,7 +62,7 @@ export async function postMessage(
       p_body: input.body,
     });
     if (error)
-      return { error: "We couldn’t send your message. Please try again." };
+      return { error: error.code === "P0002" ? "Messaging is unavailable between you and this user. Your draft has been kept." : "We couldn’t send your message. Please try again." };
     return { ok: true };
   } catch {
     return { error: "We couldn’t connect. Your message has been kept." };

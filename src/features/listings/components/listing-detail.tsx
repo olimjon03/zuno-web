@@ -7,6 +7,7 @@ import { Brand } from "@/components/ui/brand";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { SafetyControls } from "@/features/moderation/safety-controls";
 import { ContactSeller } from "@/features/messages/contact-seller";
 import { DemoDialog } from "@/components/ui/demo-dialog";
 import { Icon } from "@/components/ui/icon";
@@ -175,11 +176,12 @@ export function ListingDetail({
           <p>{details.description}</p>
           <h2>Meet nearby</h2>
           <p>
-            Pickup in {listing.neighborhood}, Seoul. Agree on a public meeting
+            Pickup in {formatLocationLabel(listing)}. Agree on a public meeting
             place and inspect the item before exchanging. Exact addresses are
             not displayed.
           </p>
         </section>
+        {real && details.sellerId && <SafetyControls userId={details.sellerId} name={details.seller} listingId={listing.id}/>}
       </main>
       <footer className="shell footer">
         <Link href="/" className="wordmark" aria-label="ZUNO home">

@@ -7,6 +7,7 @@ export const accountMenuItems: readonly NavigationItem[] = [
   {href:"/messages",label:"Messages",icon:"chat"},
   {href:"/sell",label:"Sell an item",icon:"plus"},
   {href:"/account/settings",label:"Profile settings",icon:"settings"},
+  {href:"/account/safety",label:"Safety & privacy",icon:"shield"},
   {href:"/help",label:"Help center",icon:"help"},
   {href:"/",label:"Back to marketplace",icon:"home"},
 ];

@@ -9,10 +9,12 @@ export function Chat({
   conversationId,
   userId,
   initialMessages,
+  canMessage = true,
 }: {
   conversationId: string;
   userId: string;
   initialMessages: Message[];
+  canMessage?: boolean;
 }) {
   const { realtime } = useUnread();
   const [messages, setMessages] = useState(initialMessages);
@@ -138,6 +140,7 @@ export function Chat({
   }, [conversationId]);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!canMessage) return;
     if (locked.current) return;
     locked.current = true;
     setPending(true);
@@ -244,6 +247,7 @@ export function Chat({
         <p>No messages yet. Say hello and ask about this item.</p>
       )}
       <div ref={end} />
+      {!canMessage && <p role="status">Messaging is unavailable between you and this user. You can still read previous messages.</p>}
       <form className="sell-form sell-field chat-compose" onSubmit={submit}>
         <label htmlFor="message-body">Your message</label>
         <textarea
@@ -252,13 +256,13 @@ export function Chat({
           onChange={(event) => setDraft(event.target.value)}
           maxLength={2000}
           required
-          disabled={pending}
+          disabled={pending || !canMessage}
           rows={3}
         />
         <p className="auth-hint">{Array.from(draft).length}/2,000 characters</p>
         <button
           className="button button-primary"
-          disabled={pending || !draft.trim()}
+          disabled={pending || !canMessage || !draft.trim()}
         >
           {pending ? "Sending…" : "Send message"}
         </button>

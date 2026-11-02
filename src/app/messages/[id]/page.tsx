@@ -9,6 +9,8 @@ import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid } from "@/features/listings/validation";
 import { readMessages } from "@/features/messages/actions";
+import { SafetyControls } from "@/features/moderation/safety-controls";
+import { readSafetyState } from "@/features/moderation/actions";
 import { Chat } from "@/features/messages/chat";
 export const metadata: Metadata = {
   title: "Conversation | ZUNO",
@@ -29,7 +31,8 @@ async function Conversation({ id }: { id: string }) {
     .maybeSingle();
   if (error) throw new Error("Conversation unavailable.");
   if (!c) notFound();
-  const result = await readMessages(id);
+  const otherId=c.buyer_id===user.id ? c.seller_id : c.buyer_id;
+  const [result,safety]=await Promise.all([readMessages(id),readSafetyState(otherId)]);
   if (!result.messages) throw new Error("Messages unavailable.");
   return (
     <main className="shell manage-page">
@@ -50,7 +53,9 @@ async function Conversation({ id }: { id: string }) {
         conversationId={id}
         userId={user.id}
         initialMessages={result.messages}
+        canMessage={safety.state?.canMessage ?? true}
       />
+      <SafetyControls userId={otherId} name={c.buyer_id===user.id ? c.seller_name : c.buyer_name} listingId={c.listing_id ?? undefined}/>
     </main>
   );
 }
