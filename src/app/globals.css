@@ -287,7 +287,7 @@ h2 {
   background: var(--cream);
 }
 .favorite.is-favorite {
-  color: #b94b00;
+  color: #0f766e;
   background: #f0fdfa;
 }
 .favorite.is-favorite svg {
@@ -2003,3 +2003,12 @@ h2 {
 .detail-header .back-home-nav{margin-left:auto;flex-shrink:0}.dashboard-header>.back-home-nav{flex:none;gap:10px}.dashboard-header .back-home-nav a,.dashboard-header .back-home-nav button{background:#1c1f22;color:#f7f6f2;border-color:#40464e}.section-loading{padding-block:30px}.section-loading>.back-home-nav{justify-content:flex-end}.section-loading p{margin-block:28px;color:#626872}.loading-placeholder{height:220px;border-radius:18px;background:#f4f7f6}
 @media(max-width:700px){.dashboard-header{gap:12px}.dashboard-header>.back-home-nav{display:flex;gap:8px}.dashboard-header>.back-home-nav button,.dashboard-header>.back-home-nav a{width:36px;height:36px}.detail-header{gap:12px}.detail-header .wordmark{flex-shrink:0}.back-home-nav{gap:8px}}
 .dialog-content>.back-home-nav{justify-content:flex-end;margin-bottom:18px}.demo-dialog .back-home-nav a,.demo-dialog .back-home-nav button{color:#1f2328;background:#fff;border-color:#cbd5e1}
+
+/* Shared menu hit targets and badge alignment. */
+.dashboard-sidebar a > svg { flex-shrink: 0; }
+.dashboard-sidebar a > span:not(.unread-badge) { flex: 1; }
+.dashboard-sidebar a:hover { background: #1c1f22; color: #fff; }
+@media (max-width: 700px) {
+  .mobile-bottom-nav a { min-height: 44px; justify-content: center; }
+  .mobile-bottom-nav .unread-badge { position: absolute; top: -6px; right: -12px; margin: 0; min-width: 18px; height: 18px; padding: 0 4px; font-size: 10px; }
+}

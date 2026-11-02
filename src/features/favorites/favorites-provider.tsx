@@ -17,11 +17,15 @@ import { saveFavorite } from "./actions";
 const FavoritesContext = createContext<{
   favorites: string[];
   ready: boolean;
+  loadError: string;
+  retryFavorites: () => void;
   toggleFavorite: (id: string) => void;
 } | null>(null);
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [ready, setReady] = useState(false);
+  const [loadError, setLoadError] = useState("");
+  const retryLoad = useRef<() => void>(() => {});
   const [notice, setNotice] = useState("");
   const [login, setLogin] = useState(false);
   const generation = useRef(0);
@@ -41,11 +45,15 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     const syncSession = (_event: AuthChangeEvent, session: Session | null) => {
       const nextUserId = session?.user.id ?? null;
       if (nextUserId === userId && (Date.now() - loadedAt < 60000 || pending.current.size > 0)) return;
+      const identityChanged = nextUserId !== userId;
       userId = nextUserId;
       loadedAt = Date.now();
       const version = ++generation.current;
-      current.current = [];
-      setFavorites(demos.current);
+      if (identityChanged) {
+        current.current = [];
+        setFavorites(demos.current);
+      }
+      setLoadError("");
       setReady(false);
       setNotice("");
       setLogin(false);
@@ -59,17 +67,23 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         })
         .then((result) => {
           if (!alive || version !== generation.current) return;
-          current.current = result.ids;
-          setFavorites([...result.ids, ...demos.current]);
+          if (result.error) {
+            setLoadError(result.error);
+            loadedAt = 0;
+          } else {
+            current.current = result.ids;
+            setFavorites([...result.ids, ...demos.current]);
+          }
           setReady(true);
           loading.current = false;
-          if (result.error) setNotice(result.error);
+
         })
         .catch(() => {
           if (!alive || version !== generation.current) return;
           loading.current = false;
           setReady(true);
-          setNotice("We couldn’t load saved items. Refresh to try again.");
+          setLoadError("We couldn’t load saved items. Please try again.");
+          loadedAt = 0;
         });
     };
     const {data:{subscription}} = db.auth.onAuthStateChange(syncSession);
@@ -78,9 +92,11 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         if (alive && !error) syncSession("INITIAL_SESSION", data.session);
       }).catch(() => {});
     };
+    retryLoad.current = () => { if (loading.current) return; loadedAt = 0; reconcileSession(); };
     window.addEventListener("zuno:auth-route", reconcileSession);
     return () => {
       alive = false;
+      retryLoad.current = () => {};
       subscription.unsubscribe();
       window.removeEventListener("zuno:auth-route", reconcileSession);
     };
@@ -96,6 +112,10 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       return;
     }
     if (loading.current || pending.current.has(id)) return;
+    if (loadError) {
+      setNotice("We couldn’t check your saved items. Retry loading them first.");
+      return;
+    }
     pending.current.add(id);
     const version = generation.current;
     const saved = !current.current.includes(id);
@@ -127,7 +147,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     }
   }
   return (
-    <FavoritesContext.Provider value={{ favorites, ready, toggleFavorite }}>
+    <FavoritesContext.Provider value={{ favorites, ready, loadError, retryFavorites: () => retryLoad.current(), toggleFavorite }}>
       {children}
       {notice && (
         <aside

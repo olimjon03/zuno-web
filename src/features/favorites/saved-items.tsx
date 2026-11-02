@@ -3,7 +3,8 @@ import { ListingCard } from "@/features/listings/components/listing-card";
 import type { Listing } from "@/features/listings/sample-listings";
 import { useFavorites } from "./favorites-provider";
 export function SavedItems({ listings }: { listings: Listing[] }) {
-  const { favorites, ready, toggleFavorite } = useFavorites();
+  const { favorites, ready, loadError, retryFavorites, toggleFavorite } = useFavorites();
+  if (loadError) return <div className="empty-state"><p role="alert">{loadError}</p><button className="button button-primary" onClick={retryFavorites}>Retry saved items</button></div>;
   if (!ready) return <p role="status">Loading saved items…</p>;
   const items = listings.filter((item) => favorites.includes(item.id));
   return items.length ? (
