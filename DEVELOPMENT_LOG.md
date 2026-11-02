@@ -33,3 +33,14 @@ Branch: `codex/supabase-auth`, based on merged listing-detail work.
 - Setup, redirect URLs, confirmation templates and verification limits are documented in `docs/supabase-setup.md`.
 
 Next: apply the migration and configure allowed callback URLs, then verify signup/email/login with the owner's email before connecting real listings.
+
+## 2026-11-02 — Google sign-in
+
+Branch: `codex/google-login`.
+
+- Added accessible Google sign-in buttons to login and signup while retaining email/password.
+- Added an SSR OAuth server action, fixed app callback destination and generic cancellation/error handling.
+- Added Google name fallback on the protected account screen.
+- Hosted Google provider and read-only Google handoff verified. Browser tests cover both forms, PKCE parameters/cookie, keyboard activation, cancellation, responsive layouts and email validation.
+- Lint, build and the four existing auth validation tests pass. Actual Google account consent/session is left to the owner; automation did not sign in to an account.
+- No credentials, dependency changes, migrations or Next.js configuration changes in this branch.
