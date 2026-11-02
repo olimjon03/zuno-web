@@ -55,7 +55,7 @@ Official reference: https://supabase.com/docs/guides/auth/server-side/creating-a
 
 ## Google sign-in
 
-Both `/login` and `/signup` include a separate “Continue with Google” form. Its server action uses the official SSR client to generate a PKCE verifier cookie and hand the browser to the configured Supabase `/auth/v1/authorize` endpoint. Email fields are not required for this flow. No Google SDK or new dependency was added.
+Both `/login` and `/signup` include a separate “Continue with Google” form. Its server action uses the official SSR client to generate a PKCE verifier cookie and hand the browser to the configured Supabase `/auth/v1/authorize` endpoint. Email fields are not required for this flow. The Google request includes `prompt=select_account` so Google asks the user to choose an account instead of silently reusing the previous one. The available accounts depend on the current browser’s Google sessions; without a session Google asks the user to sign in. No Google SDK or new dependency was added.
 
 The Google provider must be enabled in Supabase. Keep the OAuth Client Secret only in the Supabase dashboard. The Google Cloud Web client must allow the hosted Supabase `/auth/v1/callback` as its redirect URI; Supabase must allow the app's `/auth/callback`. These are two different callback endpoints. The app continues using the existing configured `NEXT_PUBLIC_SITE_URL` origin.
 
