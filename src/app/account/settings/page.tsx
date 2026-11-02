@@ -1,14 +1,14 @@
 import { AvatarForm } from "@/features/profile/avatar-form";
 import { Avatar } from "@/features/profile/avatar";
 import Link from "next/link";
-import { UnreadBadge } from "@/features/messages/unread-provider";
+import { Brand } from "@/components/ui/brand";
+import { BackHomeNav } from "@/components/layout/back-home-nav";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { AuthShell } from "@/features/auth/auth-shell";
 import { ProfileForm } from "@/features/profile/profile-form";
 import { LogoutButton } from "@/features/auth/logout-button";
 export const metadata: Metadata = {
@@ -44,23 +44,16 @@ async function Account() {
     name: area.name as string,
   }));
   return (
-    <AuthShell
-      title="Profile settings"
-      description="Your place in the ZUNO neighborhood."
-    >
-      <dl className="account-facts">
-        <div>
-          <dt>Display name</dt>
-          <dd>{profile.display_name}</dd>
-        </div>
-        <div>
-          <dt>Email</dt>
-          <dd>{user.email}</dd>
-        </div>
-      </dl>
-      <Avatar name={profile.display_name} path={avatarResult.data?.avatar_path}/><AvatarForm/>
+    <div className="profile-settings-page">
+      <header className="shell detail-header settings-header"><Link href="/" className="wordmark" aria-label="ZUNO home"><Brand/></Link><BackHomeNav/></header>
+      <main className="settings-main settings-soft"><h1>Profile settings</h1><p className="settings-intro">Your place in the ZUNO neighborhood.</p>
+      <section className="settings-profile" aria-label="Your profile">
+      <div className="settings-identity"><Avatar name={profile.display_name} path={avatarResult.data?.avatar_path}/><div><h2>{profile.display_name}</h2><p>{neighborhoods.find(area=>area.id===Number(profile.neighborhood_id))?.name || "Neighborhood not selected"}</p><Link href={`/neighbors/${user.id}`}>View public profile</Link></div></div>
+      <details className="settings-photo"><summary>Change photo</summary><AvatarForm/></details>
+      </section>
       <ProfileForm
         displayName={profile.display_name}
+        email={user.email ?? ""}
         neighborhoodId={
           profile.neighborhood_id === null
             ? null
@@ -68,28 +61,10 @@ async function Account() {
         }
         neighborhoods={neighborhoods}
       />
-      <p><Link href={`/neighbors/${user.id}`}>View public profile</Link></p><p><Link href="/account">Back to My ZUNO</Link></p><p className="auth-hint">
-        Manage the items you share with your neighborhood.
-      </p>
-      <nav className="account-nav" aria-label="Account navigation">
-        <p>
-          <Link className="button button-primary" href="/account/listings">
-            Your listings
-          </Link>
-        </p>
-        <p>
-          <Link className="button button-outline" href="/account/saved">
-            Saved items
-          </Link>
-        </p>
-        <p>
-          <Link className="button button-outline" href="/messages">
-            Messages <UnreadBadge />
-          </Link>
-        </p>
-        <LogoutButton />
-      </nav>
-    </AuthShell>
+      <div className="settings-logout"><LogoutButton/></div>
+      <p className="auth-tagline">Buy · Sell · Connect Locally</p>
+      </main>
+    </div>
   );
 }
 export default function AccountSettingsPage() {
