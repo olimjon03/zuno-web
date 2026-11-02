@@ -4,7 +4,7 @@ import { Brand } from "@/components/ui/brand";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { connection } from "next/server";
+import { cacheLife } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getListingOptions } from "@/features/listings/server/data";
@@ -17,7 +17,9 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 async function OwnedListings() {
-  await connection();
+  "use cache: private";
+  // Browser/session-only reuse; never a shared production server cache.
+  cacheLife({ stale: 30 });
   const db = await createClient();
   const {
     data: { user },

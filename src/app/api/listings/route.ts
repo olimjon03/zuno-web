@@ -160,6 +160,7 @@ export async function POST(request: NextRequest) {
       );
   }
   revalidatePath("/");
+  revalidatePath("/account/listings");
   revalidatePath(`/listings/${input.id}`);
   return NextResponse.json(
     { id: input.id },
