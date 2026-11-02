@@ -69,3 +69,45 @@ test("confirmation origin is configured, strips paths and rejects remote HTTP", 
     else process.env.NEXT_PUBLIC_SITE_URL = previous;
   }
 });
+
+test("Vercel callback origin uses trusted environment values, explicit configuration wins", () => {
+  const names = [
+    "NEXT_PUBLIC_SITE_URL",
+    "VERCEL",
+    "VERCEL_ENV",
+    "VERCEL_PROJECT_PRODUCTION_URL",
+    "VERCEL_URL",
+  ];
+  const previous = Object.fromEntries(
+    names.map((name) => [name, process.env[name]]),
+  );
+  try {
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+    process.env.VERCEL = "1";
+    process.env.VERCEL_ENV = "production";
+    process.env.VERCEL_PROJECT_PRODUCTION_URL = "zuno-web-wine.vercel.app";
+    process.env.VERCEL_URL = "zuno-preview.vercel.app";
+    assert.equal(getSiteUrl(), "https://zuno-web-wine.vercel.app");
+    process.env.VERCEL_ENV = "preview";
+    assert.equal(getSiteUrl(), "https://zuno-preview.vercel.app");
+    process.env.NEXT_PUBLIC_SITE_URL = "https://zuno.example";
+    assert.equal(getSiteUrl(), "https://zuno.example");
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+    for (const domain of [
+      "evil.example/path",
+      "user@evil.example",
+      "https://evil.example",
+      "evil.example?next=bad",
+    ]) {
+      process.env.VERCEL_URL = domain;
+      assert.throws(() => getSiteUrl());
+    }
+    process.env.VERCEL = "0";
+    process.env.VERCEL_URL = "zuno.vercel.app";
+    assert.throws(() => getSiteUrl());
+  } finally {
+    for (const name of names)
+      if (previous[name] === undefined) delete process.env[name];
+      else process.env[name] = previous[name];
+  }
+});

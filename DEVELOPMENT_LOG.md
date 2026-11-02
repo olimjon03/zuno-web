@@ -75,3 +75,9 @@ Lint/build, eight existing Node tests, disposable PostgreSQL privacy/ownership t
 Branch: `codex/marketplace-chat`. Added Contact seller → private buyer/seller conversation, protected inbox and chat pages, bounded message history, five-second visible-tab polling and draft-preserving idempotent sends. Added Suspense boundaries for dynamic route params and the shared favorites route observer to preserve partial prerendering. Prepared participant-only RLS and RPC migration; no dependencies or Next configuration changes.
 
 Validation: nine Node tests, lint/build, disposable PostgreSQL privacy/ownership/retry tests and local fixture browser flow checks. Hosted migration and a real two-account exchange remain owner checks; automation did not contact real users. Setup and limitations are in `docs/messages.md`.
+
+## 2026-11-02 — Production Google login configuration
+
+Branch: `codex/fix-production-google-login`. Reproduced the reported Vercel startup error before any Google handoff. The deployed public bundle has unresolved Supabase URL/publishable-key environment reads; the local handoff works and includes `prompt=select_account`. Production env setup and redeployment remain necessary owner actions.
+
+Added a trusted Vercel site-origin fallback, safe configuration-presence diagnostics and tests for explicit-origin precedence, production/preview domains and invalid domains. No dependencies or Next configuration changes. This does not change Google account selection behavior or claim a completed real account login. Production setup is documented in `docs/supabase-setup.md`.
