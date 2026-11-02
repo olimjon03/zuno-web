@@ -44,3 +44,8 @@ Branch: `codex/google-login`.
 - Hosted Google provider and read-only Google handoff verified. Browser tests cover both forms, PKCE parameters/cookie, keyboard activation, cancellation, responsive layouts and email validation.
 - Lint, build and the four existing auth validation tests pass. Actual Google account consent/session is left to the owner; automation did not sign in to an account.
 - No credentials, dependency changes, migrations or Next.js configuration changes in this branch.
+
+
+## 2026-11-02 — Return to marketplace after login
+
+Successful password login/signup and Google/email confirmation now navigate to `/` instead of `/account`. The Account header link still opens the protected profile page. Logout and failed-login routes remain the same.

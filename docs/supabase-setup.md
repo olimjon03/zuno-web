@@ -20,7 +20,7 @@ In Supabase Authentication → URL Configuration:
 2. Add the exact callback to the allowed Redirect URLs: `http://127.0.0.1:3000/auth/callback` for this local checkout, plus the HTTPS production callback when deployed.
 3. Keep email confirmation enabled. The standard confirmation template using `{{ .ConfirmationURL }}` works with the PKCE `/auth/callback` route in the same browser.
 
-Optional cross-device confirmation: change the signup confirmation template link to `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email`. The `/auth/confirm` handler only accepts type `email` and always navigates to `/account`. Neither callback accepts user-provided redirect destinations. Add the production configuration before sending real confirmation emails.
+Optional cross-device confirmation: change the signup confirmation template link to `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email`. The `/auth/confirm` handler only accepts type `email` and always navigates to the marketplace `/`. Neither callback accepts user-provided redirect destinations. Add the production configuration before sending real confirmation emails.
 
 The project's public Auth settings were read successfully: email provider enabled, signup enabled and email confirmation required. No real accounts were created and no emails were sent during automated QA. Actual email delivery remains a manual check; provider email quotas/SMTP settings can affect it.
 
@@ -59,8 +59,10 @@ Both `/login` and `/signup` include a separate “Continue with Google” form. 
 
 The Google provider must be enabled in Supabase. Keep the OAuth Client Secret only in the Supabase dashboard. The Google Cloud Web client must allow the hosted Supabase `/auth/v1/callback` as its redirect URI; Supabase must allow the app's `/auth/callback`. These are two different callback endpoints. The app continues using the existing configured `NEXT_PUBLIC_SITE_URL` origin.
 
-The shared app callback exchanges the code for a Supabase session and opens `/account`. Cancellation and exchange failures go to a generic sign-in notice, with no provider message or arbitrary redirect reflected. The account screen can display Google's `full_name` or `name` when `display_name` is absent. Database profiles still use the existing signup trigger/default and can be extended with profile editing later.
+The shared app callback exchanges the code for a Supabase session and opens the marketplace `/`. Cancellation and exchange failures go to a generic sign-in notice, with no provider message or arbitrary redirect reflected. The account screen can display Google's `full_name` or `name` when `display_name` is absent. Database profiles still use the existing signup trigger/default and can be extended with profile editing later.
 
 Verification: hosted Auth settings show Google enabled; a read-only authorization request returned a Google redirect with the expected Supabase callback. Playwright intercepted the external handoff from both auth pages and checked provider, app callback, S256 challenge, verifier cookie, keyboard activation, cancellation recovery, email fallback and mobile widths. A real account selection/consent remains a user check in Google. If Google reports `access_denied` while the OAuth app is in Testing, check the Google Auth Platform Audience/test-user settings for the chosen account.
 
 Reference: https://supabase.com/docs/guides/auth/social-sign-in/auth-google
+
+Successful email/password login, an immediately confirmed signup, and both email/OAuth confirmation callbacks now land on the marketplace `/`. The signed-in header links to `/account`, which remains protected.

@@ -36,7 +36,7 @@ export async function login(
     return { error: unavailable };
   }
   revalidatePath("/", "layout");
-  redirect("/account");
+  redirect("/");
 }
 
 export async function signup(
@@ -71,7 +71,7 @@ export async function signup(
   }
   if (signedIn) {
     revalidatePath("/", "layout");
-    redirect("/account");
+    redirect("/");
   }
   return {
     message:

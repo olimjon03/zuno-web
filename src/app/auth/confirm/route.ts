@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
         token_hash,
       });
       if (!error)
-        return NextResponse.redirect(new URL("/account", getSiteUrl()));
+        return NextResponse.redirect(new URL("/", getSiteUrl()));
     } catch {
       /* Show only a generic failure. Redirect targets are fixed. */
     }
