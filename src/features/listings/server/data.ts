@@ -1,3 +1,4 @@
+import { resolveLocation } from "@/features/locations/catalog";
 import "server-only";
 import { cache } from "react";
 import { createPublicClient } from "@/lib/supabase/public";
@@ -8,7 +9,7 @@ import type { ListingDetails } from "../sample-details";
 export const PHOTO_BUCKET = "zuno-listing-photos";
 export type LookupOption = { id: number; name: string };
 const columns =
-  "id,seller_id,title,description,price,condition,seller_name,created_at,status,category:categories(name_en),neighborhood:neighborhoods(name),photos:listing_images(id,sort_order)";
+  "id,seller_id,title,description,price,condition,seller_name,created_at,status,category:categories(name_en),neighborhood:neighborhoods(name,region_code),photos:listing_images(id,sort_order)";
 type Row = {
   id: string;
   title: string;
@@ -20,7 +21,7 @@ type Row = {
   created_at: string;
   status: string;
   category: { name_en: string } | null;
-  neighborhood: { name: string } | null;
+  neighborhood: { name: string; region_code?: string | null } | null;
   photos: { id: string; sort_order: number }[];
 };
 function mapRow(row: Row): { listing: Listing; details: ListingDetails } {
@@ -39,6 +40,7 @@ function mapRow(row: Row): { listing: Listing; details: ListingDetails } {
         ? (row.category!.name_en as Exclude<Category, "All items">)
         : "Other",
       neighborhood: row.neighborhood?.name ?? "Nearby",
+      ...resolveLocation(row.neighborhood?.name ?? "",row.neighborhood?.region_code),
       image: photos[0]?.src ?? "/file.svg",
       imageAlt: photos[0]?.alt ?? row.title,
       photos,

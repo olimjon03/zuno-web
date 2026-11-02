@@ -1,4 +1,5 @@
 "use client";
+import { formatLocationLabel } from "@/features/locations/catalog";
 import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
 
@@ -102,7 +103,7 @@ export function ListingDetail({
           <section className="detail-summary" aria-labelledby="listing-title">
             <p className="listing-location">
               <Icon name="pin" />
-              Seoul · {listing.neighborhood}
+              {formatLocationLabel(listing)}
             </p>
             <h1 id="listing-title">{listing.title}</h1>
             <p className="detail-price">{formatPrice(listing.price)}</p>
