@@ -1,4 +1,6 @@
 import { categories, type Category } from "@/features/listings/sample-listings";
+import { Icon, type IconName } from "@/components/ui/icon";
+const icons: IconName[] = ["list", "briefcase", "home", "user", "people", "book", "plus"];
 export function CategoryNav({
   selected,
   onChange,
@@ -8,13 +10,14 @@ export function CategoryNav({
 }) {
   return (
     <nav className="category-nav" aria-label="Marketplace categories">
-      {categories.map((category) => (
+      {categories.map((category, index) => (
         <button
           key={category}
           aria-pressed={selected === category}
           className={selected === category ? "selected" : ""}
           onClick={() => onChange(category)}
         >
+          <Icon name={icons[index]}/>
           {category}
         </button>
       ))}

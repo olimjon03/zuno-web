@@ -66,6 +66,8 @@ export function Header({
           </button>
         )}
       </form>
+      <Link className="header-saved" href="/account/saved"><Icon name="heart"/>Saved</Link>
+      <Link className="header-saved" href="/messages"><Icon name="chat"/>Messages</Link>
       <AccountLink />
     </header>
   );

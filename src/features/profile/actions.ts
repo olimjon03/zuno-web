@@ -52,5 +52,6 @@ export async function updateProfile(
     return { error: "We couldn’t connect. Your changes have been kept." };
   }
   revalidatePath("/account");
+    revalidatePath("/account/settings");
   return { message: "Profile updated." };
 }

@@ -46,6 +46,7 @@ export function Homepage({
       <a className="skip-link" href="#marketplace">
         Skip to listings
       </a>
+      <div className="utility-bar"><div className="shell"><span>Buy · Sell · Connect Locally</span><span>Seoul, South Korea</span></div></div>
       <Header
         neighborhood={neighborhood}
         onNeighborhoodChange={setNeighborhood}
@@ -53,28 +54,28 @@ export function Homepage({
         onQueryChange={setQuery}
       />
       <main>
-        <section className="hero shell" aria-labelledby="hero-title">
+        <div className="hero-band"><section className="hero shell" aria-labelledby="hero-title">
           <div className="hero-copy">
             <h1 id="hero-title">
-              Buy · Sell · Connect <br />
-              Locally
+              Good finds.<br/><span>Great neighbors.</span>
             </h1>
-            <p>Good finds. Great neighbors.</p>
+            <p className="hero-tagline">Buy · Sell · Connect Locally</p><p>Give pre-loved things a new beginning, right here in your neighborhood.</p><div className="hero-actions">
             <Link className="button button-primary" href="/sell">
               Sell an Item
               <Icon name="arrow" />
             </Link>
+<a className="button button-outline" href="#marketplace">Explore nearby</a></div>
           </div>
           <div className="hero-image">
             <Image
-              src="/images/hero.webp"
+              src="/images/hero-v2.webp"
               alt="A wooden chair, plant, lamp and vintage camera ready for a new home"
               fill
               sizes="(max-width: 639px) 100vw, 55vw"
               preload
             />
           </div>
-        </section>
+        </section></div>
         <section
           id="marketplace"
           className="shell marketplace"

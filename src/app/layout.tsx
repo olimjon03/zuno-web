@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { MobileNav } from "@/components/layout/mobile-nav";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -28,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <FavoritesProvider>
-          <UnreadProvider>{children}</UnreadProvider>
+          <UnreadProvider>{children}<Suspense fallback={null}><MobileNav/></Suspense></UnreadProvider>
         </FavoritesProvider>
       </body>
     </html>
