@@ -2030,3 +2030,117 @@ h2 {
 
 /* Private safety and moderator controls, using the existing ZUNO palette. */
 .safety-page{max-width:900px}.safety-tools{margin:28px 0;padding:22px;border:1px solid #dfe9e6;border-radius:18px;background:#f7fcfb}.safety-tools h2{font-size:20px;margin:0 0 12px}.safety-card{border:1px solid #e0e8e5;border-radius:16px;background:#fff;padding:20px;margin:18px 0}.safety-card summary{cursor:pointer;font-weight:650;min-height:32px}.safety-card form{margin-top:16px}.safety-card fieldset{border:0;padding:0;min-width:0}.safety-block-form{display:grid;gap:12px}.safety-list{list-style:none;padding:0;margin:0}.safety-list li{padding:18px 0;border-top:1px solid #e5edeb}.safety-list h3{margin:0 0 8px}.report-details{white-space:pre-wrap;overflow-wrap:anywhere}.safety-card h2,.safety-card h3{overflow-wrap:anywhere}.safety-page .manage-actions{flex-wrap:wrap}.safety-page p,.safety-tools p{line-height:1.6}.safety-tools .button,.safety-page .button{min-height:44px}.safety-card .sell-field textarea{width:100%;max-width:100%}@media(max-width:639px){.safety-tools,.safety-card{padding:16px}.safety-block-form .remove-confirm{align-items:flex-start}}
+
+/* Your listings — approved 02 Soft Cards, with Mark reserved. */
+.owned-listings-page{max-width:760px;padding-bottom:120px}
+.owned-listings-header{position:relative;justify-content:center;min-height:88px}
+.owned-listings-header>.wordmark{font-size:30px}
+.owned-listings-header>.back-home-nav{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;pointer-events:none}
+.owned-listings-header .back-home-nav>*{pointer-events:auto}
+.owned-soft-card{padding:0;border:0;border-radius:0;margin:22px 0 38px;background:transparent}
+.owned-product-card,.owned-edit-panel,.owned-remove-panel{border:1px solid #e5ebe9;background:#fff;border-radius:20px;box-shadow:0 3px 10px #152a2210}
+.owned-product-card{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:20px}
+.owned-product-copy{min-width:0}
+.owned-product-copy h2{font-size:22px;font-weight:700;line-height:1.3;letter-spacing:-.4px;margin:0 0 7px;overflow-wrap:anywhere}
+.owned-product-copy h2 a{text-decoration:none;color:#1f2328}
+.owned-product-copy h2 a:hover{text-decoration:underline}
+.owned-price{font-size:17px;line-height:1.45;margin:0 0 8px;color:#1f2328}
+.owned-area{display:flex;align-items:flex-start;gap:6px;font-size:13px;line-height:1.4;color:#667085;margin:0 0 10px;overflow-wrap:anywhere}
+.owned-area svg{width:15px;height:17px;flex-shrink:0}
+.owned-status{display:inline-flex;padding:5px 10px;line-height:1.2;font-size:12px;font-weight:650;border-radius:7px;background:#def8ed;color:#086455}
+.owned-status-reserved{background:#fff1d4;color:#8a5200}
+.owned-status-sold{background:#eef0f3;color:#667085}
+.owned-cover-link{flex:0 0 112px;display:block}
+.owned-cover{display:block;width:112px;height:112px;border-radius:13px;overflow:hidden;background:#f0f5f3}
+.owned-cover img{display:block;width:100%;height:100%;object-fit:cover}
+.owned-cover-placeholder{display:grid;place-items:center;width:100%;height:100%;color:#8b9c96}
+.owned-cover-placeholder svg{width:32px;height:32px}
+.owned-status-actions{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:16px 0 18px;padding:12px 0;border-radius:16px;background:#e9fbf6}
+.owned-status-actions button{display:flex;align-items:center;justify-content:center;gap:10px;min-height:38px;padding:5px 8px;font-size:14px;font-weight:600;color:#1f2328;background:transparent;border:0;cursor:pointer}
+.owned-status-actions button+button{border-left:1px solid #bfded5}
+.owned-status-actions svg{width:24px;height:24px;flex-shrink:0}
+.owned-status-actions button:hover:not(:disabled){color:#0f766e}
+.owned-status-actions button:disabled{opacity:.45;cursor:default}
+.owned-soft-card details{margin-top:16px}
+.owned-soft-card summary{list-style:none;display:flex;align-items:center;gap:12px;cursor:pointer;margin:0;padding:18px 20px;font-size:16px;font-weight:650;line-height:1.35;min-height:60px}
+.owned-soft-card summary::-webkit-details-marker{display:none}
+.owned-soft-card summary>svg:first-child{width:23px;height:23px;flex-shrink:0}
+.owned-disclosure-arrow{margin-left:auto;width:17px;height:17px;transition:transform .16s ease}
+.owned-soft-card details[open]>summary>.owned-disclosure-arrow{transform:rotate(-90deg)}
+.owned-edit-panel[open]>summary{padding-bottom:14px}
+.owned-soft-card .owned-edit-form{margin:0 12px 12px;padding:16px;background:#f7f9fa;border-radius:12px}
+.owned-edit-form fieldset{border:0;padding:0;min-width:0}
+.owned-edit-form .sell-field{margin-bottom:18px;gap:7px}
+.owned-edit-form .sell-field>label{font-size:14px;font-weight:500}
+.owned-edit-form .sell-field input,.owned-edit-form .sell-field select,.owned-edit-form .sell-field textarea{padding:10px 12px;min-height:42px;font-size:14px;border-radius:8px;background:#fff}
+.owned-edit-form .auth-hint{font-size:12px;line-height:1.5;color:#667085}
+.owned-edit-form .sell-fields{gap:16px}
+.owned-edit-form .owned-photo-editor{margin-top:6px;margin-bottom:18px}
+.owned-edit-form .compact-photo-picker{gap:8px;margin:0}
+.compact-photo-picker>label{font-weight:650!important;font-size:15px!important}
+.compact-photo-picker .auth-hint{margin:0 0 4px}
+.compact-photo-rail.upload-previews{display:flex;gap:10px;overflow-x:auto;margin-top:4px;padding:2px 0 8px;max-width:100%;align-items:flex-start}
+.compact-photo-rail>.photo-choice{display:flex;flex-direction:column;gap:7px;flex:0 0 96px;min-width:0}
+.photo-choice-media{position:relative}
+.compact-photo-rail .photo-choice-media img{width:96px;height:96px;object-fit:cover;border-radius:10px}
+.photo-cover-label{position:absolute;left:5px;bottom:5px;padding:3px 6px;border-radius:5px;background:#c8fff0;color:#086455;font-size:10px;font-weight:650;line-height:1.2}
+.compact-photo-rail .manage-actions{display:flex;gap:6px;flex-wrap:nowrap}
+.compact-photo-rail .manage-actions button{display:flex;align-items:center;justify-content:center;width:45px;min-height:40px;padding:7px;border:1px solid #dde6e2;background:#fff;border-radius:7px;color:#53685f}
+.compact-photo-rail .manage-actions button:last-child{color:#b54747}
+.compact-photo-rail .manage-actions svg{width:17px;height:17px}
+.compact-photo-rail .photo-add-tile{display:flex;flex:0 0 96px;height:96px;align-items:center;justify-content:center;flex-direction:column;gap:6px;border:1px dashed #1a9c8d;border-radius:10px;background:#f0fffa;color:#174a43;font-size:12px;font-weight:500;cursor:pointer;text-align:center;margin:0}
+.photo-add-tile svg{width:26px;height:26px}
+.photo-add-tile[aria-disabled=true]{opacity:.5;cursor:default}
+.compact-photo-picker input.sr-only:focus-visible~.compact-photo-rail .photo-add-tile{outline:2px solid #0f766e;outline-offset:2px}
+.owned-edit-form .owned-save-button{width:100%;min-height:46px;border-radius:10px;font-size:15px;margin-top:8px}
+.owned-remove-panel>summary{color:#dc2626}
+.owned-remove-panel>summary .owned-disclosure-arrow{color:#1f2328}
+.owned-remove-panel>form{padding:0 20px 20px}
+.owned-remove-panel fieldset{border:0;padding:0;margin:0;min-width:0}
+.owned-remove-panel p{font-size:14px;line-height:1.5;margin:0 0 14px}
+.owned-remove-panel .remove-confirm{font-size:14px;line-height:1.5;align-items:flex-start}
+.owned-remove-panel .owned-remove-button{color:#b42318;border-color:#e9b9b4;font-size:14px;min-height:44px;margin-top:16px}
+.owned-result{font-size:14px;line-height:1.5;margin:14px 0 0}
+.owned-soft-card .auth-error{overflow-wrap:anywhere}
+@media(max-width:639px){.owned-product-card{gap:14px;padding:16px}
+.owned-product-copy h2{font-size:20px}
+.owned-cover-link{flex-basis:100px}
+.owned-cover{width:100px;height:100px}
+.owned-soft-card summary{padding:16px}
+.owned-soft-card .owned-edit-form{margin:0 10px 10px;padding:12px}
+.owned-edit-form .sell-fields{gap:0}
+.owned-status-actions button{font-size:13px;gap:7px}
+.owned-status-actions svg{width:22px;height:22px}
+.owned-remove-panel>form{padding:0 16px 16px}
+}
+@media(prefers-reduced-motion:reduce){.owned-disclosure-arrow{transition:none}
+}
+
+.compact-photo-rail.upload-previews>.photo-choice,.compact-photo-rail.upload-previews>.photo-add-tile{flex-basis:calc((100% - 30px)/4);min-width:64px;max-width:96px}
+.compact-photo-rail .photo-choice-media img{width:100%;height:auto;aspect-ratio:1}
+.compact-photo-rail .manage-actions button{width:calc((100% - 6px)/2);min-height:36px;padding:6px}
+.compact-photo-rail .photo-add-tile{height:auto;aspect-ratio:1}
+.compact-photo-rail .photo-add-tile span{max-width:58px;line-height:1.25}
+
+.owned-listings-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 20px}
+.owned-listings-title-row h1{font-size:30px;letter-spacing:-1px;margin:0}
+.owned-listings-title-row .button{font-size:13px;min-height:42px;padding:10px 16px;white-space:nowrap}
+@media(min-width:700px){.owned-listings-title-row h1{font-size:38px}
+}
+@media(max-width:360px){.owned-listings-title-row h1{font-size:26px}
+.owned-listings-title-row .button{font-size:12px;padding:10px}
+}
+
+@media(min-width:361px) and (max-width:639px){.owned-cover-link{flex-basis:112px}
+.owned-cover{width:112px;height:112px}
+}
+@media(max-width:360px){.owned-cover-link{flex-basis:88px}
+.owned-cover{width:88px;height:88px}
+.owned-product-copy h2{font-size:18px}
+.owned-price{font-size:16px}
+}
+
+.compact-photo-picker{position:relative}
+.owned-edit-form .compact-photo-picker input.sr-only{width:1px;height:1px;min-height:0;max-width:1px;padding:0;border:0}
+
+.owned-price{overflow-wrap:anywhere}

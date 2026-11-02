@@ -84,3 +84,9 @@ export function validatePhotos(
     return "Keep the combined photo size below 3.5 MB.";
   return null;
 }
+
+export function parseAvailability(value: FormDataEntryValue | null): "active" | "reserved" | "sold" | undefined {
+  if (value === null) return undefined;
+  if (typeof value !== "string" || !["active", "reserved", "sold"].includes(value)) throw new Error("Choose a valid availability.");
+  return value as "active" | "reserved" | "sold";
+}
