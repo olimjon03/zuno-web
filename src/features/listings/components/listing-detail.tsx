@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { ContactSeller } from "@/features/messages/contact-seller";
 import { DemoDialog } from "@/components/ui/demo-dialog";
 import { Icon } from "@/components/ui/icon";
 import { useFavorites } from "@/features/favorites/favorites-provider";
@@ -53,7 +54,7 @@ export function ListingDetail({
         )}
         <p className="detail-demo">
           {real
-            ? "Local pickup · Inspect the item before exchanging. Messaging is coming soon."
+            ? "Local pickup · Inspect the item before exchanging."
             : "Sample listing · Explore the demo. No purchases or messages are sent."}
         </p>
         <div className="detail-grid">
@@ -122,13 +123,17 @@ export function ListingDetail({
               </div>
             </dl>
             <div className="detail-actions">
-              <button
-                className="button button-primary"
-                onClick={() => setDialog("contact")}
-              >
-                Contact seller
-                <Icon name="arrow" />
-              </button>
+              {real ? (
+                <ContactSeller listingId={listing.id} />
+              ) : (
+                <button
+                  className="button button-primary"
+                  onClick={() => setDialog("contact")}
+                >
+                  Contact seller
+                  <Icon name="arrow" />
+                </button>
+              )}
               <button
                 className={`button button-outline ${saved ? "detail-saved" : ""}`}
                 aria-pressed={saved}

@@ -69,3 +69,9 @@ Validation: lint, build, eight existing Node tests, extended PostgreSQL ownershi
 Branch: `codex/saved-items`. Added account-owned favorites migration and RLS, authenticated server reads/writes, shared persistent heart state and `/account/saved`. Saves require login, duplicate inserts are ignored, errors preserve the existing state, and removed listings are omitted. Sample favorites stay in memory. No dependencies or Next configuration changes.
 
 Lint/build, eight existing Node tests, disposable PostgreSQL privacy/ownership tests and local fixture browser save/reload/unsave checks passed. The new hosted migration is pending SQL Editor execution by the owner; setup is in `docs/saved-items.md`.
+
+## 2026-11-02 — Marketplace conversations and messages
+
+Branch: `codex/marketplace-chat`. Added Contact seller → private buyer/seller conversation, protected inbox and chat pages, bounded message history, five-second visible-tab polling and draft-preserving idempotent sends. Added Suspense boundaries for dynamic route params and the shared favorites route observer to preserve partial prerendering. Prepared participant-only RLS and RPC migration; no dependencies or Next configuration changes.
+
+Validation: nine Node tests, lint/build, disposable PostgreSQL privacy/ownership/retry tests and local fixture browser flow checks. Hosted migration and a real two-account exchange remain owner checks; automation did not contact real users. Setup and limitations are in `docs/messages.md`.
