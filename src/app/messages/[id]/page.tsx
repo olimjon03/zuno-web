@@ -1,3 +1,4 @@
+import { Brand } from "@/components/ui/brand";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -32,7 +33,7 @@ async function Conversation({ id }: { id: string }) {
     <main className="shell manage-page">
       <header className="detail-header">
         <Link href="/" className="wordmark">
-          ZUNO
+          <Brand/>
         </Link>
         <Link href="/messages">All messages</Link>
       </header>

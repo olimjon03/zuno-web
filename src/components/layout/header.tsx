@@ -1,3 +1,4 @@
+import { Brand } from "@/components/ui/brand";
 import Link from "next/link";
 import { AccountLink } from "@/features/auth/account-link";
 import { Icon } from "@/components/ui/icon";
@@ -21,7 +22,7 @@ export function Header({
   return (
     <header className="site-header shell">
       <Link className="wordmark" href="/" aria-label="ZUNO home">
-        ZUNO<span className="brand-dot">.</span>
+        <Brand/>
       </Link>
       <div className="location-control">
         <Icon name="pin" />
@@ -68,6 +69,7 @@ export function Header({
       </form>
       <Link className="header-saved" href="/account/saved"><Icon name="heart"/>Saved</Link>
       <Link className="header-saved" href="/messages"><Icon name="chat"/>Messages</Link>
+      <Link className="button button-primary header-sell" href="/sell">Sell</Link>
       <AccountLink />
     </header>
   );

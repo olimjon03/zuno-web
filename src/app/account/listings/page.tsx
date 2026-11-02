@@ -1,3 +1,4 @@
+import { Brand } from "@/components/ui/brand";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -38,7 +39,7 @@ async function OwnedListings() {
     <main className="shell manage-page">
       <header className="detail-header">
         <Link className="wordmark" href="/">
-          ZUNO
+          <Brand/>
         </Link>
         <Link href="/account">Your account</Link>
       </header>

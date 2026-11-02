@@ -3,8 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #1f2328;
-  --orange: #ff7a00;
-  --cream: #fff3e6;
+  --brand: #0d9488;
+  --cream: #f0fdfa;
   --border: #e5e7eb;
   --muted: #626872;
 }
@@ -45,7 +45,7 @@ a {
   text-decoration: none;
 }
 :focus-visible {
-  outline: 3px solid #a64500;
+  outline: 3px solid #0f766e;
   outline-offset: 4px;
 }
 .shell {
@@ -62,7 +62,7 @@ a {
   font-size: 36px;
   font-weight: 900;
   letter-spacing: -2px;
-  color: #e66800;
+  color: #0d9488;
   line-height: 1;
 }
 .brand-dot {
@@ -115,7 +115,7 @@ a {
   outline: 0;
 }
 .search:focus-within {
-  outline: 3px solid #a64500;
+  outline: 3px solid #0f766e;
   outline-offset: 3px;
 }
 .search button {
@@ -140,16 +140,16 @@ a {
   border: 1px solid transparent;
 }
 .button-primary {
-  background: var(--orange);
+  background: var(--brand);
   color: #1f2328;
 }
 .button-primary:hover {
-  background: #ef6d00;
+  background: #0f766e;
 }
 .button-outline {
   background: #fff;
-  color: #a64500;
-  border-color: var(--orange);
+  color: #0f766e;
+  border-color: var(--brand);
 }
 .button-outline:hover {
   background: var(--cream);
@@ -214,11 +214,11 @@ h1 {
   color: #414751;
 }
 .category-nav button.selected {
-  color: #a64500;
-  border-bottom-color: var(--orange);
+  color: #0f766e;
+  border-bottom-color: var(--brand);
 }
 .category-nav button:hover {
-  background: #fff9f3;
+  background: #f0fdfa;
 }
 .section-heading {
   display: flex;
@@ -288,7 +288,7 @@ h2 {
 }
 .favorite.is-favorite {
   color: #b94b00;
-  background: #fff3e6;
+  background: #f0fdfa;
 }
 .favorite.is-favorite svg {
   fill: currentColor;
@@ -608,7 +608,7 @@ h2 {
   border-bottom: 1px solid var(--border);
 }
 .detail-back {
-  color: #a64500;
+  color: #0f766e;
   font-size: 14px;
 }
 .detail-back:hover,
@@ -663,7 +663,7 @@ h2 {
 .photo-caption button {
   border: 0;
   background: none;
-  color: #a64500;
+  color: #0f766e;
 }
 .detail-summary h1 {
   margin-top: 16px;
@@ -729,7 +729,7 @@ h2 {
   height: 46px;
   border-radius: 50%;
   background: var(--cream);
-  color: #a64500;
+  color: #0f766e;
   font-weight: 700;
   flex-shrink: 0;
 }
@@ -879,7 +879,7 @@ h2 {
   line-height: 1.6;
 }
 .auth-switch a {
-  color: #a64500;
+  color: #0f766e;
   text-decoration: underline;
 }
 .auth-tagline {
@@ -1019,7 +1019,7 @@ h2 {
   width: 100%;
   padding: 10px 2px;
   font-size: 12px;
-  color: #a64500;
+  color: #0f766e;
 }
 .sell-form .button:disabled {
   opacity: 0.6;
@@ -1036,7 +1036,7 @@ h2 {
   padding: 3px;
 }
 .photo-thumbnails button[aria-pressed="true"] {
-  border-color: #a64500;
+  border-color: #0f766e;
 }
 .photo-thumbnails img {
   width: 90px;
@@ -1068,11 +1068,11 @@ h2 {
 .manage-actions { margin-top: 20px; }
 .remove-confirm { display: flex; gap: 10px; align-items: center; margin: 16px 0; }
 .sell-form .remove-confirm input { width: 20px; height: 20px; }
-.listing-status { color: #764000; background: #FFF3E6; padding: 4px 10px; border-radius: 6px; width: fit-content; font-weight: 600; }
+.listing-status { color: #0f766e; background: #f0fdfa; padding: 4px 10px; border-radius: 6px; width: fit-content; font-weight: 600; }
 @media (max-width: 480px) { .owned-item { padding: 16px; } }
 
 .favorite-notice { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 100; background: #1F2328; color: white; padding: 16px 48px 16px 20px; border-radius: 12px; width: min(440px, calc(100% - 32px)); box-shadow: 0 8px 30px #0002; }
-.favorite-notice a { color: #ffb36b; text-decoration: underline; }
+.favorite-notice a { color: #5eead4; text-decoration: underline; }
 .favorite-notice button { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; font-size: 24px; }
 
 .conversation-list { list-style:none; padding:0; }
@@ -1082,7 +1082,7 @@ h2 {
 .chat-panel { border:1px solid #E5E7EB; border-radius:16px; padding:24px; }
 .chat-history { list-style:none; padding:0; display:flex; flex-direction:column; gap:16px; margin:24px 0; }
 .chat-message { max-width:85%; width:fit-content; padding:12px 16px; border-radius:16px; background:#f3f4f6; }
-.chat-message.own { align-self:flex-end; background:#FFF3E6; }
+.chat-message.own { align-self:flex-end; background:#f0fdfa; }
 .chat-message p { white-space:pre-wrap; overflow-wrap:anywhere; margin:6px 0; }
 .chat-author { font-size:13px; font-weight:600; }
 .chat-message time { font-size:12px; color:#57606a; }
@@ -1090,7 +1090,7 @@ h2 {
 .chat-compose .auth-hint { margin-bottom:16px; }
 @media(max-width:480px) { .chat-panel { padding:16px; } .chat-message { max-width:95%; } }
 
-.unread-badge { display:inline-flex; justify-content:center; align-items:center; min-width:22px; height:22px; padding:0 6px; margin-left:6px; border-radius:999px; background:#FF7A00; color:#1F2328; font-size:12px; font-weight:700; vertical-align:middle; }
+.unread-badge { display:inline-flex; justify-content:center; align-items:center; min-width:22px; height:22px; padding:0 6px; margin-left:6px; border-radius:999px; background:#0d9488; color:#1F2328; font-size:12px; font-weight:700; vertical-align:middle; }
 @media (max-width:639px) {
  .site-header { grid-template-columns: auto minmax(0,1fr) auto; }
  .site-header .location-control { min-width:0; max-width:100%; }
@@ -1136,7 +1136,7 @@ h2 {
   font-weight:600
 }
 .hero-band {
-  background:#fff3e6
+  background:#f0fdfa
 }
 .hero.shell {
   margin-block:0;
@@ -1152,7 +1152,7 @@ h2 {
   letter-spacing:-.055em
 }
 .hero-copy h1 span {
-  color:#ff7a00
+  color:#0d9488
 }
 .hero-copy p {
   font-size:15px;
@@ -1202,7 +1202,7 @@ h2 {
   border-bottom:1px solid #303437
 }
 .dashboard-header .wordmark {
-  color:#ff7a00
+  color:#0d9488
 }
 .dashboard-header nav {
   display:flex;
@@ -1238,7 +1238,7 @@ h2 {
 }
 .dashboard-sidebar a[aria-current] {
   background:#1c1f22;
-  box-shadow:inset 3px 0 #ff7a00;
+  box-shadow:inset 3px 0 #0d9488;
   color:#fff
 }
 .dashboard-content {
@@ -1273,7 +1273,7 @@ h2 {
   place-items:center;
   width:84px;
   height:84px;
-  background:#fff3e6;
+  background:#f0fdfa;
   color:#1f2328;
   border-radius:50%;
   font-size:32px;
@@ -1316,14 +1316,14 @@ h2 {
   border-radius:50%;
   flex-shrink:0;
   color:#1f2328;
-  background:#ffcd83
+  background:#99f6e4
 }
 .shortcut-icon svg {
   width:27px;
   height:27px
 }
 .shortcut-1 {
-  background:#ffbdb3
+  background:#ccfbf1
 }
 .shortcut-2 {
   background:#a6c9fb
@@ -1351,9 +1351,9 @@ h2 {
 }
 .sell-panel {
   border-radius:14px;
-  background:#ff7a00;
+  background:#0d9488;
   padding:30px;
-  color:#fff3e6;
+  color:#f0fdfa;
   overflow:hidden
 }
 .sell-panel h2 {
@@ -1369,7 +1369,7 @@ h2 {
 .sell-panel .button {
   display:flex;
   justify-content:space-between;
-  background:#fff3e6;
+  background:#f0fdfa;
   color:#1f2328;
   max-width:230px;
   border-radius:16px
@@ -1381,7 +1381,7 @@ h2 {
   align-items:flex-start
 }
 .neighborhood-panel>svg {
-  color:#ff7a00;
+  color:#0d9488;
   width:38px;
   height:38px;
   flex-shrink:0;
@@ -1398,7 +1398,7 @@ h2 {
   margin:8px 0 16px
 }
 .neighborhood-panel a {
-  color:#ff7a00;
+  color:#0d9488;
   font-size:13px;
   font-weight:600;
   display:inline-flex;
@@ -1411,7 +1411,7 @@ h2 {
   margin:0
 }
 .explore-zuno h2 span {
-  color:#ff7a00
+  color:#0d9488
 }
 .explore-zuno>p {
   color:#a4a8ad;
@@ -1439,7 +1439,7 @@ h2 {
   font-size:14px
 }
 .feature-search:focus-within {
-  outline:2px solid #ff7a00;
+  outline:2px solid #0d9488;
   outline-offset:3px
 }
 .feature-groups {
@@ -1487,7 +1487,7 @@ h2 {
   background:#25292d
 }
 .feature-row>svg:first-child {
-  color:#ffb15a;
+  color:#5eead4;
   flex-shrink:0;
   width:23px;
   height:23px
@@ -1685,16 +1685,16 @@ h2 {
   height:23px
 }
 .mobile-bottom-nav a[aria-current] {
-  color:#ff7a00
+  color:#0d9488
 }
 .mobile-bottom-nav .nav-sell>span {
-  background:#ff7a00;
+  background:#0d9488;
   color:white;
   border-radius:50%;
   width:42px;
   height:42px;
   margin-top:-17px;
-  box-shadow:0 0 0 5px #fff3e6
+  box-shadow:0 0 0 5px #f0fdfa
 }
 .mobile-bottom-nav.nav-dark {
   background:rgba(28,31,34,.96);
@@ -1704,7 +1704,7 @@ h2 {
   color:#b6bcc6
 }
 .nav-dark .nav-sell>span {
-  box-shadow:0 0 0 5px #42301e
+  box-shadow:0 0 0 5px #134e4a
 }
 .account-dashboard {
   margin-bottom:-100px;
@@ -1873,7 +1873,7 @@ h2 {
   background:#303437
 }
 .account-dashboard :focus-visible {
-  outline-color:#ffb15a
+  outline-color:#5eead4
 }
 
 .dashboard-content h2,.feature-group h3 {
@@ -1920,7 +1920,7 @@ h2 {
   border-color:#1f2328
 }
 .category-nav button:hover {
-  background:#fff3e6;
+  background:#f0fdfa;
   color:#1f2328
 }
 .category-nav svg {
@@ -1968,3 +1968,22 @@ h2 {
 }
 
 }
+
+/* Teal Local Pin identity, shared across all existing marketplace flows. */
+.brand-lockup{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;color:#1f2328;letter-spacing:-.065em}
+.brand-pin{width:.85em;height:1.05em;color:#0d9488;flex:none}
+.account-dashboard .brand-lockup{color:#f7f6f2}
+.button-primary,.unread-badge{color:#fff}
+.sell-panel{color:#fff}.sell-panel .button{color:#134e4a}
+.hero-copy .hero-tagline{font-size:18px;font-weight:500}
+.hero-actions .button-primary{color:#fff}
+.shortcut-0,.shortcut-1,.shortcut-2{background:#ccfbf1;color:#0f766e}
+.site-header{gap:18px}.header-sell{padding:10px 20px;min-height:42px}
+.dashboard-header nav{align-items:center}.dashboard-header .button-primary{padding:9px 20px;min-height:38px}
+.hero-band{background:#fff}.hero.shell{background:#f0fdfa;border-radius:20px;margin-top:12px;margin-bottom:10px;padding:32px;gap:36px}.hero-image{min-height:300px}
+@media(max-width:1100px){.header-sell{display:none}}
+@media(max-width:700px){.brand-lockup{gap:4px}.hero.shell{padding:22px 16px;margin-top:0;gap:24px}.hero-copy .hero-tagline{font-size:14px}.hero-copy h1{font-size:38px}.hero-image{min-height:230px}.dashboard-header .wordmark{font-size:28px}}
+/* Darker interactive teal maintains AA contrast for normal-size white labels. */
+.button-primary,.unread-badge,.sell-panel{background:#0f766e}
+.button-primary:hover{background:#115e59}
+.nav-dark a[aria-current],.account-dashboard .explore-zuno h2 span,.neighborhood-panel a{color:#5eead4}

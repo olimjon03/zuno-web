@@ -1,3 +1,4 @@
+import { Brand } from "@/components/ui/brand";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -23,7 +24,7 @@ async function Saved() {
     <main className="shell manage-page">
       <header className="detail-header">
         <Link href="/" className="wordmark">
-          ZUNO
+          <Brand/>
         </Link>
         <Link href="/account">Your account</Link>
       </header>

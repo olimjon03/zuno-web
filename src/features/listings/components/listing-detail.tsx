@@ -1,4 +1,5 @@
 "use client";
+import { Brand } from "@/components/ui/brand";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -33,7 +34,7 @@ export function ListingDetail({
       </a>
       <header className="shell detail-header">
         <Link href="/" className="wordmark" aria-label="ZUNO home">
-          ZUNO
+          <Brand/>
         </Link>
         <Link href="/" className="detail-back">
           ← Back to marketplace
@@ -183,7 +184,7 @@ export function ListingDetail({
       </main>
       <footer className="shell footer">
         <Link href="/" className="wordmark" aria-label="ZUNO home">
-          ZUNO.
+          <Brand/>
         </Link>
         <p>Buy · Sell · Connect Locally</p>
         <span>

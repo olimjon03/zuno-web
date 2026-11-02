@@ -1,3 +1,4 @@
+import { Brand } from "@/components/ui/brand";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { connection } from "next/server";
@@ -22,7 +23,7 @@ async function Sell() {
     <>
       <header className="shell detail-header">
         <Link href="/" className="wordmark">
-          ZUNO
+          <Brand/>
         </Link>
         <Link href="/" className="detail-back">
           Back to marketplace

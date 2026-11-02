@@ -1,3 +1,4 @@
+import { Brand } from "@/components/ui/brand";
 import { InboxLiveRefresh } from "@/features/messages/inbox-live-refresh";
 import { UnreadBadge } from "@/features/messages/unread-provider";
 import type { Metadata } from "next";
@@ -29,7 +30,7 @@ async function Inbox() {
       <InboxLiveRefresh />
       <header className="detail-header">
         <Link href="/" className="wordmark">
-          ZUNO
+          <Brand/>
         </Link>
         <Link href="/account">Your account</Link>
       </header>
