@@ -23,9 +23,14 @@ async function Account() {
   } = await supabase.auth.getUser();
   if (error || !user) redirect("/login?notice=session");
   const name =
-    typeof user.user_metadata.display_name === "string"
-      ? user.user_metadata.display_name
-      : "Neighbor";
+    [
+      user.user_metadata.display_name,
+      user.user_metadata.full_name,
+      user.user_metadata.name,
+    ].find(
+      (value): value is string =>
+        typeof value === "string" && value.trim().length > 0,
+    ) ?? "Neighbor";
   return (
     <AuthShell
       title="Your account"

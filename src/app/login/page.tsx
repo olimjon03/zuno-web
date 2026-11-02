@@ -9,7 +9,12 @@ async function LoginNotice({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { notice } = await searchParams;
-  return notice === "confirmation" ? (
+  return notice === "signin" ? (
+    <p role="alert" className="auth-error">
+      We couldn’t complete sign-in. Please try again with Google or use your
+      email and password.
+    </p>
+  ) : notice === "confirmation" ? (
     <p role="alert" className="auth-error">
       That confirmation link is invalid or expired. Try logging in, or request a
       new confirmation email from registration.

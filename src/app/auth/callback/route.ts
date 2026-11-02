@@ -4,7 +4,11 @@ import { getSiteUrl } from "@/lib/supabase/config";
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
-  if (code && code.length <= 2048) {
+  if (
+    !request.nextUrl.searchParams.has("error") &&
+    code &&
+    code.length <= 2048
+  ) {
     try {
       const supabase = await createClient();
       const { error } = await supabase.auth.exchangeCodeForSession(code);
@@ -16,7 +20,7 @@ export async function GET(request: NextRequest) {
   }
   return NextResponse.redirect(
     new URL(
-      "/login?notice=confirmation",
+      "/login?notice=signin",
       process.env.NEXT_PUBLIC_SITE_URL ? getSiteUrl() : request.url,
     ),
   );

@@ -52,3 +52,15 @@ Playwright checks cover anonymous route denial, invalid confirmation recovery, r
 Dependency audit: no new Supabase production advisory was identified; npm reported moderate minimatch advisories through the existing ESLint development dependency tree. No forced dependency downgrades were applied.
 
 Official reference: https://supabase.com/docs/guides/auth/server-side/creating-a-client
+
+## Google sign-in
+
+Both `/login` and `/signup` include a separate “Continue with Google” form. Its server action uses the official SSR client to generate a PKCE verifier cookie and hand the browser to the configured Supabase `/auth/v1/authorize` endpoint. Email fields are not required for this flow. No Google SDK or new dependency was added.
+
+The Google provider must be enabled in Supabase. Keep the OAuth Client Secret only in the Supabase dashboard. The Google Cloud Web client must allow the hosted Supabase `/auth/v1/callback` as its redirect URI; Supabase must allow the app's `/auth/callback`. These are two different callback endpoints. The app continues using the existing configured `NEXT_PUBLIC_SITE_URL` origin.
+
+The shared app callback exchanges the code for a Supabase session and opens `/account`. Cancellation and exchange failures go to a generic sign-in notice, with no provider message or arbitrary redirect reflected. The account screen can display Google's `full_name` or `name` when `display_name` is absent. Database profiles still use the existing signup trigger/default and can be extended with profile editing later.
+
+Verification: hosted Auth settings show Google enabled; a read-only authorization request returned a Google redirect with the expected Supabase callback. Playwright intercepted the external handoff from both auth pages and checked provider, app callback, S256 challenge, verifier cookie, keyboard activation, cancellation recovery, email fallback and mobile widths. A real account selection/consent remains a user check in Google. If Google reports `access_denied` while the OAuth app is in Testing, check the Google Auth Platform Audience/test-user settings for the chosen account.
+
+Reference: https://supabase.com/docs/guides/auth/social-sign-in/auth-google
