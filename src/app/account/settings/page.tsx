@@ -1,3 +1,5 @@
+import { AvatarForm } from "@/features/profile/avatar-form";
+import { Avatar } from "@/features/profile/avatar";
 import Link from "next/link";
 import { UnreadBadge } from "@/features/messages/unread-provider";
 import type { Metadata } from "next";
@@ -25,13 +27,14 @@ async function Account() {
     error,
   } = await supabase.auth.getUser();
   if (error || !user) redirect("/login?notice=session");
-  const [profileResult, areaResult] = await Promise.all([
+  const [profileResult, areaResult, avatarResult] = await Promise.all([
     supabase
       .from("profiles")
       .select("display_name,neighborhood_id")
       .eq("id", user.id)
       .maybeSingle(),
     supabase.from("neighborhoods").select("id,name").order("id"),
+    supabase.from("profiles").select("avatar_path").eq("id",user.id).maybeSingle(),
   ]);
   if (profileResult.error || !profileResult.data || areaResult.error)
     throw new Error("Your profile is temporarily unavailable.");
@@ -55,6 +58,7 @@ async function Account() {
           <dd>{user.email}</dd>
         </div>
       </dl>
+      <Avatar name={profile.display_name} path={avatarResult.data?.avatar_path}/><AvatarForm/>
       <ProfileForm
         displayName={profile.display_name}
         neighborhoodId={
@@ -64,7 +68,7 @@ async function Account() {
         }
         neighborhoods={neighborhoods}
       />
-      <p><Link href="/account">Back to My ZUNO</Link></p><p className="auth-hint">
+      <p><Link href={`/neighbors/${user.id}`}>View public profile</Link></p><p><Link href="/account">Back to My ZUNO</Link></p><p className="auth-hint">
         Manage the items you share with your neighborhood.
       </p>
       <nav className="account-nav" aria-label="Account navigation">

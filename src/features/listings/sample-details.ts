@@ -2,6 +2,7 @@ export type ListingDetails = {
   condition: string;
   description: string;
   seller: string;
+  sellerId?: string;
   joined: string;
   postedAt?: string;
 };

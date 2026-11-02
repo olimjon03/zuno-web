@@ -51,7 +51,8 @@ export async function updateProfile(
   } catch {
     return { error: "We couldn’t connect. Your changes have been kept." };
   }
+  revalidatePath("/neighbors/[id]", "page");
   revalidatePath("/account");
-    revalidatePath("/account/settings");
+  revalidatePath("/account/settings");
   return { message: "Profile updated." };
 }

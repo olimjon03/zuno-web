@@ -8,7 +8,7 @@ import type { ListingDetails } from "../sample-details";
 export const PHOTO_BUCKET = "zuno-listing-photos";
 export type LookupOption = { id: number; name: string };
 const columns =
-  "id,title,description,price,condition,seller_name,created_at,status,category:categories(name_en),neighborhood:neighborhoods(name),photos:listing_images(id,sort_order)";
+  "id,seller_id,title,description,price,condition,seller_name,created_at,status,category:categories(name_en),neighborhood:neighborhoods(name),photos:listing_images(id,sort_order)";
 type Row = {
   id: string;
   title: string;
@@ -16,6 +16,7 @@ type Row = {
   price: number;
   condition: keyof typeof conditionLabels;
   seller_name: string;
+  seller_id: string;
   created_at: string;
   status: string;
   category: { name_en: string } | null;
@@ -48,6 +49,7 @@ function mapRow(row: Row): { listing: Listing; details: ListingDetails } {
       condition: conditionLabels[row.condition] ?? "Used",
       description: row.description,
       seller: row.seller_name,
+      sellerId: row.seller_id,
       joined: "",
       postedAt: row.created_at,
     },
@@ -112,4 +114,10 @@ export async function getSavedListings() {
   return ((data as unknown as { listing: Row }[]) ?? []).map(
     (row) => mapRow(row.listing).listing,
   );
+}
+
+export async function getSellerListings(sellerId: string) {
+  const {data,error}=await createPublicClient().from("listings").select(columns).eq("seller_id",sellerId).eq("status","active").order("created_at",{ascending:false}).limit(60).returns<Row[]>();
+  if(error) throw new Error("This neighbor’s listings are temporarily unavailable.");
+  return (data??[]).map(row=>mapRow(row).listing);
 }
