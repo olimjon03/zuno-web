@@ -98,3 +98,18 @@ export async function getListingOptions() {
     ready: !images.error,
   };
 }
+
+export async function getSavedListings() {
+  const { createClient } = await import("@/lib/supabase/server");
+  const db = await createClient();
+  const { data, error } = await db
+    .from("favorites")
+    .select(`listing:listings!inner(${columns})`)
+    .in("listing.status", ["active", "reserved", "sold"])
+    .order("created_at", { ascending: false })
+    .limit(1000);
+  if (error) throw new Error("Saved items are temporarily unavailable.");
+  return ((data as unknown as { listing: Row }[]) ?? []).map(
+    (row) => mapRow(row.listing).listing,
+  );
+}
