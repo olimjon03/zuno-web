@@ -1,4 +1,5 @@
 "use client";
+import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
 
 import Image from "next/image";
@@ -35,11 +36,7 @@ export function ListingDetail({
       <header className="shell detail-header">
         <Link href="/" className="wordmark" aria-label="ZUNO home">
           <Brand/>
-        </Link>
-        <Link href="/" className="detail-back">
-          ← Back to marketplace
-        </Link>
-      </header>
+        </Link><BackHomeNav/></header>
       <main id="listing-detail" className="shell detail-page">
         <nav aria-label="Breadcrumb" className="detail-breadcrumb">
           <Link href="/">Marketplace</Link>

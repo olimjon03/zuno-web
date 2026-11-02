@@ -1,8 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
-  Suspense,
   createContext,
   useContext,
   useEffect,
@@ -10,22 +8,18 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { useHydrated } from "@/lib/use-hydrated";
 import { isUuid } from "@/features/listings/validation";
-import { loadFavorites, saveFavorite } from "./actions";
+import { saveFavorite } from "./actions";
 const FavoritesContext = createContext<{
   favorites: string[];
   ready: boolean;
   toggleFavorite: (id: string) => void;
 } | null>(null);
-function RouteObserver({ onChange }: { onChange: (path: string) => void }) {
-  const pathname = usePathname();
-  useEffect(() => onChange(pathname), [pathname, onChange]);
-  return null;
-}
 export function FavoritesProvider({ children }: { children: ReactNode }) {
-  const [pathname, setPathname] = useState("");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [ready, setReady] = useState(false);
   const [notice, setNotice] = useState("");
@@ -42,9 +36,13 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     }
     const db = createClient();
     let alive = true;
-    const {
-      data: { subscription },
-    } = db.auth.onAuthStateChange(() => {
+    let userId: string | null | undefined;
+    let loadedAt = 0;
+    const syncSession = (_event: AuthChangeEvent, session: Session | null) => {
+      const nextUserId = session?.user.id ?? null;
+      if (nextUserId === userId && (Date.now() - loadedAt < 60000 || pending.current.size > 0)) return;
+      userId = nextUserId;
+      loadedAt = Date.now();
       const version = ++generation.current;
       current.current = [];
       setFavorites(demos.current);
@@ -54,7 +52,11 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       loading.current = true;
       // Defer outside the Supabase auth callback to avoid auth lock contention.
       void Promise.resolve()
-        .then(() => loadFavorites())
+        .then(async () => {
+          if (!nextUserId) return {ids: [] as string[], error: undefined};
+          const {data,error} = await db.from("favorites").select("listing_id").eq("user_id",nextUserId).order("created_at",{ascending:false}).limit(1000);
+          return {ids:(data ?? []).map(row=>row.listing_id as string),error:error ? "Saved items are temporarily unavailable. Please try again." : undefined};
+        })
         .then((result) => {
           if (!alive || version !== generation.current) return;
           current.current = result.ids;
@@ -69,12 +71,20 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
           setReady(true);
           setNotice("We couldn’t load saved items. Refresh to try again.");
         });
-    });
+    };
+    const {data:{subscription}} = db.auth.onAuthStateChange(syncSession);
+    const reconcileSession = () => {
+      void db.auth.getSession().then(({data,error}) => {
+        if (alive && !error) syncSession("INITIAL_SESSION", data.session);
+      }).catch(() => {});
+    };
+    window.addEventListener("zuno:auth-route", reconcileSession);
     return () => {
       alive = false;
       subscription.unsubscribe();
+      window.removeEventListener("zuno:auth-route", reconcileSession);
     };
-  }, [pathname]);
+  }, []);
   async function toggleFavorite(id: string) {
     if (!isUuid(id)) {
       demos.current = demos.current.includes(id)
@@ -118,9 +128,6 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   }
   return (
     <FavoritesContext.Provider value={{ favorites, ready, toggleFavorite }}>
-      <Suspense fallback={null}>
-        <RouteObserver onChange={setPathname} />
-      </Suspense>
       {children}
       {notice && (
         <aside
@@ -142,7 +149,8 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   );
 }
 export function useFavorites() {
+  const hydrated = useHydrated();
   const context = useContext(FavoritesContext);
   if (!context) throw new Error("useFavorites requires FavoritesProvider");
-  return context;
+  return {...context, favorites: hydrated ? context.favorites : [], ready: hydrated && context.ready};
 }

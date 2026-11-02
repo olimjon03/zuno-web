@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, type ReactNode } from "react";
+import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Icon } from "./icon";
 export function DemoDialog({
   title,
@@ -31,14 +32,7 @@ export function DemoDialog({
       }}
     >
       <div className="dialog-content">
-        <button
-          className="dialog-close"
-          onClick={onClose}
-          aria-label="Close dialog"
-          autoFocus
-        >
-          <Icon name="close" />
-        </button>
+        <BackHomeNav onBack={onClose} onHome={onClose} autoFocus/>
         <h2 id="dialog-title">{title}</h2>
         {children}
         <button className="button button-primary" onClick={onClose}>

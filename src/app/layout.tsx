@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { AuthRouteSync } from "@/components/layout/auth-route-sync";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -30,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <FavoritesProvider>
-          <UnreadProvider>{children}<Suspense fallback={null}><MobileNav/></Suspense></UnreadProvider>
+          <UnreadProvider>{children}<Suspense fallback={null}><AuthRouteSync/><MobileNav/></Suspense></UnreadProvider>
         </FavoritesProvider>
       </body>
     </html>

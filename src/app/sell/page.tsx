@@ -1,3 +1,4 @@
+import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -24,11 +25,7 @@ async function Sell() {
       <header className="shell detail-header">
         <Link href="/" className="wordmark">
           <Brand/>
-        </Link>
-        <Link href="/" className="detail-back">
-          Back to marketplace
-        </Link>
-      </header>
+        </Link><BackHomeNav/></header>
       <main className="sell-page shell">
         <h1>Find it a new home</h1>
         <p className="auth-intro">Share a few details with your neighbors.</p>

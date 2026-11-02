@@ -1,3 +1,4 @@
+import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
 import Link from "next/link";
 export default function ListingNotFound() {
@@ -6,7 +7,7 @@ export default function ListingNotFound() {
       <Link href="/" className="wordmark">
         <Brand/>
       </Link>
-      <h1>Listing not found</h1>
+      <BackHomeNav/><h1>Listing not found</h1>
       <p>This listing may have moved, or the link may be incorrect.</p>
       <Link className="button button-primary" href="/">
         Browse local finds

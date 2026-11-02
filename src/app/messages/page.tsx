@@ -1,3 +1,5 @@
+import { SectionLoading } from "@/components/layout/section-loading";
+import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
 import { InboxLiveRefresh } from "@/features/messages/inbox-live-refresh";
 import { UnreadBadge } from "@/features/messages/unread-provider";
@@ -31,9 +33,7 @@ async function Inbox() {
       <header className="detail-header">
         <Link href="/" className="wordmark">
           <Brand/>
-        </Link>
-        <Link href="/account">Your account</Link>
-      </header>
+        </Link><BackHomeNav/></header>
       <h1>Messages</h1>
       <p>
         Your latest 100 conversations. Open a conversation to see new messages.
@@ -68,9 +68,7 @@ export default function Page() {
   return (
     <Suspense
       fallback={
-        <main className="shell detail-message" role="status">
-          Loading messages…
-        </main>
+        <SectionLoading message="Loading messages…"/>
       }
     >
       <Inbox />

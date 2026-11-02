@@ -1,3 +1,4 @@
+import { SectionLoading } from "@/components/layout/section-loading";
 import { AvatarForm } from "@/features/profile/avatar-form";
 import { Avatar } from "@/features/profile/avatar";
 import Link from "next/link";
@@ -71,9 +72,7 @@ export default function AccountSettingsPage() {
   return (
     <Suspense
       fallback={
-        <main className="shell detail-message" role="status">
-          Loading your account…
-        </main>
+        <SectionLoading message="Loading your account…"/>
       }
     >
       <Account />

@@ -1,3 +1,4 @@
+import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -15,11 +16,7 @@ export function AuthShell({
       <header className="shell detail-header">
         <Link href="/" className="wordmark" aria-label="ZUNO home">
           <Brand/>
-        </Link>
-        <Link href="/" className="detail-back">
-          Back to marketplace
-        </Link>
-      </header>
+        </Link><BackHomeNav/></header>
       <main className="auth-page">
         <section className="auth-panel" aria-labelledby="auth-title">
           <h1 id="auth-title">{title}</h1>

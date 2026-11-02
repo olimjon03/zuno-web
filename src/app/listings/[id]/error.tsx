@@ -1,8 +1,9 @@
 "use client";
+import { BackHomeNav } from "@/components/layout/back-home-nav";
 import Link from "next/link";
 export default function ListingError({ reset }: { reset: () => void }) {
   return (
-    <main className="shell detail-message">
+    <main className="shell detail-message"><BackHomeNav/>
       <h1>We couldn’t load this find</h1>
       <p>Please try again, or head back to the marketplace.</p>
       <button className="button button-primary" onClick={reset}>

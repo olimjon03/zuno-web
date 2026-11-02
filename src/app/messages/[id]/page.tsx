@@ -1,3 +1,5 @@
+import { SectionLoading } from "@/components/layout/section-loading";
+import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -34,9 +36,7 @@ async function Conversation({ id }: { id: string }) {
       <header className="detail-header">
         <Link href="/" className="wordmark">
           <Brand/>
-        </Link>
-        <Link href="/messages">All messages</Link>
-      </header>
+        </Link><BackHomeNav/></header>
       <h1>{c.listing_title}</h1>
       <p>Chat with <Link href={`/neighbors/${c.buyer_id === user.id ? c.seller_id : c.buyer_id}`}>{c.buyer_id === user.id ? c.seller_name : c.buyer_name} · View profile</Link></p>
       {c.listing_id && (
@@ -67,9 +67,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   return (
     <Suspense
       fallback={
-        <main className="shell detail-message" role="status">
-          Loading conversation…
-        </main>
+        <SectionLoading message="Loading conversation…"/>
       }
     >
       <ConversationRoute params={params} />
