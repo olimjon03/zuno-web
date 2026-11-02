@@ -11,3 +11,5 @@ Database reads use RLS; both RPCs are available only to authenticated users. The
 Verification: lint, production build, ten Node tests, and all prior SQL suites plus `supabase/tests/message-reads.sql` in disposable PostgreSQL/PGlite. SQL tests cover incoming/own messages, participant isolation, stranger and anonymous denial, forged direct writes, future cursors, stale acknowledgements and later messages. Fixtures roll back and must not run against the hosted marketplace.
 
 Local Playwright fixtures cover inbox/header badges, opening a chat clearing unread state and hidden/visible document behavior. Real two-account hosted behavior should be checked after applying the migration: send from the other account, wait up to ten seconds, open the receiving conversation and confirm the badge clears. Automated QA does not send real user messages.
+
+Realtime events now trigger immediate updates, while the ten-second interval remains reconciliation. See [realtime-messages.md](realtime-messages.md) for the required sixth migration.

@@ -13,3 +13,5 @@ Validation: `npm run lint`, `npm run build`, `node --test tests/*.test.mjs` (Nod
 Local Playwright Auth/REST fixtures cover login gating, opening chat, sending, receiving a polled seller reply, retaining/retrying a failed send, history pagination, inbox navigation, reload and widths 320/390/768/1440. No real user was contacted. After applying the hosted migration, test using two accounts in separate browser sessions: one owns an item, the other contacts the seller, then each sends a message. A third account should not be able to open the copied conversation URL.
 
 Unread account/inbox badges and private read-state tracking are now described in [unread-messages.md](unread-messages.md), with a separate fifth migration.
+
+Realtime delivery now supplements polling; see [realtime-messages.md](realtime-messages.md) for the sixth migration and connection behavior.

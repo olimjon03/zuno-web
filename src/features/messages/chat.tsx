@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { createRefreshQueue } from "./realtime";
+import { useUnread } from "./unread-provider";
 import { markMessagesRead } from "./unread-actions";
 import { postMessage, readMessages } from "./actions";
 import type { Message } from "./validation";
@@ -12,6 +14,7 @@ export function Chat({
   userId: string;
   initialMessages: Message[];
 }) {
+  const { realtime } = useUnread();
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
   const [error, setError] = useState("");
@@ -30,9 +33,10 @@ export function Chat({
   const newest = messages.at(-1)?.id;
   useEffect(() => {
     let active = true,
-      busy = false;
+      busy = false,
+      acknowledged = false;
     async function acknowledge() {
-      if (document.hidden || !newest || busy) return;
+      if (document.hidden || !newest || busy || acknowledged) return;
       busy = true;
       try {
         const result = await markMessagesRead(conversationId, newest);
@@ -42,6 +46,7 @@ export function Chat({
             "Read status could not be saved. It will retry shortly.",
           );
         else {
+          acknowledged = true;
           setReadError("");
           window.dispatchEvent(new Event("zuno:messages-read"));
         }
@@ -79,28 +84,54 @@ export function Chat({
   }
   useEffect(() => {
     alive.current = true;
-    let fetching = false;
-    async function poll() {
-      if (fetching || document.hidden) return;
-      fetching = true;
-      try {
-        const result = await readMessages(conversationId, ids.current.last);
-        if (!alive.current) return;
-        if (result.messages) merge(result.messages);
-        else if (result.error) setError(result.error);
-      } finally {
-        fetching = false;
-      }
-    }
-    const timer = setInterval(() => {
-      void poll().catch(() => {
+    const refresh = createRefreshQueue(
+      async () => {
+        if (document.hidden) return;
+        // Drain bounded batches when reconnecting after a backlog.
+        let after = ids.current.last;
+        for (let batch = 0; batch < 10; batch++) {
+          const result = await readMessages(conversationId, after);
+          if (!alive.current) return;
+          if (!result.messages) {
+            setError(result.error ?? "Messages could not be loaded.");
+            return;
+          }
+          merge(result.messages);
+          if (
+            result.messages.length < 50 ||
+            result.messages.at(-1)?.id === after
+          )
+            return;
+          after = result.messages.at(-1)?.id;
+        }
+      },
+      () => {
         if (alive.current)
           setError("We couldn’t refresh messages. Please try again.");
-      });
-    }, 5000);
+      },
+    );
+    const changed = (event: Event) => {
+      if (
+        event instanceof CustomEvent &&
+        event.detail?.conversationId !== conversationId
+      )
+        return;
+      refresh.request();
+    };
+    const timer = setInterval(() => refresh.request(), 5000);
+    window.addEventListener("zuno:message-change", changed);
+    window.addEventListener("zuno:messages-reconnected", changed);
+    window.addEventListener("focus", changed);
+    document.addEventListener("visibilitychange", changed);
+    refresh.request();
     return () => {
       alive.current = false;
+      refresh.dispose();
       clearInterval(timer);
+      window.removeEventListener("zuno:message-change", changed);
+      window.removeEventListener("zuno:messages-reconnected", changed);
+      window.removeEventListener("focus", changed);
+      document.removeEventListener("visibilitychange", changed);
     };
   }, [conversationId]);
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -160,7 +191,9 @@ export function Chat({
   return (
     <section aria-label="Conversation messages" className="chat-panel">
       <p className="auth-hint">
-        Messages refresh every 5 seconds while this tab is visible.
+        {realtime
+          ? "Live messages connected."
+          : "Connecting to live messages. Updates are also checked automatically."}
       </p>
       {more && (
         <button
