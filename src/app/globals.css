@@ -2144,3 +2144,7 @@ h2 {
 .owned-edit-form .compact-photo-picker input.sr-only{width:1px;height:1px;min-height:0;max-width:1px;padding:0;border:0}
 
 .owned-price{overflow-wrap:anywhere}
+
+/* Database-backed marketplace search and pagination. */
+.market-price-filters select{width:100%;padding:11px 12px;min-height:44px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;color:#1f2328;font:inherit;font-size:14px}.feed-pagination{display:flex;justify-content:center;margin:32px 0}.feed-pagination .button{min-width:180px;min-height:46px}.feed-pagination .button:disabled{opacity:.6;cursor:wait}.feed-end{text-align:center;color:#667085;font-size:14px;margin:28px 0}.feed-error{padding:18px;border:1px solid #f0cece;border-radius:14px;background:#fff9f9;margin:20px 0}.feed-error p{margin-bottom:12px;line-height:1.5}.marketplace[aria-busy=true] .listing-grid{opacity:.7}
+.market-price-filters>.feed-sort{min-width:170px}
