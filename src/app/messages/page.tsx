@@ -1,3 +1,4 @@
+import { InboxLiveRefresh } from "@/features/messages/inbox-live-refresh";
 import { UnreadBadge } from "@/features/messages/unread-provider";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -25,6 +26,7 @@ async function Inbox() {
   if (error) throw new Error("Messages are temporarily unavailable.");
   return (
     <main className="shell manage-page">
+      <InboxLiveRefresh />
       <header className="detail-header">
         <Link href="/" className="wordmark">
           ZUNO

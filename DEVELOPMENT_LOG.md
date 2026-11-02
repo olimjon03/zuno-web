@@ -87,3 +87,9 @@ Added a trusted Vercel site-origin fallback, safe configuration-presence diagnos
 Branch: `codex/unread-messages`. Added private monotonic message-read cursors and participant-checked RPCs. Shared account/inbox badges count incoming messages, poll only while visible and refresh after reads. Visible conversations acknowledge rendered messages, with retry feedback. No dependencies or Next configuration changes. The new SQL migration is prepared but not applied to the hosted project.
 
 Validation: lint, build, ten existing Node tests, disposable PostgreSQL privacy/counting/cursor tests and local browser fixtures. See `docs/unread-messages.md` for setup, polling behavior and hosted follow-up.
+
+## 2026-11-02 — Realtime chat and unread badges
+
+Branch: `codex/realtime-messages`. Added an authenticated Postgres Changes channel for messages and the user's read markers, immediate chat/count/inbox refreshes, reconnect catch-up and coalesced refresh queues. Existing polling remains reconciliation/fallback. Confirmed read cursors stop repeating writes. Added an idempotent publication migration without changing RLS or dependencies/configuration.
+
+Validation: lint/build, 13 Node tests, publication and privacy SQL suites in disposable PostgreSQL/PGlite, and local WebSocket/browser fixtures. Hosted publication setup and real two-account delivery remain pending owner execution. See `docs/realtime-messages.md`.

@@ -10,12 +10,14 @@ import {
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { createRefreshQueue, subscribeToMessageChanges } from "./realtime";
 import { getUnreadCounts } from "./unread-actions";
 const Context = createContext<{
   counts: Record<string, number>;
   total: number;
   available: boolean;
-}>({ counts: {}, total: 0, available: false });
+  realtime: boolean;
+}>({ counts: {}, total: 0, available: false, realtime: false });
 function RouteObserver({ onChange }: { onChange: (path: string) => void }) {
   const path = usePathname();
   useEffect(() => onChange(path), [path, onChange]);
@@ -25,50 +27,86 @@ export function UnreadProvider({ children }: { children: ReactNode }) {
   const [path, setPath] = useState("");
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [available, setAvailable] = useState(false);
+  const [realtime, setRealtime] = useState(false);
   useEffect(() => {
     if (!isSupabaseConfigured()) return;
     let alive = true,
-      busy = false,
       generation = 0;
-    async function refresh() {
-      if (!alive || busy || document.hidden) return;
-      busy = true;
-      const version = generation;
-      try {
+    let disconnect: (() => void) | undefined;
+    const refresh = createRefreshQueue(
+      async () => {
+        if (!alive || document.hidden) return;
+        const version = generation;
         const result = await getUnreadCounts();
         if (!alive || version !== generation) return;
         setCounts(result.counts ?? {});
         setAvailable(Boolean(result.counts));
-      } catch {
-        if (alive && version === generation) {
+      },
+      () => {
+        if (alive) {
           setCounts({});
           setAvailable(false);
         }
-      } finally {
-        busy = false;
-      }
-    }
+      },
+    );
     const db = createClient();
     const {
       data: { subscription },
-    } = db.auth.onAuthStateChange(() => {
-      generation++;
+    } = db.auth.onAuthStateChange((_event, session) => {
+      const version = ++generation;
+      disconnect?.();
+      disconnect = undefined;
       setCounts({});
       setAvailable(false);
-      void Promise.resolve().then(refresh);
+      setRealtime(false);
+      // Supabase auth callbacks must not await other auth operations.
+      void Promise.resolve()
+        .then(async () => {
+          if (!alive || version !== generation) return;
+          if (session?.user) {
+            await db.realtime.setAuth(session.access_token);
+            if (!alive || version !== generation) return;
+            disconnect = subscribeToMessageChanges(db, session.user.id, {
+              message(conversationId) {
+                refresh.request();
+                window.dispatchEvent(
+                  new CustomEvent("zuno:message-change", {
+                    detail: { conversationId },
+                  }),
+                );
+              },
+              reads() {
+                refresh.request();
+              },
+              status(status) {
+                setRealtime(status === "SUBSCRIBED");
+                if (status === "SUBSCRIBED") {
+                  refresh.request();
+                  window.dispatchEvent(new Event("zuno:messages-reconnected"));
+                }
+              },
+            });
+          }
+          refresh.request();
+        })
+        .catch(() => {
+          if (alive && version === generation) {
+            setRealtime(false);
+            refresh.request();
+          }
+        });
     });
-    const timer = setInterval(() => {
-      void refresh();
-    }, 10000);
-    const changed = () => {
-      void refresh();
-    };
+    // Periodic reconciliation also covers missed events and disabled Realtime.
+    const timer = setInterval(() => refresh.request(), 10000);
+    const changed = () => refresh.request();
     document.addEventListener("visibilitychange", changed);
     window.addEventListener("focus", changed);
     window.addEventListener("zuno:messages-read", changed);
-    void refresh();
+    refresh.request();
     return () => {
       alive = false;
+      disconnect?.();
+      refresh.dispose();
       clearInterval(timer);
       subscription.unsubscribe();
       document.removeEventListener("visibilitychange", changed);
@@ -82,6 +120,7 @@ export function UnreadProvider({ children }: { children: ReactNode }) {
         counts,
         total: Object.values(counts).reduce((sum, n) => sum + n, 0),
         available,
+        realtime,
       }}
     >
       <Suspense fallback={null}>
