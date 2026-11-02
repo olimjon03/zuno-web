@@ -1,3 +1,4 @@
+import { resolveLocation } from "@/features/locations/catalog";
 import { formatLocationLabel } from "@/features/locations/catalog";
 import Image from "next/image";
 import Link from "next/link";
@@ -45,7 +46,7 @@ export function ListingCard({
           {listing.status === "sold" ? "Sold" : "Reserved"}
         </p>
       )}
-      <p className="price">{formatPrice(listing.price)}</p>
+      <p className="price">{formatPrice(listing.price, listing.countryCode ?? resolveLocation(listing.neighborhood, listing.regionCode).countryCode)}</p>
       <p className="listing-location">
         <Icon name="pin" />
         {formatLocationLabel(listing)}

@@ -1,5 +1,5 @@
-export const MAX_PHOTOS = 3;
-export const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
+export const MAX_PHOTOS = 10;
+export const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 export const MAX_TOTAL_PHOTO_BYTES = 3.5 * 1024 * 1024;
 export const MAX_BODY_BYTES = 4 * 1024 * 1024;
 export const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -45,7 +45,7 @@ export function parseListingInput(data: FormData): ListingInput {
     !Number.isSafeInteger(Number(price)) ||
     Number(price) > 1000000000000
   )
-    throw new Error("Enter a whole KRW price between 0 and 1,000,000,000,000.");
+    throw new Error("Enter a whole price between 0 and 1,000,000,000,000.");
   if (
     ![category, neighborhood].every(
       (value) =>
@@ -67,9 +67,10 @@ export function parseListingInput(data: FormData): ListingInput {
 }
 export function validatePhotos(
   files: { size: number; type: string }[],
+  uploaded = false,
 ): string | null {
   if (files.length < 1 || files.length > MAX_PHOTOS)
-    return "Choose between 1 and 3 photos.";
+    return "Choose between 1 and 10 photos.";
   if (
     files.some(
       (file) =>
@@ -78,8 +79,8 @@ export function validatePhotos(
         file.size > MAX_PHOTO_BYTES,
     )
   )
-    return "Use JPG, PNG or WebP photos up to 2 MB each.";
-  if (files.reduce((sum, file) => sum + file.size, 0) > MAX_TOTAL_PHOTO_BYTES)
+    return "Use JPG, PNG or WebP photos up to 10 MB each.";
+  if (uploaded && files.reduce((sum, file) => sum + file.size, 0) > MAX_TOTAL_PHOTO_BYTES)
     return "Keep the combined photo size below 3.5 MB.";
   return null;
 }

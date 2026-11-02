@@ -53,13 +53,15 @@ test("listing input rejects malformed IDs, fractional/negative prices and invali
 });
 test("photos enforce count, types, per-file and combined sizes", () => {
   assert.equal(validatePhotos([{ type: "image/jpeg", size: 500 }]), null);
+  assert.equal(validatePhotos(Array(10).fill({type:"image/jpeg",size:MAX_PHOTO_BYTES})),null);
+  assert.ok(validatePhotos(Array(10).fill({type:"image/jpeg",size:MAX_PHOTO_BYTES}),true));
+  assert.equal(validatePhotos(Array(10).fill({type:"image/webp",size:320*1024}),true),null);
   for (const files of [
     [],
-    Array(4).fill({ type: "image/png", size: 2 }),
+    Array(11).fill({ type: "image/png", size: 2 }),
     [{ type: "image/svg+xml", size: 200 }],
     [{ type: "image/png", size: 0 }],
     [{ type: "image/jpeg", size: MAX_PHOTO_BYTES + 1 }],
-    Array(3).fill({ type: "image/png", size: MAX_PHOTO_BYTES }),
   ])
     assert.ok(validatePhotos(files));
 });

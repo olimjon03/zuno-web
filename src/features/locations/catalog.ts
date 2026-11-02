@@ -85,3 +85,9 @@ export function formatLocationLabel(listing: {neighborhood:string;countryCode?:C
   const prefix=region && region.countryCode===location.countryCode ? region.regionName : countries.find(country=>country.code===location.countryCode)?.name;
   return prefix && prefix !== listing.neighborhood ? `${prefix} · ${listing.neighborhood}` : listing.neighborhood;
 }
+
+export type MarketplaceItem = {title:string;category:string;neighborhood:string;countryCode?:"UZ"|"KR";regionCode?:string;price:number;status?:string};
+export function filterMarketplace<T extends MarketplaceItem>(items:T[],filter:{category:string;location:LocationSelection;query:string;minPrice:string;maxPrice:string;availableOnly:boolean}) {
+ const {category,location,query,minPrice,maxPrice,availableOnly}=filter;
+ return items.filter(item=>(category==="All items"||item.category===category)&&matchesLocation(item,location)&&`${item.title} ${item.neighborhood} ${item.category}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase())&&(!availableOnly||!item.status||item.status==="active")&&(!location.country||((!minPrice||item.price>=Number(minPrice))&&(!maxPrice||item.price<=Number(maxPrice)))));
+}

@@ -30,7 +30,7 @@ async function OwnedListings() {
     db
       .from("listings")
       .select(
-        "id,title,description,price,condition,category_id,neighborhood_id,status",
+        "id,title,description,price,condition,category_id,neighborhood_id,status,photos:listing_images(id,sort_order)",
       )
       .eq("seller_id", user.id)
       .neq("status", "removed")

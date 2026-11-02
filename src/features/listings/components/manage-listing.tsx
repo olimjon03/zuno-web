@@ -1,5 +1,9 @@
 "use client";
 import Link from "next/link";
+import type { CountryCode } from "@/features/locations/catalog";
+import { priceLabel } from "../currency";
+import { EditListingPhotos, type ListingPhoto } from "./edit-listing-photos";
+import { ListingLocationFields, optionCountry } from "./listing-location-fields";
 import { startTransition, useActionState, useState } from "react";
 import { manageListing } from "../manage-actions";
 import { conditions, conditionLabels } from "../validation";
@@ -14,6 +18,7 @@ export type OwnedListing = {
   category_id: number;
   neighborhood_id: number;
   status: string;
+  photos: ListingPhoto[];
 };
 export function ManageListing({
   item,
@@ -24,9 +29,12 @@ export function ManageListing({
   categories: LookupOption[];
   neighborhoods: LookupOption[];
 }) {
+  const originalCountry=optionCountry(neighborhoods.find(n=>n.id===item.neighborhood_id));
+  const [country,setCountry]=useState<CountryCode|"">(originalCountry ?? "");
   const [draft, setDraft] = useState({ ...item, price: String(item.price) });
   const update = (field: keyof OwnedListing, value: string | number) =>
     setDraft((current) => ({ ...current, [field]: value }));
+  const [photoMessage,setPhotoMessage]=useState("");
   const [result, action, pending] = useActionState(manageListing, {});
   return (
     <article className="owned-item">
@@ -34,7 +42,7 @@ export function ManageListing({
         <Link href={`/listings/${item.id}`}>{item.title}</Link>
       </h2>
       <p>
-        {formatPrice(Number(item.price))} ·{" "}
+        {formatPrice(Number(item.price), originalCountry)} ·{" "}
         <strong>
           {item.status === "sold"
             ? "Sold"
@@ -75,7 +83,7 @@ export function ManageListing({
               />
             </div>
             <div className="sell-field">
-              <label htmlFor={`${item.id}-price`}>Price (KRW)</label>
+              <label htmlFor={`${item.id}-price`}>Price ({priceLabel(country)})</label>
               <input
                 id={`${item.id}-price`}
                 name="price"
@@ -120,23 +128,7 @@ export function ManageListing({
                 ))}
               </select>
             </div>
-            <div className="sell-field">
-              <label htmlFor={`${item.id}-area`}>Neighborhood</label>
-              <select
-                id={`${item.id}-area`}
-                name="neighborhoodId"
-                value={draft.neighborhood_id}
-                onChange={(event) =>
-                  update("neighborhood_id", Number(event.target.value))
-                }
-              >
-                {neighborhoods.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <ListingLocationFields id={item.id} country={country} neighborhoodId={draft.neighborhood_id ? String(draft.neighborhood_id) : ""} options={neighborhoods} onCountry={setCountry} onNeighborhood={value=>update("neighborhood_id",value ? Number(value) : 0)}/>
             <div className="sell-field">
               <label htmlFor={`${item.id}-description`}>Description</label>
               <textarea
@@ -149,9 +141,7 @@ export function ManageListing({
                 onChange={(event) => update("description", event.target.value)}
               />
             </div>
-            <p className="auth-hint">
-              Your existing photos stay with this item.
-            </p>
+            <p className="auth-hint">Changing country changes the price currency. Enter the appropriate amount; prices are not converted.</p>
             <button
               className="button button-primary"
               name="intent"
@@ -161,6 +151,7 @@ export function ManageListing({
             </button>
           </details>
           <div className="manage-actions">
+            {["active","reserved","sold"].filter(status=>status!==item.status && status!==(item.status==="sold" ? "active" : "sold")).map(status=><button key={status} className="button button-outline" name="intent" value={status} formNoValidate>Mark {status==="active" ? "available" : status}</button>)}
             <button
               className="button button-outline"
               name="intent"
@@ -195,6 +186,8 @@ export function ManageListing({
         )}
         {result.message && <p role="status">{result.message}</p>}
       </form>
+      <EditListingPhotos key={item.photos.map(p=>p.id+":"+p.sort_order).join(",")} listingId={item.id} initial={item.photos} onSaved={()=>setPhotoMessage("Photos saved.")}/>
+      {photoMessage && <p role="status">{photoMessage}</p>}
     </article>
   );
 }

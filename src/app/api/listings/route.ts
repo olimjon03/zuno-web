@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
   }
   const entries = form.getAll("photos");
   const files = entries.filter((entry): entry is File => entry instanceof File);
-  const photoError = validatePhotos(files);
+  const photoError = validatePhotos(files, true);
   if (photoError || files.length !== entries.length)
     return reply(photoError ?? "Choose valid photos.", 400);
   const { data: existing, error: lookupError } = await supabase
@@ -85,9 +85,8 @@ export async function POST(request: NextRequest) {
     );
   let processed: Buffer[];
   try {
-    processed = await Promise.all(
-      files.map((file) => processPhoto(file, MAX_PHOTO_BYTES)),
-    );
+    processed = [];
+    for (const file of files) processed.push(await processPhoto(file, MAX_PHOTO_BYTES));
   } catch {
     return reply(
       "One of the photos could not be read. Choose still JPG, PNG or WebP images.",

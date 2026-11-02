@@ -1,22 +1,15 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useLocation } from "@/features/locations/location-provider";
+import type { CountryCode } from "@/features/locations/catalog";
+import { priceLabel } from "../currency";
+import { preparePhotos } from "../prepare-photos";
+import { PhotoPicker, type PhotoChoice } from "./photo-picker";
+import { ListingLocationFields } from "./listing-location-fields";
+import { useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { conditionLabels, conditions, isUuid, validatePhotos } from "../validation";
 import type { LookupOption } from "../server/data";
-function PhotoPreview({ file }: { file: File }) {
-  const preview = useRef<HTMLImageElement>(null);
-  useEffect(() => {
-    const url = URL.createObjectURL(file);
-    if (preview.current) preview.current.src = url;
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
-  return (
-    // Object URLs exist only in the browser and must be recreated after effect cleanup.
-    // eslint-disable-next-line @next/next/no-img-element
-    <img ref={preview} alt={`Preview of ${file.name}`} width={180} height={140} />
-  );
-}
 export function CreateListingForm({
   categories,
   neighborhoods,
@@ -27,7 +20,10 @@ export function CreateListingForm({
   ready: boolean;
 }) {
   const router = useRouter();
-  const [photos, setPhotos] = useState<File[]>([]);
+  const [photos, setPhotos] = useState<PhotoChoice[]>([]);
+  const {location}=useLocation();
+  const [country,setCountry]=useState<CountryCode|"">(location.country || "KR");
+  const [neighborhoodId,setNeighborhoodId]=useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [needsLogin, setNeedsLogin] = useState(false);
@@ -36,7 +32,7 @@ export function CreateListingForm({
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (submitting.current) return;
-    const issue = validatePhotos(photos);
+    const issue = validatePhotos(photos.map(photo=>photo.file!));
     if (issue) {
       setError(issue);
       return;
@@ -44,12 +40,13 @@ export function CreateListingForm({
     const data = new FormData(event.currentTarget);
     requestId.current ??= crypto.randomUUID();
     data.set("id", requestId.current);
-    for (const photo of photos) data.append("photos", photo);
+
     submitting.current = true;
     setPending(true);
     setError("");
     setNeedsLogin(false);
     try {
+      for (const photo of await preparePhotos(photos.map(photo=>photo.file!))) data.append("photos",photo);
       const response = await fetch("/api/listings", {
         method: "POST",
         body: data,
@@ -109,7 +106,7 @@ export function CreateListingForm({
         </div>
         <div className="sell-fields">
           <div className="sell-field">
-            <label htmlFor="listing-price">Price (KRW)</label>
+            <label htmlFor="listing-price">Price ({priceLabel(country)})</label>
             <input
               id="listing-price"
               name="price"
@@ -121,7 +118,7 @@ export function CreateListingForm({
               step={1}
               placeholder="0"
             />
-            <p className="auth-hint">Use 0 if you’re giving it away.</p>
+            <p className="auth-hint">Use 0 if you’re giving it away. Currency follows the selected country; amounts are not converted.</p>
           </div>
           <div className="sell-field">
             <label htmlFor="listing-condition">Condition</label>
@@ -161,25 +158,8 @@ export function CreateListingForm({
               ))}
             </select>
           </div>
-          <div className="sell-field">
-            <label htmlFor="listing-neighborhood">Neighborhood</label>
-            <select
-              id="listing-neighborhood"
-              name="neighborhoodId"
-              required
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Choose neighborhood
-              </option>
-              {neighborhoods.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
+        <ListingLocationFields id="create" country={country} neighborhoodId={neighborhoodId} options={neighborhoods} onCountry={setCountry} onNeighborhood={setNeighborhoodId}/>
         <div className="sell-field">
           <label htmlFor="listing-description">Description</label>
           <textarea
@@ -195,49 +175,7 @@ export function CreateListingForm({
             Share your neighborhood, not your home address or phone number.
           </p>
         </div>
-        <div className="sell-field">
-          <label htmlFor="listing-photos">Photos</label>
-          <p id="photo-help" className="auth-hint">
-            Choose 1–3 JPG, PNG or WebP photos. Up to 2 MB each and 3.5 MB
-            combined. The first photo is the cover.
-          </p>
-          <input
-            id="listing-photos"
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            multiple
-            aria-describedby="photo-help"
-            onChange={(event) => {
-              const selected = Array.from(event.target.files ?? []);
-              const issue = validatePhotos(selected);
-              if (issue) setError(issue);
-              else {
-                setPhotos(selected);
-                setError("");
-              }
-              event.target.value = "";
-            }}
-          />
-          <div className="upload-previews">
-            {photos.map((file, index) => (
-              <div key={`${file.name}-${file.lastModified}-${index}`}>
-                <PhotoPreview file={file} />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPhotos((current) =>
-                      current.filter((_, i) => i !== index),
-                    );
-                    requestId.current = null;
-                  }}
-                  aria-label={`Remove photo ${index + 1}`}
-                >
-                  Remove photo {index + 1}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
+        <PhotoPicker id="listing-photos" photos={photos} onChange={value=>{setPhotos(value);requestId.current=null;}} onError={setError} disabled={pending}/>
       </fieldset>
       {error && (
         <p role="alert" className="auth-error">

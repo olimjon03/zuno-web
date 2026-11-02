@@ -1,4 +1,5 @@
 "use client";
+import { resolveLocation } from "@/features/locations/catalog";
 import { formatLocationLabel } from "@/features/locations/catalog";
 import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
@@ -106,7 +107,7 @@ export function ListingDetail({
               {formatLocationLabel(listing)}
             </p>
             <h1 id="listing-title">{listing.title}</h1>
-            <p className="detail-price">{formatPrice(listing.price)}</p>
+            <p className="detail-price">{formatPrice(listing.price, listing.countryCode ?? resolveLocation(listing.neighborhood, listing.regionCode).countryCode)}</p>
             <dl className="detail-facts">
               <div>
                 <dt>Condition</dt>

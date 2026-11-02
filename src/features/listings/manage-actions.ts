@@ -13,7 +13,7 @@ export async function manageListing(
   if (typeof id !== "string" || !isUuid(id))
     return { error: "Invalid listing. Reload and try again." };
   const intent = form.get("intent");
-  if (!["edit", "sold", "active", "remove"].includes(String(intent)))
+  if (!["edit", "sold", "active", "reserved", "remove"].includes(String(intent)))
     return { error: "Choose a valid action." };
   if (intent === "remove" && form.get("confirm") !== "yes")
     return { error: "Confirm removal first." };
