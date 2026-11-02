@@ -1,8 +1,9 @@
 "use client";
+import { BackHomeNav } from "@/components/layout/back-home-nav";
 import Link from "next/link";
 export default function ListingsError({ reset }: { reset: () => void }) {
   return (
-    <main className="shell detail-message">
+    <main className="shell detail-message"><BackHomeNav/>
       <h1>Saved items are temporarily unavailable</h1>
       <p>Please try again in a moment.</p>
       <button className="button button-primary" onClick={reset}>

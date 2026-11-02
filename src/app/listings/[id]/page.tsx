@@ -1,3 +1,4 @@
+import { SectionLoading } from "@/components/layout/section-loading";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { connection } from "next/server";
@@ -47,9 +48,7 @@ export default async function ListingPage({
   return (
     <Suspense
       fallback={
-        <main className="shell detail-message" role="status">
-          Loading this local find…
-        </main>
+        <SectionLoading message="Loading this local find…"/>
       }
     >
       <LiveListing id={id} />

@@ -1,3 +1,5 @@
+import { SectionLoading } from "@/components/layout/section-loading";
+import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -40,9 +42,7 @@ async function OwnedListings() {
       <header className="detail-header">
         <Link className="wordmark" href="/">
           <Brand/>
-        </Link>
-        <Link href="/account">Your account</Link>
-      </header>
+        </Link><BackHomeNav/></header>
       <h1>Your listings</h1>
       <p>
         Edit your items, mark them sold or remove them from the marketplace.
@@ -71,9 +71,7 @@ export default function Page() {
   return (
     <Suspense
       fallback={
-        <main className="shell detail-message" role="status">
-          Loading your listings…
-        </main>
+        <SectionLoading message="Loading your listings…"/>
       }
     >
       <OwnedListings />

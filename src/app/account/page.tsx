@@ -1,3 +1,5 @@
+import { BackHomeNav } from "@/components/layout/back-home-nav";
+import { SectionLoading } from "@/components/layout/section-loading";
 import { Avatar } from "@/features/profile/avatar";
 import { Brand } from "@/components/ui/brand";
 import Link from "next/link";
@@ -32,7 +34,7 @@ async function Account() {
   const profile = profileResult.data;
   const area = areaResult.data?.find(item => Number(item.id) === Number(profile.neighborhood_id))?.name ?? "Choose your neighborhood";
   return <div className="account-dashboard">
-    <header className="dashboard-header"><Link href="/" className="wordmark"><Brand/></Link><nav aria-label="Marketplace"><Link href="/account/saved">Saved</Link><Link href="/messages">Messages <UnreadBadge/></Link><Link className="button button-primary" href="/sell">Sell</Link></nav><Link href="/account/settings" aria-label="Profile settings"><Icon name="settings"/></Link></header>
+    <header className="dashboard-header"><Link href="/" className="wordmark"><Brand/></Link><nav aria-label="Marketplace"><Link href="/account/saved">Saved</Link><Link href="/messages">Messages <UnreadBadge/></Link><Link className="button button-primary" href="/sell">Sell</Link></nav><Link href="/account/settings" aria-label="Profile settings"><Icon name="settings"/></Link><BackHomeNav/></header>
     <div className="dashboard-layout"><aside className="dashboard-sidebar"><nav aria-label="Account"><Link href="/account" aria-current="page"><Icon name="user"/>My ZUNO</Link>{links.map(link => <Link key={link.href} href={link.href}><Icon name={link.icon}/>{link.name}</Link>)}<Link href="/account/settings"><Icon name="settings"/>Settings</Link><Link href="/help"><Icon name="help"/>Help center</Link></nav></aside>
     <main className="dashboard-content"><h1>My ZUNO</h1><p className="dashboard-subtitle">Your neighborhood, your little corner.</p>
       <section className="account-card profile-summary" aria-label="Your profile"><Avatar name={profile.display_name} path={avatarResult.data?.avatar_path}/><div><h2><Link href={`/neighbors/${user.id}`}>{profile.display_name}</Link></h2><p><Icon name="pin"/>{area}</p></div><Link className="button button-outline" href="/account/settings">Edit profile</Link></section>
@@ -44,4 +46,4 @@ async function Account() {
     </main></div>
   </div>;
 }
-export default function AccountPage() { return <Suspense fallback={<main className="shell detail-message" role="status">Loading your account…</main>}><Account/></Suspense>; }
+export default function AccountPage() { return <Suspense fallback={<SectionLoading message="Loading your account…"/>}><Account/></Suspense>; }

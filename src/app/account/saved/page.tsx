@@ -1,3 +1,5 @@
+import { SectionLoading } from "@/components/layout/section-loading";
+import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -25,9 +27,7 @@ async function Saved() {
       <header className="detail-header">
         <Link href="/" className="wordmark">
           <Brand/>
-        </Link>
-        <Link href="/account">Your account</Link>
-      </header>
+        </Link><BackHomeNav/></header>
       <h1>Saved items</h1>
       <p>Your saved finds, ready when you are. Removed listings are hidden.</p>
       <SavedItems listings={listings} />
@@ -38,9 +38,7 @@ export default function Page() {
   return (
     <Suspense
       fallback={
-        <main className="shell detail-message" role="status">
-          Loading saved items…
-        </main>
+        <SectionLoading message="Loading saved items…"/>
       }
     >
       <Saved />
