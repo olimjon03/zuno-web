@@ -17,6 +17,7 @@ export function Chat({
   const { realtime } = useUnread();
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
+  const [refreshError, setRefreshError] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [more, setMore] = useState(initialMessages.length === 50);
@@ -93,9 +94,10 @@ export function Chat({
           const result = await readMessages(conversationId, after);
           if (!alive.current) return;
           if (!result.messages) {
-            setError(result.error ?? "Messages could not be loaded.");
+            setRefreshError(result.error ?? "Messages could not be loaded.");
             return;
           }
+          setRefreshError("");
           merge(result.messages);
           if (
             result.messages.length < 50 ||
@@ -107,7 +109,7 @@ export function Chat({
       },
       () => {
         if (alive.current)
-          setError("We couldn’t refresh messages. Please try again.");
+          setRefreshError("We couldn’t refresh messages. Please try again.");
       },
     );
     const changed = (event: Event) => {
@@ -204,6 +206,7 @@ export function Chat({
           {loadingOlder ? "Loading…" : "Load older messages"}
         </button>
       )}
+      {refreshError && <p role="status" className="auth-hint">{refreshError} Updates will retry automatically.</p>}
       {readError && (
         <p role="status" className="auth-hint">
           {readError}

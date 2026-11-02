@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import { manageListing } from "../manage-actions";
 import { conditions, conditionLabels } from "../validation";
 import { formatPrice } from "../sample-listings";
@@ -43,7 +43,20 @@ export function ManageListing({
               : "Available"}
         </strong>
       </p>
-      <form action={action} className="sell-form">
+      <form method="post" className="sell-form" aria-busy={pending} onSubmit={event => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const submitter = (event.nativeEvent as SubmitEvent).submitter;
+        data.set("intent", submitter instanceof HTMLButtonElement ? submitter.value : "edit");
+        // Keep controlled select values after a failed Server Action.
+        data.set("title", draft.title);
+        data.set("price", draft.price);
+        data.set("condition", draft.condition);
+        data.set("categoryId", String(draft.category_id));
+        data.set("neighborhoodId", String(draft.neighborhood_id));
+        data.set("description", draft.description);
+        startTransition(() => action(data));
+      }}>
         <input type="hidden" name="id" value={item.id} />
         <fieldset disabled={pending}>
           <legend className="sr-only">Manage {item.title}</legend>

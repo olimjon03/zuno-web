@@ -19,8 +19,9 @@ export function ExploreMenu() {
     <h2 id="explore-title">Explore <span>ZUNO</span></h2>
     <p>More ways to connect with your neighborhood.</p>
     <label className="feature-search"><Icon name="search"/><span className="sr-only">Search ZUNO features</span><input type="search" placeholder="Search ZUNO features" value={query} onChange={event => setQuery(event.target.value)}/></label>
-    <div className="feature-groups">{filtered.map(group => <section className="account-card feature-group" key={group.title}><header><h3>{group.title}</h3><span className="coming-soon">Coming soon</span></header>{group.items.map(([name, description]) => <button className="feature-row" key={name} onClick={() => setSelected(name)}><Icon name={featureIcons[name] ?? group.icon}/><span><strong>{name}</strong><small>{description}</small></span><Icon name="chevron"/></button>)}</section>)}</div>
-    {!filtered.length && <p role="status">No features found. Try another search.</p>}
+    <div className="feature-groups">{filtered.map(group => <section className="account-card feature-group" key={group.title}><header><h3>{group.title}</h3><span className="coming-soon">Coming soon</span></header>{group.items.map(([name, description]) => <button className="feature-row" key={name} aria-label={`${name} — coming soon`} onClick={() => setSelected(name)}><Icon name={featureIcons[name] ?? group.icon}/><span><strong>{name}</strong><small>{description}</small></span><Icon name="chevron"/></button>)}</section>)}</div>
+    <p className="sr-only" role="status">{filtered.reduce((count,group)=>count+group.items.length,0)} planned features found.</p>
+    {!filtered.length && <div><p>No features found. Try another search.</p><button className="button button-outline" onClick={()=>setQuery("")}>Clear feature search</button></div>}
     {selected && <DemoDialog title={`${selected} — coming soon`} onClose={() => setSelected(null)}><p>This feature is planned for ZUNO. It isn’t available yet. You can already browse, sell, save items, and chat with neighbors.</p></DemoDialog>}
   </section>;
 }
