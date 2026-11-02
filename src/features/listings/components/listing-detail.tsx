@@ -158,7 +158,7 @@ export function ListingDetail({
                 {details.seller.charAt(0)}
               </span>
               <div>
-                <h2>{details.seller}</h2>
+                <h2>{details.sellerId ? <Link href={`/neighbors/${details.sellerId}`}>{details.seller} · View profile</Link> : details.seller}</h2>
                 <p>
                   {real
                     ? "Local seller"
@@ -196,7 +196,7 @@ export function ListingDetail({
       {dialog && (
         <DemoDialog
           title={
-            dialog === "photo" ? listing.title : `Contact ${details.seller}`
+            dialog === "photo" ? listing.title : `Contact ${details.sellerId ? <Link href={`/neighbors/${details.sellerId}`}>{details.seller} · View profile</Link> : details.seller}`
           }
           onClose={() => setDialog(null)}
         >

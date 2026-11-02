@@ -1,3 +1,4 @@
+import { Avatar } from "@/features/profile/avatar";
 import { Brand } from "@/components/ui/brand";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -22,9 +23,10 @@ async function Account() {
   const supabase = await createClient();
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error || !user) redirect("/login?notice=session");
-  const [profileResult, areaResult] = await Promise.all([
+  const [profileResult, areaResult, avatarResult] = await Promise.all([
     supabase.from("profiles").select("display_name,neighborhood_id").eq("id", user.id).maybeSingle(),
     supabase.from("neighborhoods").select("id,name").order("id"),
+    supabase.from("profiles").select("avatar_path").eq("id",user.id).maybeSingle(),
   ]);
   if (profileResult.error || !profileResult.data || areaResult.error) throw new Error("Your profile is temporarily unavailable.");
   const profile = profileResult.data;
@@ -33,7 +35,7 @@ async function Account() {
     <header className="dashboard-header"><Link href="/" className="wordmark"><Brand/></Link><nav aria-label="Marketplace"><Link href="/account/saved">Saved</Link><Link href="/messages">Messages <UnreadBadge/></Link><Link className="button button-primary" href="/sell">Sell</Link></nav><Link href="/account/settings" aria-label="Profile settings"><Icon name="settings"/></Link></header>
     <div className="dashboard-layout"><aside className="dashboard-sidebar"><nav aria-label="Account"><Link href="/account" aria-current="page"><Icon name="user"/>My ZUNO</Link>{links.map(link => <Link key={link.href} href={link.href}><Icon name={link.icon}/>{link.name}</Link>)}<Link href="/account/settings"><Icon name="settings"/>Settings</Link><Link href="/help"><Icon name="help"/>Help center</Link></nav></aside>
     <main className="dashboard-content"><h1>My ZUNO</h1><p className="dashboard-subtitle">Your neighborhood, your little corner.</p>
-      <section className="account-card profile-summary" aria-label="Your profile"><span className="profile-avatar">{Array.from(profile.display_name as string)[0]?.toUpperCase() || "N"}</span><div><h2>{profile.display_name}</h2><p><Icon name="pin"/>{area}</p></div><Link className="button button-outline" href="/account/settings">Edit profile</Link></section>
+      <section className="account-card profile-summary" aria-label="Your profile"><Avatar name={profile.display_name} path={avatarResult.data?.avatar_path}/><div><h2><Link href={`/neighbors/${user.id}`}>{profile.display_name}</Link></h2><p><Icon name="pin"/>{area}</p></div><Link className="button button-outline" href="/account/settings">Edit profile</Link></section>
       <nav className="account-shortcuts" aria-label="Quick actions">{links.map((link, index) => <Link className="account-card shortcut" href={link.href} key={link.href}><span className={`shortcut-icon shortcut-${index}`}><Icon name={link.icon}/></span><span><strong>{link.name}{link.href === "/messages" && <UnreadBadge/>}</strong><small>{link.description}</small></span><Icon name="chevron"/></Link>)}</nav>
       <div className="account-highlight"><section className="sell-panel"><h2>Make room for something new.</h2><p>Give your items a new home in your neighborhood.</p><Link className="button" href="/sell">Sell an Item<Icon name="arrow"/></Link></section><section className="account-card neighborhood-panel"><Icon name="pin"/><div><p>Your neighborhood</p><h2>{area}</h2><p>Good things happen close to home.</p><Link href="/account/settings#profile-neighborhood">Change neighborhood <Icon name="arrow"/></Link></div></section></div>
       <ExploreMenu/>

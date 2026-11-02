@@ -22,7 +22,7 @@ async function Conversation({ id }: { id: string }) {
   if (authError || !user) redirect("/login?notice=session");
   const { data: c, error } = await db
     .from("conversations")
-    .select("id,listing_id,listing_title,buyer_id,buyer_name,seller_name")
+    .select("id,listing_id,listing_title,buyer_id,seller_id,buyer_name,seller_name")
     .eq("id", id)
     .maybeSingle();
   if (error) throw new Error("Conversation unavailable.");
@@ -38,7 +38,7 @@ async function Conversation({ id }: { id: string }) {
         <Link href="/messages">All messages</Link>
       </header>
       <h1>{c.listing_title}</h1>
-      <p>Chat with {c.buyer_id === user.id ? c.seller_name : c.buyer_name}</p>
+      <p>Chat with <Link href={`/neighbors/${c.buyer_id === user.id ? c.seller_id : c.buyer_id}`}>{c.buyer_id === user.id ? c.seller_name : c.buyer_name} · View profile</Link></p>
       {c.listing_id && (
         <p>
           <Link href={`/listings/${c.listing_id}`}>View item</Link> · The item
