@@ -37,6 +37,7 @@ export function Header({
         <input
           id="search"
           type="search"
+          maxLength={100}
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Search for your next local find…"

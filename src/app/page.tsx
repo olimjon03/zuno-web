@@ -1,37 +1,17 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
+import { SectionLoading } from "@/components/layout/section-loading";
 import { Homepage } from "@/features/marketplace/homepage";
-import { getLiveListings } from "@/features/listings/server/data";
-
-async function MarketplaceFeed() {
-  await connection();
-  let listings: Awaited<ReturnType<typeof getLiveListings>> = [];
-  let unavailable = false;
-  try {
-    listings = await getLiveListings();
-  } catch {
-    unavailable = true;
-  }
-  return listings?.length ? (
-    <Homepage initialListings={listings} isDemo={false} />
-  ) : (
-    <Homepage
-      feedNotice={
-        unavailable
-          ? "Live listings are temporarily unavailable. Showing sample items."
-          : "Sample items to explore. Be the first to post a local find."
-      }
-    />
-  );
+import { getMarketplacePage,type FeedPage } from "@/features/search/feed-data";
+import { feedIssue,parseFeedFilters } from "@/features/search/feed-model";
+type SearchParams=Promise<Record<string,string|string[]|undefined>>;
+async function MarketplaceFeed({searchParams}:{searchParams:SearchParams}) {
+ await connection();const raw=await searchParams;const params=new URLSearchParams();
+ for(const [key,value] of Object.entries(raw)){if(typeof value==="string")params.set(key,value);else if(Array.isArray(value)&&value[0])params.set(key,value[0]);}
+ const filters=parseFeedFilters(params);let page:FeedPage={items:[],nextCursor:null};let error:string|undefined;
+ if(!feedIssue(filters)){try{page=await getMarketplacePage(filters);}catch{error="Listings are temporarily unavailable. Please try again.";}}
+ return <Homepage initialSearch={params.toString()} initialPage={page} initialError={error}/>;
 }
-export default function Home() {
-  return (
-    <Suspense
-      fallback={
-        <Homepage feedNotice="Loading nearby listings… Sample items are shown below." />
-      }
-    >
-      <MarketplaceFeed />
-    </Suspense>
-  );
+export default function Home({searchParams}:{searchParams:SearchParams}) {
+ return <Suspense fallback={<SectionLoading message="Loading nearby listings…"/>}><MarketplaceFeed searchParams={searchParams}/></Suspense>;
 }

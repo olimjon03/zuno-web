@@ -1,46 +1,29 @@
 "use client";
 import { priceLabel } from "@/features/listings/currency";
-import { filterMarketplace } from "@/features/locations/catalog";
+import { useMarketplaceFeed } from "@/features/search/use-marketplace-feed";
+import type { FeedPage } from "@/features/search/feed-data";
+import type { FeedFilters } from "@/features/search/feed-model";
+import { parseFeedFilters } from "@/features/search/feed-model";
+import type { CountryCode } from "@/features/locations/catalog";
 import { Brand } from "@/components/ui/brand";
 import Image from "next/image";
 import Link from "next/link";
 import { useLocation } from "@/features/locations/location-provider";
 import { countries, findRegion } from "@/features/locations/catalog";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useFavorites } from "@/features/favorites/favorites-provider";
 import { Header } from "@/components/layout/header";
 import { Icon } from "@/components/ui/icon";
 import { CategoryNav } from "@/features/categories/components/category-nav";
 import { ListingCard } from "@/features/listings/components/listing-card";
-import {
-  sampleListings,
-  type Listing,
-  type Category,
-} from "@/features/listings/sample-listings";
-
-export function Homepage({
-  initialListings = sampleListings,
-  feedNotice,
-  isDemo = true,
-}: {
-  initialListings?: Listing[];
-  feedNotice?: string;
-  isDemo?: boolean;
-}) {
-  const [category, setCategory] = useState<Category>("All items");
-  const {location,changeCountry,changeRegion,resetLocation}=useLocation();
-  const [query, setQuery] = useState("");
-  const { favorites, toggleFavorite } = useFavorites();
-  const [minPrice,setMinPrice]=useState("");
-  const [maxPrice,setMaxPrice]=useState("");
-  const [availableOnly,setAvailableOnly]=useState(false);
-  const listings = filterMarketplace(initialListings,{category,location,query,minPrice,maxPrice,availableOnly});
-  function resetFilters() {
-    setCategory("All items");
-    resetLocation();
-    setQuery("");
-    setMinPrice("");setMaxPrice("");setAvailableOnly(false);
-  }
+export function Homepage({initialSearch,initialPage,initialError}:{initialSearch:string;initialPage:FeedPage;initialError?:string}) {
+  const {filters,update,items:listings,nextCursor,error,issue,changing,loadingMore,loadMore,retry}=useMarketplaceFeed(initialSearch,initialPage,initialError);
+  const {category,query,minPrice,maxPrice,availableOnly}=filters;
+  const location={country:filters.country,region:filters.region};
+  const {setSelection}=useLocation();
+  useEffect(()=>{setSelection({country:filters.country,region:filters.region});},[setSelection,filters.country,filters.region]);
+  const {favorites,toggleFavorite}=useFavorites();
+  function resetFilters(){update(parseFeedFilters(new URLSearchParams()));}
   return (
     <>
       <a className="skip-link" href="#marketplace">
@@ -49,10 +32,10 @@ export function Homepage({
       <div className="utility-bar"><div className="shell"><span>Buy · Sell · Connect Locally</span><span>{location.region ? findRegion(location.region)?.regionName : location.country ? countries.find(country=>country.code===location.country)?.name : "Choose your local area"}</span></div></div>
       <Header
         location={location}
-        onCountryChange={value=>{changeCountry(value);setMinPrice("");setMaxPrice("");}}
-        onRegionChange={changeRegion}
+        onCountryChange={value=>update({country:value as CountryCode|"",region:"",minPrice:"",maxPrice:"",sort:value?filters.sort:"newest"})}
+        onRegionChange={region=>update({region})}
         query={query}
-        onQueryChange={setQuery}
+        onQueryChange={query=>update({query},true)}
       />
       <main>
         <div className="hero-band"><section className="hero shell" aria-labelledby="hero-title">
@@ -81,29 +64,28 @@ export function Homepage({
           id="marketplace"
           className="shell marketplace"
           aria-labelledby="listings-title"
+          aria-busy={changing||loadingMore}
         >
-          <CategoryNav selected={category} onChange={setCategory} />
+          <CategoryNav selected={category} onChange={category=>update({category})} />
           <div className="market-price-filters">
-            <label>Min price ({location.country ? priceLabel(location.country) : "local currency"})<input type="number" inputMode="numeric" min="0" max="1000000000000" step="1" value={minPrice} onChange={e=>setMinPrice(e.target.value)} disabled={!location.country}/></label>
-            <label>Max price ({location.country ? priceLabel(location.country) : "local currency"})<input type="number" inputMode="numeric" min="0" max="1000000000000" step="1" value={maxPrice} onChange={e=>setMaxPrice(e.target.value)} disabled={!location.country}/></label>
-            <label className="remove-confirm"><input type="checkbox" checked={availableOnly} onChange={e=>setAvailableOnly(e.target.checked)}/>Available only</label>
+            <label>Min price ({location.country ? priceLabel(location.country) : "local currency"})<input type="number" inputMode="numeric" min="0" max="1000000000000" step="1" value={minPrice} onChange={e=>update({minPrice:e.target.value},true)} disabled={!location.country}/></label>
+            <label>Max price ({location.country ? priceLabel(location.country) : "local currency"})<input type="number" inputMode="numeric" min="0" max="1000000000000" step="1" value={maxPrice} onChange={e=>update({maxPrice:e.target.value},true)} disabled={!location.country}/></label>
+            <label className="remove-confirm"><input type="checkbox" checked={availableOnly} onChange={e=>update({availableOnly:e.target.checked})}/>Available only</label>
+            <label className="feed-sort">Sort by<select aria-label="Sort by" value={filters.sort} onChange={event=>update({sort:event.target.value as FeedFilters["sort"]})}><option value="newest">Newest first</option><option value="price-asc" disabled={!location.country}>Price: low to high</option><option value="price-desc" disabled={!location.country}>Price: high to low</option></select></label>
             <button className="button button-outline" onClick={resetFilters}>Clear filters</button>
           </div>
-          {!location.country && <p className="auth-hint">Choose a country to filter prices in its local currency.</p>}
-          {minPrice && maxPrice && Number(minPrice)>Number(maxPrice) && <p role="alert">Minimum price must not exceed maximum price.</p>}
+          {!location.country && <p className="auth-hint">Choose a country to filter and sort prices in its local currency.</p>}
+          {issue && <p className="auth-error" role="alert">{issue}</p>}
           <div className="section-heading">
             <h2 id="listings-title">Fresh finds nearby</h2>
             <p role="status" aria-live="polite">
-              {listings.length} {listings.length === 1 ? "find" : "finds"}
+              {changing ? "Updating results…" : issue ? "Check filters" : `${listings.length} ${listings.length === 1 ? "find" : "finds"} shown`}
               {favorites.length > 0 && ` · ${favorites.length} saved`}
             </p>
           </div>
-          {feedNotice && (
-            <p className="feed-notice" role="status">
-              {feedNotice}
-            </p>
-          )}
-          {listings.length > 0 ? (
+          {changing && <p className="feed-notice" role="status">Updating nearby listings…</p>}
+          {error && <div className="feed-error" role="alert"><p>{error}</p><button className="button button-outline" onClick={retry} disabled={changing}>Retry search</button></div>}
+          {!issue && listings.length > 0 ? (
             <div className="listing-grid">
               {listings.map((listing) => (
                 <ListingCard
@@ -114,16 +96,18 @@ export function Homepage({
                 />
               ))}
             </div>
-          ) : (
+          ) : !issue && !changing && !error ? (
             <div className="empty-state">
               <Icon name="search" />
               <h3>No finds just yet</h3>
-              <p>Try another search, category, country, or region.</p>
+              <p>Try another search, category, price, country, or region.</p>
               <button className="button button-outline" onClick={resetFilters}>
                 Clear filters
               </button>
             </div>
-          )}
+          ) : null}
+          {!issue && nextCursor && <div className="feed-pagination"><button className="button button-primary" onClick={loadMore} disabled={changing||loadingMore}>{loadingMore ? "Loading more…" : "Load more"}</button></div>}
+          {!issue && !changing && !error && listings.length>0 && !nextCursor && <p className="feed-end">You’ve reached the end of these results.</p>}
         </section>
       </main>
       <footer className="footer shell">
@@ -132,7 +116,7 @@ export function Homepage({
         </Link>
         <p>A little closer. A little more connected.</p>
         <span>
-          {isDemo ? "Sample listings" : "Your neighborhood marketplace"}
+          Your neighborhood marketplace
         </span>
       </footer>
       <Link className="button button-primary mobile-sell" href="/sell">
