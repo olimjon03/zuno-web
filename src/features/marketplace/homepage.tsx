@@ -1,4 +1,5 @@
 "use client";
+import { Brand } from "@/components/ui/brand";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -119,7 +120,7 @@ export function Homepage({
       </main>
       <footer className="footer shell">
         <Link href="/" className="wordmark" aria-label="ZUNO home">
-          ZUNO.
+          <Brand/>
         </Link>
         <p>A little closer. A little more connected.</p>
         <span>

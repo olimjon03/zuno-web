@@ -40,3 +40,13 @@ Verified: private account login, all eighteen menu rows, feature search filterin
 - Marketplace homepage and category navigation: new hero/layout and category icons.
 - Icon component and global CSS: shared visual system; profile action also revalidates settings.
 - `/help`: working FAQ and About destination.
+
+## Selected identity: Teal Local Pin (2026-11-02)
+
+This supersedes the orange palette above. User selected Local Pin logo option 02 and teal direction 01, then requested implementation with Saved replacing Browse.
+
+Reference: `/Users/tojiboevolimjon/.codex/generated_images/01a19b1b-a4ae-7ea2-8aa4-f1f3204bd684/exec-e8f5efa1-8d5b-4719-8afb-77306b1aa51a.png` (1536×1024). Brand teal #0D9488; mint #F0FDFA; charcoal #1F2328. Interactive teal #0F766E supports accessible small white labels. Shared vector Local Pin/Z component and app/favicon assets replace text-only wordmarks across account, auth, listings, selling, chats, help, and homepage.
+
+Fidelity review compared reference and Playwright screenshots using view_image: (1) charcoal wordmark with teal pin, (2) mint split marketplace hero with teal headline, (3) charcoal account and teal selling panel, (4) Saved/Messages/Sell navigation, (5) mint shortcut icon surfaces, (6) responsive stacked hero and mobile dock. Checked desktop at reference-native 1536×1024 and mobile at 390×844. Browser automation is unavailable; used Playwright Chromium fallback. Verified menu search and preview dialog/Escape, real auth fixture, Saved header destination, logo computed RGB(13,148,136), and no mobile horizontal overflow.
+
+Intentional deviations: preserve existing eighteen future menus and sidebar rather than deleting user-requested content; preserve Korean locations, KRW and live data, not the concept's invented Seattle identity, dollar listings or activity counts. Keep existing generated chair/camera photograph and Geist typography. Above-fold copy uses existing approved Good finds / Great neighbors, tagline, Sell an Item and Explore nearby; only requested Browse→Saved navigation change is introduced. Small vector refinements make the selected pin scalable rather than embedding a generated raster screenshot as UI. No new database migration, dependencies or Next configuration changes.

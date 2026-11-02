@@ -1,3 +1,4 @@
+import { Brand } from "@/components/ui/brand";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -29,7 +30,7 @@ async function Account() {
   const profile = profileResult.data;
   const area = areaResult.data?.find(item => Number(item.id) === Number(profile.neighborhood_id))?.name ?? "Choose your neighborhood";
   return <div className="account-dashboard">
-    <header className="dashboard-header"><Link href="/" className="wordmark">ZUNO</Link><nav aria-label="Marketplace"><Link href="/">Marketplace</Link><Link href="/account/saved">Saved items</Link><Link href="/messages">Messages <UnreadBadge/></Link></nav><Link href="/account/settings" aria-label="Profile settings"><Icon name="settings"/></Link></header>
+    <header className="dashboard-header"><Link href="/" className="wordmark"><Brand/></Link><nav aria-label="Marketplace"><Link href="/account/saved">Saved</Link><Link href="/messages">Messages <UnreadBadge/></Link><Link className="button button-primary" href="/sell">Sell</Link></nav><Link href="/account/settings" aria-label="Profile settings"><Icon name="settings"/></Link></header>
     <div className="dashboard-layout"><aside className="dashboard-sidebar"><nav aria-label="Account"><Link href="/account" aria-current="page"><Icon name="user"/>My ZUNO</Link>{links.map(link => <Link key={link.href} href={link.href}><Icon name={link.icon}/>{link.name}</Link>)}<Link href="/account/settings"><Icon name="settings"/>Settings</Link><Link href="/help"><Icon name="help"/>Help center</Link></nav></aside>
     <main className="dashboard-content"><h1>My ZUNO</h1><p className="dashboard-subtitle">Your neighborhood, your little corner.</p>
       <section className="account-card profile-summary" aria-label="Your profile"><span className="profile-avatar">{Array.from(profile.display_name as string)[0]?.toUpperCase() || "N"}</span><div><h2>{profile.display_name}</h2><p><Icon name="pin"/>{area}</p></div><Link className="button button-outline" href="/account/settings">Edit profile</Link></section>

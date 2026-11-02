@@ -1,3 +1,4 @@
+import { Brand } from "@/components/ui/brand";
 import Link from "next/link";
 import type { ReactNode } from "react";
 export function AuthShell({
@@ -13,7 +14,7 @@ export function AuthShell({
     <>
       <header className="shell detail-header">
         <Link href="/" className="wordmark" aria-label="ZUNO home">
-          ZUNO
+          <Brand/>
         </Link>
         <Link href="/" className="detail-back">
           Back to marketplace
