@@ -41,3 +41,7 @@ Hero: AI-generated still life for ZUNO. The listing images are illustrative samp
 Run `npm ci`, `npm run lint`, `npm run build`, and `npm start`.
 
 Check desktop, tablet and narrow mobile widths. Search for a title, combine category and neighborhood filters, check no-results recovery, toggle favorites, open a listing, and open the login page and selling dialog. Verify Escape closes dialogs and returns focus to their trigger. Keyboard users can skip to listings, navigate all controls, and see focus outlines.
+
+## Database listing phase
+
+The Sell action now opens `/sell` behind authentication. The homepage prefers database listings and labels sample fallbacks. See [listing-setup.md](listing-setup.md) for photo storage, migration and verification details; this supersedes the earlier demo-only Sell behavior.

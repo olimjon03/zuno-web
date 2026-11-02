@@ -4,7 +4,7 @@
 
 Email/password signup, login, local logout, PKCE email callback, optional token-hash email confirmation, and a protected `/account` page are connected to Supabase Auth. The homepage navigation changes to Account when a browser session exists. Protected server content independently calls `auth.getUser()`; browser state is never used for authorization. `src/proxy.ts` refreshes cookies on auth/account routes with `getClaims()` and marks those responses private/no-store. Dynamic account content is behind Suspense to preserve the existing Cache Components configuration.
 
-The account page displays Auth's email and display name. Database-backed profile editing and real marketplace listings are later work. Browsing, favorites and seller contact remain demo behavior.
+The account page displays Auth's email and display name. Database-backed profile editing remains future work. Real listing creation and photos are described in [listing-setup.md](listing-setup.md); favorites and seller contact remain demo behavior.
 
 ## Local environment
 
@@ -26,7 +26,7 @@ The project's public Auth settings were read successfully: email provider enable
 
 ## Database migration needed
 
-The publishable key cannot apply schema changes. **The migration has not been run against the hosted project.** Open Supabase SQL Editor, paste `supabase/migrations/202611020001_initial_marketplace.sql`, and run it once on the new project. Alternatively, use an authenticated Supabase CLI migration workflow. Do not paste an admin credential into chat.
+The publishable key cannot apply schema changes. The owner has applied the initial migration to the hosted project. For a fresh project: Open Supabase SQL Editor, paste `supabase/migrations/202611020001_initial_marketplace.sql`, and run it once on the new project. Alternatively, use an authenticated Supabase CLI migration workflow. Do not paste an admin credential into chat.
 
 The migration creates:
 
@@ -36,14 +36,14 @@ The migration creates:
 - A hardened signup trigger and backfill for profiles. User-supplied display names are sanitized for database length; user metadata never grants permissions.
 - Explicit grants, RLS policies, foreign keys, deletion behavior and feed/ownership indexes.
 
-The neighborhood labels are initial browsing labels, not verified location claims. The frontend intentionally keeps using sample listings until the listing workflow phase.
+The neighborhood labels are initial browsing labels, not verified location claims. The frontend now loads database listings, with labelled samples when the feed is empty or unavailable. Apply the second migration as described in [listing-setup.md](listing-setup.md).
 
 ## Verification
 
 - `npm run lint`
 - `npm run build`
 - `node --test tests/auth-validation.test.mjs` (Node 22.18+ or a compatible TypeScript-stripping Node runtime; the current Node 26 runtime emits a harmless module-type detection warning.)
-- `supabase/tests/rls.sql` is for a **disposable database** with the migration applied. It rolls back fixture rows and tests anonymous visibility, private profiles, ownership enforcement, forged inserts, protected category writes and owner changes. Do not run fixtures against a live marketplace.
+- `supabase/tests/rls.sql` is for a **disposable database** with only the initial migration applied; use `listing-photos.sql` after both migrations. It rolls back fixture rows and tests anonymous visibility, private profiles, ownership enforcement, forged inserts, protected category writes and owner changes. Do not run fixtures against a live marketplace.
 
 The migration and RLS suite passed locally under temporary PGlite/PostgreSQL with Supabase Auth schema/roles stubbed; no new test package was added to the project. This is not a substitute for checking hosted policies after applying the migration.
 

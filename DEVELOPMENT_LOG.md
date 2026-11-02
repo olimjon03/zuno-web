@@ -49,3 +49,11 @@ Branch: `codex/google-login`.
 ## 2026-11-02 — Return to marketplace after login
 
 Successful password login/signup and Google/email confirmation now navigate to `/` instead of `/account`. The Account header link still opens the protected profile page. Logout and failed-login routes remain the same.
+
+## 2026-11-02 — Listing creation and private photos
+
+Branch: `codex/create-listings`.
+
+Added authenticated `/sell`, bounded upload API, image normalization, private Storage policies and atomic/idempotent publishing RPC. Homepage and detail pages read live listings with labelled sample fallback. New reusable form/gallery components support mobile layouts. Added `sharp` directly for safe decoding; Next configuration remains unchanged.
+
+Validation: eight Node tests, lint, build, disposable PostgreSQL RLS/storage-policy tests and fixture-backed browser checks. Hosted second migration and real hosted publishing remain pending owner SQL Editor setup; see `docs/listing-setup.md`.
