@@ -1,0 +1,11 @@
+# Preparing account sections before navigation
+
+With the repository's existing partialPrefetching setting, default Links only prepared the static shell. Each section also awaited connection(), forcing personal data to wait for the click.
+
+Account, settings, own listings, saved items and the selling form now render inside `use cache: private` with a 30-second client stale time. The directive is supported by the installed Next docs and existing cacheComponents configuration. It verifies Auth when resolving the private result; it does not place a user's result in a cross-request production server cache. Primary navigation links opt into prefetch=true so these short-lived session-scoped results can be prepared before the click. Listing-card links are not all made eager. Live inbox/conversation reads remain uncached for freshness.
+
+Server mutations still verify identity. Existing profile/avatar/favorite revalidation is retained; publishing now also invalidates own listings, and listing management invalidates saved items. Login/logout already revalidate the root layout and invalidate session output. AccountLink also reconciles local session state after server-side login/logout, so the header destination updates without a full reload. No configuration, dependency or schema change.
+
+Production-mode Playwright checks with an isolated local Supabase fixture (no real-user writes): after prefetch completed, Saved/Settings/Your listings opened in 86/53/52 ms locally, with zero visible SectionLoading observations. These include test automation overhead and are not production latency promises. Saving a profile updated the previously cached Account; saving an item updated previously cached Saved; logout + Back did not show the old private profile; the header updated after server login. Lint, build and all fifteen existing tests pass.
+
+First visits, expired entries, slow internet and fresh live chat reads may still show loading. Prefetch moves work earlier rather than eliminating all network work, and the small primary navigation set adds background reads. A short private lifetime balances quick navigation with freshness. Results do not survive a full browser reload. Existing unrelated working-tree edits were retained separately.

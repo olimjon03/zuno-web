@@ -66,6 +66,7 @@ export async function manageListing(
   revalidatePath("/");
   revalidatePath(`/listings/${id}`);
   revalidatePath("/account/listings");
+  revalidatePath("/account/saved");
   return {
     message:
       intent === "remove"

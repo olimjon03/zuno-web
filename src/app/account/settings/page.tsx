@@ -7,7 +7,7 @@ import { BackHomeNav } from "@/components/layout/back-home-nav";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
+import { cacheLife } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { ProfileForm } from "@/features/profile/profile-form";
@@ -18,8 +18,9 @@ export const metadata: Metadata = {
 };
 
 async function Account() {
-  // Authentication must wait for a real request, never a prefetched/static shell.
-  await connection();
+  "use cache: private";
+  // Browser/session-only reuse; never a shared production server cache.
+  cacheLife({ stale: 30 });
   if (!isSupabaseConfigured()) redirect("/login?notice=session");
   const supabase = await createClient();
   // Fetch the current user from Auth; never authorize using a cookie's user object.

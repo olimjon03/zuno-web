@@ -16,7 +16,18 @@ export function AccountLink() {
     } = supabase.auth.onAuthStateChange((_event, session) =>
       setSignedIn(Boolean(session)),
     );
-    return () => subscription.unsubscribe();
+    let alive = true;
+    const reconcile = () => {
+      void supabase.auth.getSession().then(({data,error}) => {
+        if (alive && !error) setSignedIn(Boolean(data.session));
+      }).catch(() => {});
+    };
+    window.addEventListener("zuno:auth-route", reconcile);
+    return () => {
+      alive = false;
+      subscription.unsubscribe();
+      window.removeEventListener("zuno:auth-route", reconcile);
+    };
   }, []);
   return (
     <Link
