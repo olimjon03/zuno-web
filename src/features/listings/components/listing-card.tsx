@@ -23,6 +23,7 @@ export function ListingCard({
             src={listing.image}
             alt={listing.imageAlt}
             fill
+            unoptimized={listing.source === "database"}
             sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 300px"
           />
         </Link>

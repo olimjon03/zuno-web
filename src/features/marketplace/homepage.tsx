@@ -5,22 +5,29 @@ import { useState } from "react";
 import { useFavorites } from "@/features/favorites/favorites-provider";
 import { Header } from "@/components/layout/header";
 import { Icon } from "@/components/ui/icon";
-import { DemoDialog } from "@/components/ui/demo-dialog";
 import { CategoryNav } from "@/features/categories/components/category-nav";
 import { ListingCard } from "@/features/listings/components/listing-card";
 import {
   sampleListings,
+  type Listing,
   type Category,
   type Neighborhood,
 } from "@/features/listings/sample-listings";
 
-export function Homepage() {
+export function Homepage({
+  initialListings = sampleListings,
+  feedNotice,
+  isDemo = true,
+}: {
+  initialListings?: Listing[];
+  feedNotice?: string;
+  isDemo?: boolean;
+}) {
   const [category, setCategory] = useState<Category>("All items");
   const [neighborhood, setNeighborhood] = useState<Neighborhood>("All nearby");
   const [query, setQuery] = useState("");
   const { favorites, toggleFavorite } = useFavorites();
-  const [dialog, setDialog] = useState<"sell" | null>(null);
-  const listings = sampleListings.filter(
+  const listings = initialListings.filter(
     (listing) =>
       (category === "All items" || listing.category === category) &&
       (neighborhood === "All nearby" ||
@@ -53,13 +60,10 @@ export function Homepage() {
               Locally
             </h1>
             <p>Good finds. Great neighbors.</p>
-            <button
-              className="button button-primary"
-              onClick={() => setDialog("sell")}
-            >
+            <Link className="button button-primary" href="/sell">
               Sell an Item
               <Icon name="arrow" />
-            </button>
+            </Link>
           </div>
           <div className="hero-image">
             <Image
@@ -84,6 +88,11 @@ export function Homepage() {
               {favorites.length > 0 && ` · ${favorites.length} saved`}
             </p>
           </div>
+          {feedNotice && (
+            <p className="feed-notice" role="status">
+              {feedNotice}
+            </p>
+          )}
           {listings.length > 0 ? (
             <div className="listing-grid">
               {listings.map((listing) => (
@@ -112,26 +121,14 @@ export function Homepage() {
           ZUNO.
         </Link>
         <p>A little closer. A little more connected.</p>
-        <span>Sample listings · Demo marketplace</span>
+        <span>
+          {isDemo ? "Sample listings" : "Your neighborhood marketplace"}
+        </span>
       </footer>
-      <button
-        className="button button-primary mobile-sell"
-        onClick={() => setDialog("sell")}
-      >
+      <Link className="button button-primary mobile-sell" href="/sell">
         <Icon name="plus" />
         Sell an Item
-      </button>
-      {dialog && (
-        <DemoDialog
-          title="Your next sale starts here"
-          onClose={() => setDialog(null)}
-        >
-          <p>
-            Listing an item is coming soon. You can create an account and
-            explore local finds while we build the next stage.
-          </p>
-        </DemoDialog>
-      )}
+      </Link>
     </>
   );
 }

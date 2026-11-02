@@ -1,28 +1,39 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { sampleListings } from "@/features/listings/sample-listings";
 import { sampleDetails } from "@/features/listings/sample-details";
 import { ListingDetail } from "@/features/listings/components/listing-detail";
+import { getLiveListing } from "@/features/listings/server/data";
+import { isUuid } from "@/features/listings/validation";
 
 export function generateStaticParams() {
   return sampleListings.map(({ id }) => ({ id }));
 }
-
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const listing = sampleListings.find((item) => item.id === id);
+  const sample = sampleListings.find((item) => item.id === id);
+  if (sample)
+    return {
+      title: `${sample.title} | ZUNO`,
+      description: `Sample listing in ${sample.neighborhood}, Seoul.`,
+    };
   return {
-    title: listing ? `${listing.title} | ZUNO` : "Listing not found | ZUNO",
-    description: listing
-      ? `Sample listing in ${listing.neighborhood}, Seoul. ${listing.title} on ZUNO.`
-      : "This listing could not be found.",
+    title: "Local find | ZUNO",
+    description: "Discover a local second-hand find on ZUNO.",
   };
 }
-
+async function LiveListing({ id }: { id: string }) {
+  await connection();
+  const result = await getLiveListing(id);
+  if (!result) notFound();
+  return <ListingDetail {...result} />;
+}
 export default async function ListingPage({
   params,
 }: {
@@ -30,6 +41,18 @@ export default async function ListingPage({
 }) {
   const { id } = await params;
   const listing = sampleListings.find((item) => item.id === id);
-  if (!listing || !sampleDetails[id]) notFound();
-  return <ListingDetail listing={listing} details={sampleDetails[id]} />;
+  if (listing && sampleDetails[id])
+    return <ListingDetail listing={listing} details={sampleDetails[id]} />;
+  if (!isUuid(id)) notFound();
+  return (
+    <Suspense
+      fallback={
+        <main className="shell detail-message" role="status">
+          Loading this local find…
+        </main>
+      }
+    >
+      <LiveListing id={id} />
+    </Suspense>
+  );
 }

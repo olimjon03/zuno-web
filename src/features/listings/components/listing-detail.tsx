@@ -19,6 +19,12 @@ export function ListingDetail({
   const [dialog, setDialog] = useState<"photo" | "contact" | null>(null);
   const { favorites, toggleFavorite } = useFavorites();
   const saved = favorites.includes(listing.id);
+  const [selectedPhoto, setSelectedPhoto] = useState(0);
+  const photos = listing.photos?.length
+    ? listing.photos
+    : [{ src: listing.image, alt: listing.imageAlt }];
+  const photo = photos[selectedPhoto] ?? photos[0];
+  const real = listing.source === "database";
   return (
     <>
       <a className="skip-link" href="#listing-detail">
@@ -39,7 +45,9 @@ export function ListingDetail({
           <span>{listing.category}</span>
         </nav>
         <p className="detail-demo">
-          Sample listing · Explore the demo. No purchases or messages are sent.
+          {real
+            ? "Local pickup · Inspect the item before exchanging. Messaging is coming soon."
+            : "Sample listing · Explore the demo. No purchases or messages are sent."}
         </p>
         <div className="detail-grid">
           <section aria-label="Listing photos" className="detail-gallery">
@@ -49,18 +57,41 @@ export function ListingDetail({
               onClick={() => setDialog("photo")}
             >
               <Image
-                src={listing.image}
-                alt={listing.imageAlt}
+                src={photo.src}
+                alt={photo.alt}
                 fill
+                unoptimized={real}
                 sizes="(max-width: 767px) 100vw, 60vw"
                 loading="eager"
                 fetchPriority="high"
               />
             </button>
             <div className="photo-caption">
-              <span>1 photo</span>
+              <span>
+                {photos.length} {photos.length === 1 ? "photo" : "photos"}
+              </span>
               <button onClick={() => setDialog("photo")}>View larger ↗</button>
             </div>
+            {photos.length > 1 && (
+              <div className="photo-thumbnails">
+                {photos.map((item, index) => (
+                  <button
+                    key={item.src}
+                    aria-label={`Show photo ${index + 1}`}
+                    aria-pressed={selectedPhoto === index}
+                    onClick={() => setSelectedPhoto(index)}
+                  >
+                    <Image
+                      src={item.src}
+                      alt=""
+                      width={90}
+                      height={70}
+                      unoptimized={real}
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </section>
           <section className="detail-summary" aria-labelledby="listing-title">
             <p className="listing-location">
@@ -111,7 +142,11 @@ export function ListingDetail({
               </span>
               <div>
                 <h2>{details.seller}</h2>
-                <p>Sample seller · Joined {details.joined}</p>
+                <p>
+                  {real
+                    ? "Local seller"
+                    : `Sample seller · Joined ${details.joined}`}
+                </p>
               </div>
             </div>
           </section>
@@ -135,7 +170,11 @@ export function ListingDetail({
           ZUNO.
         </Link>
         <p>Buy · Sell · Connect Locally</p>
-        <span>Sample listings · Demo marketplace</span>
+        <span>
+          {real
+            ? "Your neighborhood marketplace"
+            : "Sample listings · Demo marketplace"}
+        </span>
       </footer>
       {dialog && (
         <DemoDialog
@@ -147,17 +186,18 @@ export function ListingDetail({
           {dialog === "photo" ? (
             <Image
               className="detail-enlarged"
-              src={listing.image}
-              alt={listing.imageAlt}
+              src={photo.src}
+              alt={photo.alt}
               width={1000}
               height={800}
+              unoptimized={real}
               sizes="(max-width: 639px) 90vw, 440px"
             />
           ) : (
             <p>
-              Messaging is coming soon. This is a sample seller and no message
-              will be sent. You can browse and save finds while we build the
-              next stage.
+              {real
+                ? "Messaging is coming soon. No message has been sent. You can save this item for now."
+                : "Messaging is coming soon. This is a sample seller and no message will be sent."}
             </p>
           )}
         </DemoDialog>

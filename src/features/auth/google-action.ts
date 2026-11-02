@@ -14,6 +14,7 @@ export async function loginWithGoogle(): Promise<AuthState> {
       options: {
         redirectTo: `${getSiteUrl()}/auth/callback`,
         skipBrowserRedirect: true,
+        queryParams: { prompt: "select_account" },
       },
     });
     if (error || !data.url)

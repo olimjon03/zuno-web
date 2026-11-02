@@ -20,10 +20,12 @@ export type Listing = {
   id: string;
   title: string;
   price: number;
-  neighborhood: Exclude<Neighborhood, "All nearby">;
+  neighborhood: string;
   category: Exclude<Category, "All items">;
   image: string;
   imageAlt: string;
+  photos?: { src: string; alt: string }[];
+  source?: "sample" | "database";
 };
 export const sampleListings: Listing[] = [
   {

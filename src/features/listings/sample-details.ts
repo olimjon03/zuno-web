@@ -3,6 +3,7 @@ export type ListingDetails = {
   description: string;
   seller: string;
   joined: string;
+  postedAt?: string;
 };
 export const sampleDetails: Record<string, ListingDetails> = {
   laptop: {
