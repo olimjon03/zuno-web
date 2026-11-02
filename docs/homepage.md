@@ -1,6 +1,6 @@
 # ZUNO homepage
 
-The homepage uses sample listings only. Search, category and neighborhood filters combine in browser state. Favorites last for the current page visit. Login and selling open explanatory demo dialogs; listing cards open a sample detail preview. Nothing is submitted to a server or Supabase.
+The homepage uses sample listings only. Search, category and neighborhood filters combine in browser state. Favorites are shared between the homepage and listing detail routes during the current app visit; a full reload clears them. Login and selling open explanatory demo dialogs; listing cards link to dedicated `/listings/[id]` pages. Nothing is submitted to a server or Supabase.
 
 ## Structure
 
@@ -9,7 +9,11 @@ The homepage uses sample listings only. Search, category and neighborhood filter
 - `src/components/layout/header.tsx`: brand, neighborhood selector, search and login.
 - `src/features/categories/components/category-nav.tsx`: reusable category navigation.
 - `src/features/listings/sample-listings.ts`: typed sample data and KRW formatting.
-- `src/features/listings/components/listing-card.tsx`: reusable listing and favorite controls.
+- `src/features/listings/components/listing-card.tsx`: reusable listing links and favorite controls.
+- `src/features/listings/components/listing-detail.tsx`: responsive detail layout, single-photo viewer and contact demo.
+- `src/features/listings/sample-details.ts`: clearly fictional descriptions, condition and seller data.
+- `src/features/favorites/favorites-provider.tsx`: shared browser state across route navigation.
+- `src/app/listings/[id]/`: server route, per-listing metadata, static sample paths, loading, error and not-found UI.
 - `src/components/ui/`: SVG icons and native modal dialog with focus restoration.
 - `src/app/globals.css`: brand tokens and responsive styles; 4, 3 and 2 listing columns on desktop, tablet and mobile.
 - `src/app/layout.tsx`: ZUNO metadata, retaining the existing fonts and layout setup.
