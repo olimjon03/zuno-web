@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AccountLink } from "@/features/auth/account-link";
 import { Icon } from "@/components/ui/icon";
 import {
   neighborhoods,
@@ -10,14 +11,12 @@ type Props = {
   onNeighborhoodChange: (value: Neighborhood) => void;
   query: string;
   onQueryChange: (value: string) => void;
-  onLogin: () => void;
 };
 export function Header({
   neighborhood,
   onNeighborhoodChange,
   query,
   onQueryChange,
-  onLogin,
 }: Props) {
   return (
     <header className="site-header shell">
@@ -67,9 +66,7 @@ export function Header({
           </button>
         )}
       </form>
-      <button className="button button-outline login" onClick={onLogin}>
-        Log in
-      </button>
+      <AccountLink />
     </header>
   );
 }

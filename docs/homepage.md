@@ -1,6 +1,6 @@
 # ZUNO homepage
 
-The homepage uses sample listings only. Search, category and neighborhood filters combine in browser state. Favorites are shared between the homepage and listing detail routes during the current app visit; a full reload clears them. Login and selling open explanatory demo dialogs; listing cards link to dedicated `/listings/[id]` pages. Nothing is submitted to a server or Supabase.
+The homepage uses sample listings only. Search, category and neighborhood filters combine in browser state. Favorites are shared between the homepage and listing detail routes during the current app visit; a full reload clears them. Login links to the Supabase-backed auth flow; selling opens an explanatory demo dialog; listing cards link to dedicated `/listings/[id]` pages. Marketplace browsing and favorites remain browser-only; auth forms submit to Supabase Auth. See `docs/supabase-setup.md`.
 
 ## Structure
 
@@ -40,4 +40,4 @@ Hero: AI-generated still life for ZUNO. The listing images are illustrative samp
 
 Run `npm ci`, `npm run lint`, `npm run build`, and `npm start`.
 
-Check desktop, tablet and narrow mobile widths. Search for a title, combine category and neighborhood filters, check no-results recovery, toggle favorites, open a listing, and open login/selling dialogs. Verify Escape closes dialogs and returns focus to their trigger. Keyboard users can skip to listings, navigate all controls, and see focus outlines.
+Check desktop, tablet and narrow mobile widths. Search for a title, combine category and neighborhood filters, check no-results recovery, toggle favorites, open a listing, and open the login page and selling dialog. Verify Escape closes dialogs and returns focus to their trigger. Keyboard users can skip to listings, navigate all controls, and see focus outlines.
