@@ -2,6 +2,8 @@
 import { Brand } from "@/components/ui/brand";
 import Image from "next/image";
 import Link from "next/link";
+import { useLocation } from "@/features/locations/location-provider";
+import { matchesLocation, countries, findRegion } from "@/features/locations/catalog";
 import { useState } from "react";
 import { useFavorites } from "@/features/favorites/favorites-provider";
 import { Header } from "@/components/layout/header";
@@ -12,7 +14,6 @@ import {
   sampleListings,
   type Listing,
   type Category,
-  type Neighborhood,
 } from "@/features/listings/sample-listings";
 
 export function Homepage({
@@ -25,21 +26,20 @@ export function Homepage({
   isDemo?: boolean;
 }) {
   const [category, setCategory] = useState<Category>("All items");
-  const [neighborhood, setNeighborhood] = useState<Neighborhood>("All nearby");
+  const {location,changeCountry,changeRegion,resetLocation}=useLocation();
   const [query, setQuery] = useState("");
   const { favorites, toggleFavorite } = useFavorites();
   const listings = initialListings.filter(
     (listing) =>
       (category === "All items" || listing.category === category) &&
-      (neighborhood === "All nearby" ||
-        listing.neighborhood === neighborhood) &&
+      matchesLocation(listing,location) &&
       `${listing.title} ${listing.neighborhood} ${listing.category}`
         .toLocaleLowerCase()
         .includes(query.trim().toLocaleLowerCase()),
   );
   function resetFilters() {
     setCategory("All items");
-    setNeighborhood("All nearby");
+    resetLocation();
     setQuery("");
   }
   return (
@@ -47,10 +47,11 @@ export function Homepage({
       <a className="skip-link" href="#marketplace">
         Skip to listings
       </a>
-      <div className="utility-bar"><div className="shell"><span>Buy · Sell · Connect Locally</span><span>Seoul, South Korea</span></div></div>
+      <div className="utility-bar"><div className="shell"><span>Buy · Sell · Connect Locally</span><span>{location.region ? findRegion(location.region)?.regionName : location.country ? countries.find(country=>country.code===location.country)?.name : "Choose your local area"}</span></div></div>
       <Header
-        neighborhood={neighborhood}
-        onNeighborhoodChange={setNeighborhood}
+        location={location}
+        onCountryChange={changeCountry}
+        onRegionChange={changeRegion}
         query={query}
         onQueryChange={setQuery}
       />
@@ -110,7 +111,7 @@ export function Homepage({
             <div className="empty-state">
               <Icon name="search" />
               <h3>No finds just yet</h3>
-              <p>Try another search, category, or neighborhood.</p>
+              <p>Try another search, category, country, or region.</p>
               <button className="button button-outline" onClick={resetFilters}>
                 Clear filters
               </button>

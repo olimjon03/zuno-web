@@ -1,3 +1,4 @@
+import { formatLocationLabel } from "@/features/locations/catalog";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
@@ -47,7 +48,7 @@ export function ListingCard({
       <p className="price">{formatPrice(listing.price)}</p>
       <p className="listing-location">
         <Icon name="pin" />
-        Seoul · {listing.neighborhood}
+        {formatLocationLabel(listing)}
       </p>
     </article>
   );

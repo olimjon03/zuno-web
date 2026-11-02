@@ -2012,3 +2012,9 @@ h2 {
   .mobile-bottom-nav a { min-height: 44px; justify-content: center; }
   .mobile-bottom-nav .unread-badge { position: absolute; top: -6px; right: -12px; margin: 0; min-width: 18px; height: 18px; padding: 0 4px; font-size: 10px; }
 }
+
+/* Cascading browse location: country first, then that country's regions. */
+.location-cascade{min-width:0;max-width:340px;gap:6px}.location-cascade select{min-width:0;max-width:160px;text-overflow:ellipsis}.location-cascade #browse-country{max-width:112px}.location-divider{height:20px;width:1px;flex-shrink:0;background:#e5e7eb}.site-header .search{min-width:120px}
+@media(max-width:1100px) and (min-width:701px){.site-header{flex-wrap:wrap}.location-cascade{max-width:340px}.site-header .search{flex-basis:30%}}
+@media(max-width:700px){.site-header{grid-template-columns:1fr auto;gap:12px}.site-header .wordmark{grid-column:1;grid-row:1;justify-self:start}.site-header .login{grid-column:2;grid-row:1}.location-cascade{grid-column:1/-1;grid-row:2;justify-self:stretch;border:1px solid #e5e7eb;border-radius:10px;padding:0 12px;width:100%;max-width:none;height:44px;gap:8px}.location-cascade select{flex:1;width:0;max-width:none!important;font-size:13px;min-height:42px}.location-cascade #browse-country{flex:0 1 120px;width:120px}.location-cascade:has(#browse-region) #browse-country{flex-shrink:0}.site-header .search{grid-row:3;grid-column:1/-1}.location-divider{margin-inline:2px}}
+@media(max-width:700px){.site-header{display:grid}.location-cascade:not(:has(#browse-region)) #browse-country{flex:1;width:100%}}

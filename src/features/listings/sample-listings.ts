@@ -1,3 +1,4 @@
+import type { CountryCode } from "@/features/locations/catalog";
 export const categories = [
   "All items",
   "Electronics",
@@ -21,6 +22,8 @@ export type Listing = {
   title: string;
   price: number;
   neighborhood: string;
+  countryCode?: CountryCode;
+  regionCode?: string;
   category: Exclude<Category, "All items">;
   image: string;
   imageAlt: string;

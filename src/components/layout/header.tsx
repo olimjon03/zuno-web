@@ -2,20 +2,20 @@ import { Brand } from "@/components/ui/brand";
 import Link from "next/link";
 import { AccountLink } from "@/features/auth/account-link";
 import { Icon } from "@/components/ui/icon";
-import {
-  neighborhoods,
-  type Neighborhood,
-} from "@/features/listings/sample-listings";
+import { LocationSelector } from "@/features/locations/location-selector";
+import type { LocationSelection } from "@/features/locations/catalog";
 
 type Props = {
-  neighborhood: Neighborhood;
-  onNeighborhoodChange: (value: Neighborhood) => void;
+  location: LocationSelection;
+  onCountryChange: (value: string) => void;
+  onRegionChange: (value: string) => void;
   query: string;
   onQueryChange: (value: string) => void;
 };
 export function Header({
-  neighborhood,
-  onNeighborhoodChange,
+  location,
+  onCountryChange,
+  onRegionChange,
   query,
   onQueryChange,
 }: Props) {
@@ -24,23 +24,7 @@ export function Header({
       <Link prefetch={true} className="wordmark" href="/" aria-label="ZUNO home">
         <Brand/>
       </Link>
-      <div className="location-control">
-        <Icon name="pin" />
-        <label className="sr-only" htmlFor="neighborhood">
-          Choose a neighborhood
-        </label>
-        <select
-          id="neighborhood"
-          value={neighborhood}
-          onChange={(event) =>
-            onNeighborhoodChange(event.target.value as Neighborhood)
-          }
-        >
-          {neighborhoods.map((value) => (
-            <option key={value}>{value}</option>
-          ))}
-        </select>
-      </div>
+      <LocationSelector location={location} onCountryChange={onCountryChange} onRegionChange={onRegionChange}/>
       <form
         className="search"
         role="search"
