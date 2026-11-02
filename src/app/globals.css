@@ -802,3 +802,112 @@ h2 {
     margin-top: 30px;
   }
 }
+
+/* Authentication uses the existing ZUNO tokens and controls. */
+.auth-page {
+  width: min(460px, calc(100% - 32px));
+  margin: 52px auto;
+}
+.auth-panel {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+}
+.auth-panel h1 {
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+.auth-intro {
+  margin: 14px 0 28px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.auth-form {
+  display: grid;
+  gap: 20px;
+}
+.auth-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.auth-form input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 12px;
+  background: white;
+  color: var(--foreground);
+  font-size: 16px;
+}
+.auth-form .button {
+  width: 100%;
+}
+.auth-form .button:disabled {
+  opacity: 0.65;
+}
+.auth-hint {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 10px 0;
+  line-height: 1.6;
+}
+.auth-error,
+.auth-success {
+  font-size: 14px;
+  padding: 12px;
+  border-radius: 8px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.auth-error {
+  color: #9b2525;
+  background: #fff2f2;
+}
+.auth-success {
+  color: #245b34;
+  background: #eef8ef;
+}
+.auth-switch {
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.auth-switch a {
+  color: #a64500;
+  text-decoration: underline;
+}
+.auth-tagline {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.account-facts > div {
+  padding-block: 14px;
+  border-top: 1px solid var(--border);
+}
+.account-facts dt {
+  font-size: 13px;
+  color: var(--muted);
+}
+.account-facts dd {
+  margin-top: 7px;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 639px) {
+  .auth-page {
+    margin-top: 28px;
+  }
+  .auth-panel {
+    padding: 24px 20px;
+  }
+  .auth-panel h1 {
+    font-size: 28px;
+  }
+}

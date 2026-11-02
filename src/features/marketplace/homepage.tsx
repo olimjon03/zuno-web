@@ -19,7 +19,7 @@ export function Homepage() {
   const [neighborhood, setNeighborhood] = useState<Neighborhood>("All nearby");
   const [query, setQuery] = useState("");
   const { favorites, toggleFavorite } = useFavorites();
-  const [dialog, setDialog] = useState<"login" | "sell" | null>(null);
+  const [dialog, setDialog] = useState<"sell" | null>(null);
   const listings = sampleListings.filter(
     (listing) =>
       (category === "All items" || listing.category === category) &&
@@ -44,7 +44,6 @@ export function Homepage() {
         onNeighborhoodChange={setNeighborhood}
         query={query}
         onQueryChange={setQuery}
-        onLogin={() => setDialog("login")}
       />
       <main>
         <section className="hero shell" aria-labelledby="hero-title">
@@ -124,15 +123,12 @@ export function Homepage() {
       </button>
       {dialog && (
         <DemoDialog
-          title={
-            dialog === "sell" ? "Your next sale starts here" : "Welcome to ZUNO"
-          }
+          title="Your next sale starts here"
           onClose={() => setDialog(null)}
         >
           <p>
-            {dialog === "sell"
-              ? "Listing an item is coming soon. This sample marketplace lets you explore local finds; no items or personal information are submitted."
-              : "Login is coming soon. For now, explore the sample listings and save your favorites during this visit. No account is needed."}
+            Listing an item is coming soon. You can create an account and
+            explore local finds while we build the next stage.
           </p>
         </DemoDialog>
       )}
