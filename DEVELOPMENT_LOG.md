@@ -93,3 +93,9 @@ Validation: lint, build, ten existing Node tests, disposable PostgreSQL privacy/
 Branch: `codex/realtime-messages`. Added an authenticated Postgres Changes channel for messages and the user's read markers, immediate chat/count/inbox refreshes, reconnect catch-up and coalesced refresh queues. Existing polling remains reconciliation/fallback. Confirmed read cursors stop repeating writes. Added an idempotent publication migration without changing RLS or dependencies/configuration.
 
 Validation: lint/build, 13 Node tests, publication and privacy SQL suites in disposable PostgreSQL/PGlite, and local WebSocket/browser fixtures. Hosted publication setup and real two-account delivery remain pending owner execution. See `docs/realtime-messages.md`.
+
+## 2026-11-02 — Account profile editing
+
+Branch: `codex/edit-profile`. Added an authenticated display-name/neighborhood form using existing private profile grants/RLS. Account reads the profile as its name source; new listings snapshot that name, matching new conversation behavior. Errors preserve drafts; optional neighborhood can be cleared. Existing listings/conversations retain their snapshot names. No migration, dependency, environment or Next configuration changes.
+
+Validation: lint/build, 15 Node tests, disposable PostgreSQL profile ownership/field-policy tests and local fixture browser save/reload/failure/clear/publishing/responsive checks. Real user profiles were not changed. Setup and limits are in `docs/profile-editing.md`.
