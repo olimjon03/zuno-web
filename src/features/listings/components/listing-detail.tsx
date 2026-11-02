@@ -12,8 +12,9 @@ import { ContactSeller } from "@/features/messages/contact-seller";
 import { DemoDialog } from "@/components/ui/demo-dialog";
 import { Icon } from "@/components/ui/icon";
 import { useFavorites } from "@/features/favorites/favorites-provider";
-import { formatPrice, type Listing } from "../sample-listings";
-import type { ListingDetails } from "../sample-details";
+import { formatMoney as formatPrice } from "../currency";
+import type { Listing } from "../types";
+import type { ListingDetails } from "../types";
 
 export function ListingDetail({
   listing,

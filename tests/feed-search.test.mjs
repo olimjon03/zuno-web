@@ -1,11 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {registerHooks} from 'node:module';
-// Production resolves extensionless TS imports through Next; this mirrors that
-// resolution for native Node tests without adding a runtime dependency.
-registerHooks({resolve(specifier,context,next){try{return next(specifier,context);}catch(error){if(specifier.startsWith('.')&&error.code==='ERR_MODULE_NOT_FOUND')return next(specifier+'.ts',context);throw error;}}});
-const {parseFeedFilters,feedParams,feedIssue,mergeFeedItems}=await import('../src/features/search/feed-model.ts');
-const {encodeFeedCursor,decodeFeedCursor}=await import('../src/features/search/feed-cursor.ts');
+import './helpers/register-runtime.mjs';
+const {parseFeedFilters,feedParams,feedIssue}=await import('../src/features/search/validation.ts');
+const {mergeFeedItems}=await import('../src/features/search/pagination.ts');
+const {encodeFeedCursor,decodeFeedCursor}=await import('../src/features/search/server/cursor.ts');
 test('shareable filters preserve Unicode and local price semantics, normalize invalid areas',()=>{
  const f=parseFeedFilters(new URLSearchParams('country=UZ&region=UZ-TK&q=kamera+%F0%9F%93%B7&category=Electronics&min=0&max=300&available=1&sort=price-asc'));
  assert.equal(f.query,'kamera 📷');assert.equal(f.sort,'price-asc');assert.equal(feedIssue(f),null);

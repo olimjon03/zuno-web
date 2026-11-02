@@ -1,4 +1,5 @@
-import { categories, type Category } from "@/features/listings/sample-listings";
+import { categories } from "@/features/listings/constants";
+import type { Category } from "@/features/listings/types";
 import { Icon, type IconName } from "@/components/ui/icon";
 const icons: IconName[] = ["list", "briefcase", "home", "user", "people", "book", "plus"];
 export function CategoryNav({

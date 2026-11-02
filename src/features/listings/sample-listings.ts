@@ -1,36 +1,4 @@
-import type { CountryCode } from "@/features/locations/catalog";
-export const categories = [
-  "All items",
-  "Electronics",
-  "Home & Living",
-  "Fashion",
-  "Sports",
-  "Books",
-  "Other",
-] as const;
-export type Category = (typeof categories)[number];
-export const neighborhoods = [
-  "All nearby",
-  "Seongsu-dong",
-  "Songjeong-dong",
-  "Seoul Forest",
-  "Ttukseom",
-] as const;
-export type Neighborhood = (typeof neighborhoods)[number];
-export type Listing = {
-  id: string;
-  title: string;
-  price: number;
-  neighborhood: string;
-  countryCode?: CountryCode;
-  regionCode?: string;
-  category: Exclude<Category, "All items">;
-  image: string;
-  imageAlt: string;
-  photos?: { src: string; alt: string }[];
-  status?: "active" | "reserved" | "sold";
-  source?: "sample" | "database";
-};
+import type { Listing } from "./types";
 export const sampleListings: Listing[] = [
   {
     id: "laptop",
@@ -105,4 +73,3 @@ export const sampleListings: Listing[] = [
     imageAlt: "Gray adjustable desk lamp against a light wall",
   },
 ];
-export { formatMoney as formatPrice } from "./currency";

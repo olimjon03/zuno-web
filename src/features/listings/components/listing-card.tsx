@@ -3,7 +3,8 @@ import { formatLocationLabel } from "@/features/locations/catalog";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
-import { formatPrice, type Listing } from "../sample-listings";
+import { formatMoney as formatPrice } from "../currency";
+import type { Listing } from "../types";
 export function ListingCard({
   listing,
   favorite,

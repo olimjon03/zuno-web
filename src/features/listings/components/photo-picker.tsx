@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { Icon } from "@/components/ui/icon";
-import { MAX_PHOTOS, validatePhotos } from "../validation";
+import { MAX_PHOTOS } from "../constants";
+import { validatePhotos } from "../validation";
 export type PhotoChoice = {id:string;src:string;file?:never} | {id:string;file:File;src?:never};
 function Preview({photo,index}:{photo:PhotoChoice;index:number}) {
   const ref=useRef<HTMLImageElement>(null);

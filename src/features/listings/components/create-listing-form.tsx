@@ -3,13 +3,14 @@ import Link from "next/link";
 import { useLocation } from "@/features/locations/location-provider";
 import type { CountryCode } from "@/features/locations/catalog";
 import { priceLabel } from "../currency";
-import { preparePhotos } from "../prepare-photos";
+import { preparePhotos } from "../client/prepare-photos";
 import { PhotoPicker, type PhotoChoice } from "./photo-picker";
 import { ListingLocationFields } from "./listing-location-fields";
 import { useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { conditionLabels, conditions, isUuid, validatePhotos } from "../validation";
-import type { LookupOption } from "../server/data";
+import { conditionLabels, conditions } from "../constants";
+import { isUuid, validatePhotos } from "../validation";
+import type { LookupOption } from "../types";
 export function CreateListingForm({
   categories,
   neighborhoods,

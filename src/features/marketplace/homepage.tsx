@@ -1,9 +1,9 @@
 "use client";
 import { priceLabel } from "@/features/listings/currency";
-import { useMarketplaceFeed } from "@/features/search/use-marketplace-feed";
-import type { FeedPage } from "@/features/search/feed-data";
-import type { FeedFilters } from "@/features/search/feed-model";
-import { parseFeedFilters } from "@/features/search/feed-model";
+import { useMarketplaceFeed } from "@/features/search/client/use-marketplace-feed";
+import type { FeedPage } from "@/features/search/types";
+import type { FeedFilters } from "@/features/search/types";
+import { parseFeedFilters } from "@/features/search/validation";
 import type { CountryCode } from "@/features/locations/catalog";
 import { Brand } from "@/components/ui/brand";
 import Image from "next/image";

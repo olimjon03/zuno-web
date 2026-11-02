@@ -5,16 +5,13 @@ import { useRef, useState, type FormEvent } from "react";
 import { Icon } from "@/components/ui/icon";
 import type { CountryCode } from "@/features/locations/catalog";
 import { priceLabel } from "../currency";
-import { EditListingPhotos, type ListingPhoto, type PhotoEditorHandle } from "./edit-listing-photos";
+import { EditListingPhotos, type PhotoEditorHandle } from "./edit-listing-photos";
 import { ListingLocationFields, optionCountry } from "./listing-location-fields";
-import { manageListing, type ManageResult } from "../manage-actions";
-import { conditions, conditionLabels } from "../validation";
-import { formatPrice } from "../sample-listings";
-import type { LookupOption } from "../server/data";
-export type OwnedListing = {
-  id: string; title: string; description: string; price: number; condition: string;
-  category_id: number; neighborhood_id: number; status: string; photos: ListingPhoto[];
-};
+import { manageListing } from "../server/actions";
+import type { ManageResult,OwnedListing } from "../types";
+import { conditions, conditionLabels } from "../constants";
+import { formatMoney as formatPrice } from "../currency";
+import type { LookupOption } from "../types";
 function CoverPhoto({photoId,title}:{photoId?:string;title:string}) {
  const [failed,setFailed]=useState(false);
  return <span className="owned-cover">{photoId && !failed ? <Image src={`/listing-photos/${photoId}`} alt={`Cover photo of ${title}`} width={112} height={112} unoptimized onError={()=>setFailed(true)}/> : <span className="owned-cover-placeholder" role="img" aria-label="No product photo"><Icon name="image"/></span>}</span>;

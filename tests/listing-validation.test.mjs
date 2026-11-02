@@ -1,18 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import sharp from "sharp";
-import {
-  parseListingInput,
-  parseAvailability,
-  validatePhotos,
-  MAX_BODY_BYTES,
-  MAX_PHOTO_BYTES,
-} from "../src/features/listings/validation.ts";
-import {
-  readBoundedForm,
-  BodyTooLargeError,
-} from "../src/features/listings/server/request-body.ts";
-import { processPhoto } from "../src/features/listings/server/process-photo.ts";
+import { MAX_BODY_BYTES, MAX_PHOTO_BYTES } from "../src/features/listings/constants.ts";
+import './helpers/register-runtime.mjs';
+const {parseListingInput,parseAvailability,validatePhotos}=await import('../src/features/listings/validation.ts');
+const {readBoundedForm,BodyTooLargeError}=await import('../src/features/listings/server/request-body.ts');
+const {processPhoto}=await import('../src/features/listings/server/process-photo.ts');
 const valid = () => {
   const d = new FormData();
   for (const [key, value] of Object.entries({

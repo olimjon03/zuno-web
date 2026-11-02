@@ -1,3 +1,4 @@
+import "client-only";
 // Keep ten images below the hosting request limit. Originals stay on the device.
 export async function preparePhotos(files: File[]): Promise<File[]> {
   const result: File[] = [];
