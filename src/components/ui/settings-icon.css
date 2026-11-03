@@ -1,4 +1,0 @@
-/* One shared gear treatment for settings links, shortcuts and feature rows. */
-svg[data-icon=settings],.account-dashboard .feature-row>svg[data-icon=settings]{box-sizing:content-box;padding:8px;width:22px;height:22px;flex-shrink:0;color:#0d9488;background:#e3f7ef;border-radius:11px}
-.shortcut-icon:has(>[data-icon=settings]){background:#e3f7ef;color:#0d9488}
-.shortcut-icon>[data-icon=settings]{padding:0}
