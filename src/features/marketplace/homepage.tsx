@@ -8,7 +8,7 @@ import type { FeedPage } from "@/features/search/types";
 import type { FeedFilters } from "@/features/search/types";
 import { parseFeedFilters } from "@/features/search/validation";
 import { Brand } from "@/components/ui/brand";
-import Image from "next/image";
+import { HeroCarousel } from "./hero-carousel";
 import Link from "next/link";
 import { useLocation } from "@/features/locations/location-provider";
 import { countries, findRegion } from "@/features/locations/catalog";
@@ -42,27 +42,7 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
         onQueryChange={query=>update({query},true)}
       />
       <main>
-        <div className="hero-band"><section className="hero shell" aria-labelledby="hero-title">
-          <div className="hero-copy">
-            <h1 id="hero-title">
-              <Text>{"Good finds."}</Text><br/><span><Text>{"Great neighbors."}</Text></span>
-            </h1>
-            <p className="hero-tagline"><Text>{"Buy · Sell · Connect Locally"}</Text></p><p><Text>{"Give pre-loved things a new beginning, right here in your neighborhood."}</Text></p><div className="hero-actions">
-            <Link className="button button-primary" href="/sell">
-              <Text>{"Sell an Item"}</Text><Icon name="arrow" />
-            </Link>
-<a className="button button-outline" href="#marketplace"><Text>{"Explore nearby"}</Text></a></div>
-          </div>
-          <div className="hero-image">
-            <Image
-              src="/images/hero-v2.webp"
-              alt={t("A wooden chair, plant, lamp and vintage camera ready for a new home")}
-              fill
-              sizes="(max-width: 639px) 100vw, 55vw"
-              preload
-            />
-          </div>
-        </section></div>
+        <HeroCarousel/>
         <section
           id="marketplace"
           className="shell marketplace"
