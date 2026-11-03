@@ -1,3 +1,6 @@
+"use client";
+import { Text, useT } from "@/features/language/provider";
+import { LanguageSelector } from "@/features/language/language-selector";
 import { Brand } from "@/components/ui/brand";
 import Link from "next/link";
 import { AccountLink } from "@/features/auth/account-link";
@@ -19,9 +22,10 @@ export function Header({
   query,
   onQueryChange,
 }: Props) {
+  const t = useT();
   return (
     <header className="site-header shell">
-      <Link prefetch={true} className="wordmark" href="/" aria-label="ZUNO home">
+      <Link prefetch={true} className="wordmark" href="/" aria-label={t("ZUNO home")}>
         <Brand/>
       </Link>
       <LocationSelector location={location} onCountryChange={onCountryChange} onRegionChange={onRegionChange}/>
@@ -32,29 +36,29 @@ export function Header({
       >
         <Icon name="search" />
         <label className="sr-only" htmlFor="search">
-          Search second-hand listings
-        </label>
+          <Text>{"Search second-hand listings"}</Text></label>
         <input
           id="search"
           type="search"
           maxLength={100}
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
-          placeholder="Search for your next local find…"
+          placeholder={t("Search for your next local find…")}
         />
         {query && (
           <button
             type="button"
-            aria-label="Clear search"
+            aria-label={t("Clear search")}
             onClick={() => onQueryChange("")}
           >
             <Icon name="close" />
           </button>
         )}
       </form>
-      <Link prefetch={true} className="header-saved" href="/account/saved"><Icon name="heart"/>Saved</Link>
-      <Link prefetch={true} className="header-saved" href="/messages"><Icon name="chat"/>Messages</Link>
-      <Link prefetch={true} className="button button-primary header-sell" href="/sell">Sell</Link>
+      <Link prefetch={true} className="header-saved" href="/account/saved"><Icon name="heart"/><Text>{"Saved"}</Text></Link>
+      <Link prefetch={true} className="header-saved" href="/messages"><Icon name="chat"/><Text>{"Messages"}</Text></Link>
+      <LanguageSelector/>
+      <Link prefetch={true} className="button button-primary header-sell" href="/sell"><Text>{"Sell"}</Text></Link>
       <AccountLink />
     </header>
   );

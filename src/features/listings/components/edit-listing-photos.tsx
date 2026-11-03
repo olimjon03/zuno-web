@@ -1,4 +1,6 @@
 "use client";
+import { Text, useT } from "@/features/language/provider";
+
 import { useState, useRef, useImperativeHandle, type Ref } from "react";
 import { useRouter } from "next/navigation";
 import { PhotoPicker, type PhotoChoice } from "./photo-picker";
@@ -14,6 +16,7 @@ export function EditListingPhotos({ listingId, initial, disabled, ref }: {
   disabled: boolean;
   ref: Ref<PhotoEditorHandle>;
 }) {
+ const t = useT();
   const router = useRouter();
   const busy = useRef(false);
   const ordered = [...initial].sort((a, b) => a.sort_order - b.sort_order);
@@ -53,8 +56,8 @@ export function EditListingPhotos({ listingId, initial, disabled, ref }: {
       }
     },
   }));
-  return <section className="owned-photo-editor" aria-label="Item photos">
+  return <section className="owned-photo-editor" aria-label={t("Item photos")}>
     <PhotoPicker id={`photos-${listingId}`} photos={photos} onChange={setPhotos} onError={setError} disabled={disabled} compact/>
-    {error && <p role="alert" className="auth-error">{error}</p>}
+    {error && <p role="alert" className="auth-error"><Text>{error}</Text></p>}
   </section>;
 }

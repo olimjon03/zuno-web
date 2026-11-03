@@ -1,4 +1,6 @@
 "use client";
+import { Text, useT } from "@/features/language/provider";
+
 import Image from "next/image";
 import { Icon } from "@/components/ui/icon";
 import { PersonAvatar } from "./person-avatar";
@@ -29,6 +31,7 @@ export function Chat({
   person: { name: string; avatarPath: string | null };
   self: { name: string; avatarPath: string | null };
 }) {
+  const t = useT();
   const { realtime } = useUnread();
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
@@ -245,14 +248,14 @@ export function Chat({
     }
   }
   return (
-    <section aria-label="Conversation messages" className="media-chat">
-      <p className="sr-only" role="status">{realtime ? "Live messages connected." : "Connecting to live messages. Updates are also checked automatically."}</p>
-      {refreshError && <p role="status" className="message-feedback">{refreshError} Updates will retry automatically.</p>}
-      {readError && <p role="status" className="message-feedback">{readError}</p>}
+    <section aria-label={t("Conversation messages")} className="media-chat">
+      <p className="sr-only" role="status">{realtime ? <Text>{"Live messages connected."}</Text> : <Text>{"Connecting to live messages. Updates are also checked automatically."}</Text>}</p>
+      {refreshError && <p role="status" className="message-feedback"><Text>{refreshError}</Text> <Text>{"Updates will retry automatically."}</Text></p>}
+      {readError && <p role="status" className="message-feedback"><Text>{readError}</Text></p>}
       <div className="message-scroll" ref={scroller}>
-        {more && <button className="message-load-older" onClick={older} disabled={loadingOlder}>{loadingOlder ? "Loading…" : "Load older messages"}</button>}
-        <p className="sr-only" role="status">{messages.length} messages loaded.</p>
-        <ol className="message-history" aria-label="Message history">
+        {more && <button className="message-load-older" onClick={older} disabled={loadingOlder}>{loadingOlder ? <Text>{"Loading…"}</Text> : <Text>{"Load older messages"}</Text>}</button>}
+        <p className="sr-only" role="status">{t("{count} messages loaded.", { count: messages.length })}</p>
+        <ol className="message-history" aria-label={t("Message history")}>
           {messages.map(message => {
             const own = message.sender_id === userId;
             const author = own ? self : person;
@@ -260,35 +263,35 @@ export function Chat({
             const autoBody = attachments.length && (message.body === "Photo" || message.body === attachments[0].name);
             return <li key={message.id} className={`message-row ${own ? "own" : ""}`}>
               <PersonAvatar name={author.name} path={author.avatarPath}/>
-              <div className="message-content"><span className="sr-only">{own ? "You" : author.name}</span>
+              <div className="message-content"><span className="sr-only">{own ? <Text>{"You"}</Text> : author.name}</span>
                 {!autoBody && message.body && <p className="message-bubble">{message.body}</p>}
                 {attachments.some(file => file.mime === "image/webp") && <div className="message-photos">{attachments.filter(file => file.mime === "image/webp").map(file => <a key={file.id} href={`/api/messages/attachments/${file.id}`} target="_blank" rel="noopener noreferrer" aria-label={`Open photo ${file.name}`}><Image src={`/api/messages/attachments/${file.id}`} alt={file.name} width={400} height={300} unoptimized/></a>)}</div>}
-                {attachments.filter(file => file.mime !== "image/webp").map(file => <a key={file.id} className="message-file" href={`/api/messages/attachments/${file.id}?download=1`} download={file.name} aria-label={`Download ${file.name}`}><span className="message-file-icon"><MessageIcon name="file"/></span><span><strong>{file.name}</strong><small>{file.name.split(".").at(-1)?.toUpperCase()} · {formatFileSize(file.size)}</small></span><span className="message-file-download"><MessageIcon name="download"/></span></a>)}
-                <div className="message-time"><time dateTime={message.created_at}>{new Date(message.created_at).toLocaleTimeString("en-GB", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit" })}</time>{own && <span aria-label="Sent"><Icon name="check-circle" width="14" height="14"/></span>}</div>
+                {attachments.filter(file => file.mime !== "image/webp").map(file => <a key={file.id} className="message-file" href={`/api/messages/attachments/${file.id}?download=1`} download={file.name} aria-label={t("Download {name}", { name: file.name })}><span className="message-file-icon"><MessageIcon name="file"/></span><span><strong>{file.name}</strong><small>{file.name.split(".").at(-1)?.toUpperCase()} · {formatFileSize(file.size)}</small></span><span className="message-file-download"><MessageIcon name="download"/></span></a>)}
+                <div className="message-time"><time dateTime={message.created_at}>{new Date(message.created_at).toLocaleTimeString("en-GB", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit" })}</time>{own && <span aria-label={t("Sent")}><Icon name="check-circle" width="14" height="14"/></span>}</div>
               </div>
             </li>;
           })}
         </ol>
-        {!messages.length && <div className="conversation-empty"><Icon name="chat"/><p>Say hello to your neighbor.</p></div>}
+        {!messages.length && <div className="conversation-empty"><Icon name="chat"/><p><Text>{"Say hello to your neighbor."}</Text></p></div>}
         <div ref={end}/>
       </div>
-      {!canMessage && <p role="status" className="message-feedback">Messaging is unavailable between you and this user. You can still read previous messages.</p>}
+      {!canMessage && <p role="status" className="message-feedback"><Text>{"Messaging is unavailable between you and this user. You can still read previous messages."}</Text></p>}
       <form className="message-compose" onSubmit={submit} aria-busy={pending}>
-        {files.length > 0 && <ul className="message-selected" aria-label="Selected attachments">{files.map((file, index) => <li key={index}><MessageIcon name="file"/><span>{file.name}<small>{formatFileSize(file.size)}</small></span><button type="button" aria-label={`Remove ${file.name}`} disabled={pending} onClick={() => setFiles(files.filter((_, i) => i !== index))}><Icon name="close"/></button></li>)}</ul>}
+        {files.length > 0 && <ul className="message-selected" aria-label={t("Selected attachments")}>{files.map((file, index) => <li key={index}><MessageIcon name="file"/><span>{file.name}<small>{formatFileSize(file.size)}</small></span><button type="button" aria-label={t("Remove {name}", { name: file.name })} disabled={pending} onClick={() => setFiles(files.filter((_, i) => i !== index))}><Icon name="close"/></button></li>)}</ul>}
         <div className="message-compose-row">
           <div className="message-attach-control">
-            <button type="button" className="message-icon-button" aria-label="Attach photos or files" aria-expanded={attachmentMenu} disabled={pending || !canMessage || !mediaReady} onClick={() => setAttachmentMenu(!attachmentMenu)}><MessageIcon name="attach"/></button>
-            {attachmentMenu && <div className="message-attach-menu"><button type="button" onClick={() => photoInput.current?.click()}><Icon name="image"/>Photo</button><button type="button" onClick={() => fileInput.current?.click()}><MessageIcon name="file"/>File</button></div>}
+            <button type="button" className="message-icon-button" aria-label={t("Attach photos or files")} aria-expanded={attachmentMenu} disabled={pending || !canMessage || !mediaReady} onClick={() => setAttachmentMenu(!attachmentMenu)}><MessageIcon name="attach"/></button>
+            {attachmentMenu && <div className="message-attach-menu"><button type="button" onClick={() => photoInput.current?.click()}><Icon name="image"/><Text>{"Photo"}</Text></button><button type="button" onClick={() => fileInput.current?.click()}><MessageIcon name="file"/><Text>{"File"}</Text></button></div>}
           </div>
-          <button type="button" className="message-icon-button message-gallery" aria-label="Choose photos" disabled={pending || !canMessage || !mediaReady} onClick={() => photoInput.current?.click()}><Icon name="image"/></button>
-          <input className="sr-only" ref={photoInput} type="file" multiple disabled={pending || !canMessage || !mediaReady} accept="image/jpeg,image/png,image/webp" aria-label="Choose chat photos" tabIndex={-1} onChange={event => selectFiles(event.target.files)}/>
-          <input className="sr-only" ref={fileInput} type="file" multiple disabled={pending || !canMessage || !mediaReady} accept=".pdf,.txt,.csv,.zip,.docx,.xlsx" aria-label="Choose chat files" tabIndex={-1} onChange={event => selectFiles(event.target.files)}/>
-          <label className="sr-only" htmlFor="message-body">Your message</label>
-          <textarea id="message-body" value={draft} onChange={event => setDraft(event.target.value)} placeholder="Write a message…" maxLength={2000} disabled={pending || !canMessage} rows={1} onKeyDown={event => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing && !pending && canMessage && (draft.trim() || files.length)) { event.preventDefault(); event.currentTarget.form?.requestSubmit(); } }}/>
-          <button className="message-send" aria-label={pending ? "Sending message" : "Send message"} disabled={pending || !canMessage || (!draft.trim() && !files.length)}><MessageIcon name="send"/></button>
+          <button type="button" className="message-icon-button message-gallery" aria-label={t("Choose photos")} disabled={pending || !canMessage || !mediaReady} onClick={() => photoInput.current?.click()}><Icon name="image"/></button>
+          <input className="sr-only" ref={photoInput} type="file" multiple disabled={pending || !canMessage || !mediaReady} accept="image/jpeg,image/png,image/webp" aria-label={t("Choose chat photos")} tabIndex={-1} onChange={event => selectFiles(event.target.files)}/>
+          <input className="sr-only" ref={fileInput} type="file" multiple disabled={pending || !canMessage || !mediaReady} accept=".pdf,.txt,.csv,.zip,.docx,.xlsx" aria-label={t("Choose chat files")} tabIndex={-1} onChange={event => selectFiles(event.target.files)}/>
+          <label className="sr-only" htmlFor="message-body"><Text>{"Your message"}</Text></label>
+          <textarea id="message-body" value={draft} onChange={event => setDraft(event.target.value)} placeholder={t("Write a message…")} maxLength={2000} disabled={pending || !canMessage} rows={1} onKeyDown={event => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing && !pending && canMessage && (draft.trim() || files.length)) { event.preventDefault(); event.currentTarget.form?.requestSubmit(); } }}/>
+          <button className="message-send" aria-label={t(pending ? "Sending message" : "Send message")} disabled={pending || !canMessage || (!draft.trim() && !files.length)}><MessageIcon name="send"/></button>
         </div>
-        <p className="message-compose-hint">{pending ? "Sending your message…" : files.length ? "Up to 4 attachments · 3 MB total after photo preparation" : !mediaReady ? "Photo and file sharing is being prepared. Text messages still work." : "Photos up to 10 MB · Files up to 3 MB"}<span>{Array.from(draft).length}/2,000</span></p>
-        {error && <p role="alert" className="message-feedback message-error">{error}</p>}
+        <p className="message-compose-hint">{pending ? <Text>{"Sending your message…"}</Text> : files.length ? <Text>{"Up to 4 attachments · 3 MB total after photo preparation"}</Text> : !mediaReady ? <Text>{"Photo and file sharing is being prepared. Text messages still work."}</Text> : <Text>{"Photos up to 10 MB · Files up to 3 MB"}</Text>}<span>{Array.from(draft).length}/2,000</span></p>
+        {error && <p role="alert" className="message-feedback message-error"><Text>{error}</Text></p>}
       </form>
     </section>
   );

@@ -1,3 +1,4 @@
+import { Text } from "@/features/language/provider";
 import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
 import type { Metadata } from "next";
@@ -29,8 +30,8 @@ async function Sell() {
           <Brand/>
         </Link><BackHomeNav/></header>
       <main className="sell-page shell">
-        <h1>Find it a new home</h1>
-        <p className="auth-intro">Share a few details with your neighbors.</p>
+        <h1><Text>{"Find it a new home"}</Text></h1>
+        <p className="auth-intro"><Text>{"Share a few details with your neighbors."}</Text></p>
         <CreateListingForm {...options} />
       </main>
     </>
@@ -41,8 +42,7 @@ export default function SellPage() {
     <Suspense
       fallback={
         <main className="shell detail-message" role="status">
-          Getting your listing form ready…
-        </main>
+          <Text>{"Getting your listing form ready…"}</Text></main>
       }
     >
       <Sell />

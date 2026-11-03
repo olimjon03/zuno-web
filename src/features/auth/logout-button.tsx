@@ -1,4 +1,6 @@
 "use client";
+import { Text } from "@/features/language/provider";
+
 import { useActionState } from "react";
 import { logout, type AuthState } from "./actions";
 export function LogoutButton() {
@@ -9,11 +11,11 @@ export function LogoutButton() {
   return (
     <form action={action}>
       <button className="button button-outline" disabled={pending}>
-        {pending ? "Logging out…" : "Log out"}
+        {pending ? <Text>{"Logging out…"}</Text> : <Text>{"Log out"}</Text>}
       </button>
       {state.error && (
         <p role="alert" className="auth-error">
-          {state.error}
+          <Text>{state.error}</Text>
         </p>
       )}
     </form>

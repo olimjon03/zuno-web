@@ -1,4 +1,6 @@
 "use client";
+import { Text } from "@/features/language/provider";
+
 import { useEffect, useRef, type ReactNode } from "react";
 import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Icon } from "./icon";
@@ -33,11 +35,10 @@ export function DemoDialog({
     >
       <div className="dialog-content">
         <BackHomeNav onBack={onClose} onHome={onClose} autoFocus/>
-        <h2 id="dialog-title">{title}</h2>
+        <h2 id="dialog-title"><Text>{title}</Text></h2>
         {children}
         <button className="button button-primary" onClick={onClose}>
-          Back to browsing
-          <Icon name="arrow" />
+          <Text>{"Back to browsing"}</Text><Icon name="arrow" />
         </button>
       </div>
     </dialog>

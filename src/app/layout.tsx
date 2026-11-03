@@ -1,3 +1,4 @@
+import { LanguageProvider } from "@/features/language/provider";
 import { Suspense } from "react";
 import { AuthRouteSync } from "@/components/layout/auth-route-sync";
 import { MobileNav } from "@/components/layout/mobile-nav";
@@ -31,9 +32,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <LocationProvider><FavoritesProvider>
+        <LanguageProvider><LocationProvider><FavoritesProvider>
           <UnreadProvider>{children}<Suspense fallback={null}><AuthRouteSync/><MobileNav/></Suspense></UnreadProvider>
-        </FavoritesProvider></LocationProvider>
+        </FavoritesProvider></LocationProvider></LanguageProvider>
       </body>
     </html>
   );

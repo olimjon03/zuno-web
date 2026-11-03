@@ -1,3 +1,4 @@
+import { Text } from "@/features/language/provider";
 import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
 import Link from "next/link";
@@ -7,11 +8,10 @@ export default function ListingNotFound() {
       <Link href="/" className="wordmark">
         <Brand/>
       </Link>
-      <BackHomeNav/><h1>Listing not found</h1>
-      <p>This listing may have moved, or the link may be incorrect.</p>
+      <BackHomeNav/><h1><Text>{"Listing not found"}</Text></h1>
+      <p><Text>{"This listing may have moved, or the link may be incorrect."}</Text></p>
       <Link className="button button-primary" href="/">
-        Browse local finds
-      </Link>
+        <Text>{"Browse local finds"}</Text></Link>
     </main>
   );
 }

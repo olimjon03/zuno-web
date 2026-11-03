@@ -1,4 +1,6 @@
 "use client";
+import { Text } from "@/features/language/provider";
+
 import { UnreadBadge } from "@/features/messages/unread-provider";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -34,7 +36,7 @@ export function AccountLink() {
       className="button button-outline login"
       href={signedIn ? "/account" : "/login"}
     >
-      {signedIn ? "Account" : "Log in"}
+      {signedIn ? <Text>{"Account"}</Text> : <Text>{"Log in"}</Text>}
       {signedIn && <UnreadBadge />}
     </Link>
   );

@@ -1,10 +1,13 @@
 "use client";
+import { Text, useT } from "@/features/language/provider";
+
 import { useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@/components/ui/icon";
 import { Avatar } from "./avatar";
 import "./avatar-form.css";
 export function AvatarForm({ name, path }: { name: string; path?: string | null }) {
+  const t = useT();
   const router = useRouter();
   const inputId = useId();
   const input = useRef<HTMLInputElement>(null);
@@ -31,14 +34,14 @@ export function AvatarForm({ name, path }: { name: string; path?: string | null 
   }
   return <div className={"profile-photo-control"} aria-busy={pending}>
     <div className={"profile-photo-picture"}><Avatar name={name} path={path}/>
-      <button type="button" className={"profile-photo-add"} aria-label="Change profile photo" title="Change profile photo" aria-controls={inputId} aria-describedby={`${inputId}-help`} disabled={pending} onClick={() => input.current?.click()}>{pending ? <span aria-hidden="true">…</span> : <Icon name="plus" width="19" height="19"/>}</button>
+      <button type="button" className={"profile-photo-add"} aria-label={t("Change profile photo")} title={t("Change profile photo")} aria-controls={inputId} aria-describedby={`${inputId}-help`} disabled={pending} onClick={() => input.current?.click()}>{pending ? <span aria-hidden="true">…</span> : <Icon name="plus" width="19" height="19"/>}</button>
     </div>
-    <input id={inputId} ref={input} type="file" accept="image/jpeg,image/png,image/webp" hidden aria-label="Choose a profile photo" disabled={pending} onChange={event => { const file=event.currentTarget.files?.[0];event.currentTarget.value="";if(file)void upload(file); }}/>
-    <p id={`${inputId}-help`} className="sr-only">Choose a public profile photo. JPG, PNG or WebP, up to 3 MB. It uploads after selection.</p>
+    <input id={inputId} ref={input} type="file" accept="image/jpeg,image/png,image/webp" hidden aria-label={t("Choose a profile photo")} disabled={pending} onChange={event => { const file=event.currentTarget.files?.[0];event.currentTarget.value="";if(file)void upload(file); }}/>
+    <p id={`${inputId}-help`} className="sr-only"><Text>{"Choose a public profile photo. JPG, PNG or WebP, up to 3 MB. It uploads after selection."}</Text></p>
     {(pending || error || message) && <div className={"profile-photo-feedback"}>
-      <p role={error ? "alert" : "status"}>{pending ? "Uploading profile photo…" : error || message}</p>
-      {!pending && error && chosen && <button type="button" onClick={() => {if(chosen)void upload(chosen);}}>Retry</button>}
-      {!pending && <button type="button" aria-label="Dismiss photo notification" onClick={()=>{setError("");setMessage("");}}><Icon name="close" width="16" height="16"/></button>}
+      <p role={error ? "alert" : "status"}>{pending ? <Text>{"Uploading profile photo…"}</Text> : <Text>{error || message}</Text>}</p>
+      {!pending && error && chosen && <button type="button" onClick={() => {if(chosen)void upload(chosen);}}><Text>{"Retry"}</Text></button>}
+      {!pending && <button type="button" aria-label={t("Dismiss photo notification")} onClick={()=>{setError("");setMessage("");}}><Icon name="close" width="16" height="16"/></button>}
     </div>}
   </div>;
 }

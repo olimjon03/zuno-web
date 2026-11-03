@@ -1,4 +1,6 @@
 "use client";
+import { Text } from "@/features/language/provider";
+
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ListingCard } from "@/features/listings/components/listing-card";
@@ -17,8 +19,8 @@ export function SavedItems({ listings }: { listings: Listing[] }) {
       document.removeEventListener("visibilitychange", refresh);
     };
   }, [router]);
-  if (loadError) return <div className="empty-state"><p role="alert">{loadError}</p><button className="button button-primary" onClick={retryFavorites}>Retry saved items</button></div>;
-  if (!ready) return <p role="status">Loading saved items…</p>;
+  if (loadError) return <div className="empty-state"><p role="alert">{loadError}</p><button className="button button-primary" onClick={retryFavorites}><Text>{"Retry saved items"}</Text></button></div>;
+  if (!ready) return <p role="status"><Text>{"Loading saved items…"}</Text></p>;
   const items = listings.filter((item) => favorites.includes(item.id));
   return items.length ? (
     <div className="listing-grid">
@@ -33,8 +35,6 @@ export function SavedItems({ listings }: { listings: Listing[] }) {
     </div>
   ) : (
     <p>
-      You have no saved items. Tap the heart on a marketplace listing to save
-      it.
-    </p>
+      <Text>{"You have no saved items. Tap the heart on a marketplace listing to save it."}</Text></p>
   );
 }

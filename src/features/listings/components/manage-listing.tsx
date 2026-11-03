@@ -1,4 +1,6 @@
 "use client";
+import { Text, useT } from "@/features/language/provider";
+
 import Link from "next/link";
 import Image from "next/image";
 import { useRef, useState, type FormEvent } from "react";
@@ -13,8 +15,9 @@ import { conditions, conditionLabels } from "../constants";
 import { formatMoney as formatPrice } from "../currency";
 import type { LookupOption } from "../types";
 function CoverPhoto({photoId,title}:{photoId?:string;title:string}) {
+ const t = useT();
  const [failed,setFailed]=useState(false);
- return <span className="owned-cover">{photoId && !failed ? <Image src={`/listing-photos/${photoId}`} alt={`Cover photo of ${title}`} width={112} height={112} unoptimized onError={()=>setFailed(true)}/> : <span className="owned-cover-placeholder" role="img" aria-label="No product photo"><Icon name="image"/></span>}</span>;
+ return <span className="owned-cover">{photoId && !failed ? <Image src={`/listing-photos/${photoId}`} alt={`Cover photo of ${title}`} width={112} height={112} unoptimized onError={()=>setFailed(true)}/> : <span className="owned-cover-placeholder" role="img" aria-label={t("No product photo")}><Icon name="image"/></span>}</span>;
 }
 export function ManageListing({item,categories,neighborhoods}:{item:OwnedListing;categories:LookupOption[];neighborhoods:LookupOption[]}) {
  const area=neighborhoods.find(n=>n.id===item.neighborhood_id);
@@ -56,33 +59,33 @@ export function ManageListing({item,categories,neighborhoods}:{item:OwnedListing
  }
  return <article className="owned-item owned-soft-card" aria-label={item.title} aria-busy={pending}>
   <div className="owned-product-card">
-   <div className="owned-product-copy"><h2><Link href={`/listings/${item.id}`}>{item.title}</Link></h2><p className="owned-price">{formatPrice(Number(item.price),originalCountry)}</p><p className="owned-area"><Icon name="pin"/>{area?.name ?? "Nearby"}</p><span className={`owned-status owned-status-${item.status}`}>{statusName}</span></div>
+   <div className="owned-product-copy"><h2><Link href={`/listings/${item.id}`}>{item.title}</Link></h2><p className="owned-price">{formatPrice(Number(item.price),originalCountry)}</p><p className="owned-area"><Icon name="pin"/>{area?.name ?? <Text>{"Nearby"}</Text>}</p><span className={`owned-status owned-status-${item.status}`}><Text>{statusName}</Text></span></div>
    <Link href={`/listings/${item.id}`} className="owned-cover-link" aria-label={`View ${item.title}`}><CoverPhoto key={orderedPhotos[0]?.id ?? "missing"} photoId={orderedPhotos[0]?.id} title={item.title}/></Link>
   </div>
   <form className="owned-status-actions" onSubmit={submit} aria-label={`Change status of ${item.title}`}>
-   <button type="submit" name="intent" value="reserved" disabled={pending||item.status==="reserved"}><Icon name="clock"/><span>Mark reserved</span></button>
-   <button type="submit" name="intent" value="sold" disabled={pending||item.status==="sold"}><Icon name="bag-check"/><span>Mark sold</span></button>
+   <button type="submit" name="intent" value="reserved" disabled={pending||item.status==="reserved"}><Icon name="clock"/><span><Text>{"Mark reserved"}</Text></span></button>
+   <button type="submit" name="intent" value="sold" disabled={pending||item.status==="sold"}><Icon name="bag-check"/><span><Text>{"Mark sold"}</Text></span></button>
   </form>
   <details className="owned-edit-panel">
-   <summary><Icon name="pencil"/><span>Edit item details</span><Icon name="chevron" className="owned-disclosure-arrow"/></summary>
+   <summary><Icon name="pencil"/><span><Text>{"Edit item details"}</Text></span><Icon name="chevron" className="owned-disclosure-arrow"/></summary>
    <form className="sell-form owned-edit-form" onSubmit={submit}>
     <fieldset disabled={pending}><legend className="sr-only">Edit {item.title}</legend>
-     <div className="sell-field"><label htmlFor={`${item.id}-title`}>Title</label><input id={`${item.id}-title`} name="title" value={draft.title} onChange={e=>update("title",e.target.value)} required minLength={3} maxLength={120}/></div>
-     <div className="sell-field"><label htmlFor={`${item.id}-price`}>Price ({priceLabel(country)})</label><input id={`${item.id}-price`} name="price" type="number" inputMode="numeric" min={0} max={1000000000000} step={1} required value={draft.price} onChange={e=>update("price",e.target.value)}/></div>
+     <div className="sell-field"><label htmlFor={`${item.id}-title`}><Text>{"Title"}</Text></label><input id={`${item.id}-title`} name="title" value={draft.title} onChange={e=>update("title",e.target.value)} required minLength={3} maxLength={120}/></div>
+     <div className="sell-field"><label htmlFor={`${item.id}-price`}><Text>{"Price ("}</Text>{priceLabel(country)})</label><input id={`${item.id}-price`} name="price" type="number" inputMode="numeric" min={0} max={1000000000000} step={1} required value={draft.price} onChange={e=>update("price",e.target.value)}/></div>
      <EditListingPhotos key={orderedPhotos.map(p=>`${p.id}:${p.sort_order}`).join(",")} ref={photoEditor} listingId={item.id} initial={orderedPhotos} disabled={pending}/>
      <div className="sell-fields">
-      <div className="sell-field"><label htmlFor={`${item.id}-condition`}>Condition</label><select id={`${item.id}-condition`} name="condition" value={draft.condition} onChange={e=>update("condition",e.target.value)}>{conditions.map(c=><option key={c} value={c}>{conditionLabels[c]}</option>)}</select></div>
-      <div className="sell-field"><label htmlFor={`${item.id}-category`}>Category</label><select id={`${item.id}-category`} name="categoryId" value={draft.category_id} onChange={e=>update("category_id",Number(e.target.value))}>{categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
+      <div className="sell-field"><label htmlFor={`${item.id}-condition`}><Text>{"Condition"}</Text></label><select id={`${item.id}-condition`} name="condition" value={draft.condition} onChange={e=>update("condition",e.target.value)}>{conditions.map(c=><option key={c} value={c}><Text>{conditionLabels[c]}</Text></option>)}</select></div>
+      <div className="sell-field"><label htmlFor={`${item.id}-category`}><Text>{"Category"}</Text></label><select id={`${item.id}-category`} name="categoryId" value={draft.category_id} onChange={e=>update("category_id",Number(e.target.value))}>{categories.map(c=><option key={c.id} value={c.id}><Text>{c.name}</Text></option>)}</select></div>
      </div>
      <ListingLocationFields id={item.id} country={country} neighborhoodId={draft.neighborhood_id ? String(draft.neighborhood_id) : ""} options={neighborhoods} onCountry={setCountry} onNeighborhood={value=>update("neighborhood_id",value ? Number(value) : 0)}/>
-     <div className="sell-field"><label htmlFor={`${item.id}-status`}>Availability</label><select key={item.status} id={`${item.id}-status`} name="status" defaultValue={item.status}><option value="active">Available</option><option value="reserved">Reserved</option><option value="sold">Sold</option></select></div>
-     <div className="sell-field"><label htmlFor={`${item.id}-description`}>Description</label><textarea id={`${item.id}-description`} name="description" required minLength={10} maxLength={5000} rows={4} value={draft.description} onChange={e=>update("description",e.target.value)}/></div>
-     <p className="auth-hint">Changing country changes the price currency. Enter the appropriate amount; prices are not converted.</p>
-     <button className="button button-primary owned-save-button" name="intent" value="edit">{pending ? "Saving changes…" : "Save changes"}</button>
+     <div className="sell-field"><label htmlFor={`${item.id}-status`}><Text>{"Availability"}</Text></label><select key={item.status} id={`${item.id}-status`} name="status" defaultValue={item.status}><option value="active"><Text>{"Available"}</Text></option><option value="reserved"><Text>{"Reserved"}</Text></option><option value="sold"><Text>{"Sold"}</Text></option></select></div>
+     <div className="sell-field"><label htmlFor={`${item.id}-description`}><Text>{"Description"}</Text></label><textarea id={`${item.id}-description`} name="description" required minLength={10} maxLength={5000} rows={4} value={draft.description} onChange={e=>update("description",e.target.value)}/></div>
+     <p className="auth-hint"><Text>{"Changing country changes the price currency. Enter the appropriate amount; prices are not converted."}</Text></p>
+     <button className="button button-primary owned-save-button" name="intent" value="edit">{pending ? <Text>{"Saving changes…"}</Text> : <Text>{"Save changes"}</Text>}</button>
     </fieldset>
    </form>
   </details>
-  <details className="owned-remove-panel"><summary><Icon name="trash"/><span>Remove item</span><Icon name="chevron" className="owned-disclosure-arrow"/></summary><form onSubmit={submit}><fieldset disabled={pending}><legend className="sr-only">Remove {item.title}</legend><p>This hides the item and its photos from the marketplace.</p><label className="remove-confirm"><input name="confirm" type="checkbox" value="yes" required/>Confirm removal of this item</label><button className="button button-outline owned-remove-button" name="intent" value="remove"><Icon name="trash"/>Remove item</button></fieldset></form></details>
-  {pending&&<p role="status" className="owned-result">Saving changes…</p>}{result.error&&<p className="auth-error owned-result" role="alert">{result.error}</p>}{result.message&&<p role="status" className="owned-result">{result.message}</p>}
+  <details className="owned-remove-panel"><summary><Icon name="trash"/><span><Text>{"Remove item"}</Text></span><Icon name="chevron" className="owned-disclosure-arrow"/></summary><form onSubmit={submit}><fieldset disabled={pending}><legend className="sr-only"><Text>{"Remove"}</Text>{item.title}</legend><p><Text>{"This hides the item and its photos from the marketplace."}</Text></p><label className="remove-confirm"><input name="confirm" type="checkbox" value="yes" required/><Text>{"Confirm removal of this item"}</Text></label><button className="button button-outline owned-remove-button" name="intent" value="remove"><Icon name="trash"/><Text>{"Remove item"}</Text></button></fieldset></form></details>
+  {pending&&<p role="status" className="owned-result"><Text>{"Saving changes…"}</Text></p>}{result.error&&<p className="auth-error owned-result" role="alert"><Text>{result.error}</Text></p>}{result.message&&<p role="status" className="owned-result"><Text>{result.message}</Text></p>}
  </article>;
 }

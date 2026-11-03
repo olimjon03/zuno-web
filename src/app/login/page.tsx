@@ -1,3 +1,4 @@
+import { Text } from "@/features/language/provider";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { AuthShell } from "@/features/auth/auth-shell";
@@ -11,18 +12,13 @@ async function LoginNotice({
   const { notice } = await searchParams;
   return notice === "signin" ? (
     <p role="alert" className="auth-error">
-      We couldn’t complete sign-in. Please try again with Google or use your
-      email and password.
-    </p>
+      <Text>{"We couldn’t complete sign-in. Please try again with Google or use your email and password."}</Text></p>
   ) : notice === "confirmation" ? (
     <p role="alert" className="auth-error">
-      That confirmation link is invalid or expired. Try logging in, or request a
-      new confirmation email from registration.
-    </p>
+      <Text>{"That confirmation link is invalid or expired. Try logging in, or request a new confirmation email from registration."}</Text></p>
   ) : notice === "session" ? (
     <p role="status" className="auth-hint">
-      Please log in to access your account.
-    </p>
+      <Text>{"Please log in to access your account."}</Text></p>
   ) : null;
 }
 export default function LoginPage({

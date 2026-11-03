@@ -1,4 +1,6 @@
 "use client";
+import { Text } from "@/features/language/provider";
+
 import { useActionState } from "react";
 import { beginConversation } from "./server/actions";
 export function ContactSeller({ listingId }: { listingId: string }) {
@@ -7,11 +9,11 @@ export function ContactSeller({ listingId }: { listingId: string }) {
     <form action={action}>
       <input type="hidden" name="listingId" value={listingId} />
       <button className="button button-primary" disabled={pending}>
-        {pending ? "Opening chat…" : "Contact seller"}
+        {pending ? <Text>{"Opening chat…"}</Text> : <Text>{"Contact seller"}</Text>}
       </button>
       {state.error && (
         <p className="auth-error" role="alert">
-          {state.error}
+          <Text>{state.error}</Text>
         </p>
       )}
     </form>

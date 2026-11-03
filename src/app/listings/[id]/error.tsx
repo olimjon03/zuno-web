@@ -1,17 +1,17 @@
 "use client";
+import { Text } from "@/features/language/provider";
+
 import { BackHomeNav } from "@/components/layout/back-home-nav";
 import Link from "next/link";
 export default function ListingError({ reset }: { reset: () => void }) {
   return (
     <main className="shell detail-message"><BackHomeNav/>
-      <h1>We couldn’t load this find</h1>
-      <p>Please try again, or head back to the marketplace.</p>
+      <h1><Text>{"We couldn’t load this find"}</Text></h1>
+      <p><Text>{"Please try again, or head back to the marketplace."}</Text></p>
       <button className="button button-primary" onClick={reset}>
-        Try again
-      </button>
+        <Text>{"Try again"}</Text></button>
       <Link className="button button-outline" href="/">
-        Back to marketplace
-      </Link>
+        <Text>{"Back to marketplace"}</Text></Link>
     </main>
   );
 }

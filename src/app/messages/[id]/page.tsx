@@ -1,3 +1,4 @@
+import { Text } from "@/features/language/provider";
 import Image from "next/image";
 import { MessagesWorkspace } from "@/features/messages/workspace";
 import { PersonAvatar } from "@/features/messages/person-avatar";
@@ -24,14 +25,14 @@ async function Conversation({ id }: { id: string }) {
   return <MessagesWorkspace entries={data.inbox.entries} now={data.inbox.now} activeId={id}>
     <header className="conversation-heading">
       <Link href="/messages" className="conversation-back message-icon-button" aria-label="Back to messages"><Icon name="arrow"/></Link>
-      <Link href={`/neighbors/${data.person.id}`} className="conversation-person"><PersonAvatar name={data.person.name} path={data.person.avatarPath}/><span><h2>{data.person.name}</h2><small><Icon name="pin"/>{data.person.neighborhood || "Your ZUNO neighbor"}</small></span></Link>
+      <Link href={`/neighbors/${data.person.id}`} className="conversation-person"><PersonAvatar name={data.person.name} path={data.person.avatarPath}/><span><h2>{data.person.name}</h2><small><Icon name="pin"/>{data.person.neighborhood || <Text>{"Your ZUNO neighbor"}</Text>}</small></span></Link>
       <Link href="/" prefetch className="conversation-home message-icon-button" aria-label="Go to homepage"><Icon name="home"/></Link>
       <details className="conversation-options"><summary aria-label="Conversation options"><MessageIcon name="more"/></summary><div><SafetyControls userId={data.otherId} name={data.person.name} listingId={data.c.listing_id ?? undefined}/></div></details>
     </header>
     <div className="conversation-item">
       <span className="conversation-thumbnail">{data.listing ? <Image src={data.listing.image} alt={data.c.listing_title} width={56} height={56} unoptimized/> : <Icon name="image"/>}</span>
-      <span><strong>{data.c.listing_title}</strong>{data.listing ? <b>{formatMoney(data.listing.price, data.listing.countryCode)}</b> : <small>This item may no longer be available.</small>}</span>
-      {data.listing && <Link href={`/listings/${data.listing.id}`} prefetch>View item <Icon name="chevron"/></Link>}
+      <span><strong>{data.c.listing_title}</strong>{data.listing ? <b>{formatMoney(data.listing.price, data.listing.countryCode)}</b> : <small><Text>{"This item may no longer be available."}</Text></small>}</span>
+      {data.listing && <Link href={`/listings/${data.listing.id}`} prefetch><Text>{"View item"}</Text><Icon name="chevron"/></Link>}
     </div>
     <Chat key={`${id}-${data.userId}`} conversationId={id} userId={data.userId} initialMessages={data.messages} canMessage={data.canMessage} mediaReady={data.mediaReady} person={data.person} self={data.self}/>
   </MessagesWorkspace>;

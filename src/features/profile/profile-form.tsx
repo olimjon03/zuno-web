@@ -1,4 +1,6 @@
 "use client";
+import { Text } from "@/features/language/provider";
+
 import { startTransition, useActionState, useState, useRef, useEffect } from "react";
 import { Icon } from "@/components/ui/icon";
 import { NeighborhoodFields } from "./neighborhood-fields";
@@ -61,22 +63,22 @@ export function ProfileForm({
   }
   return <div className="auth-form profile-form">
     {!mode && <>
-      <dl className="settings-facts"><div><dt><Icon name="user"/>Display name</dt><dd>{saved.name}</dd></div><div><dt><Icon name="mail"/>Email</dt><dd>{email || "Not shared"}</dd></div><div><dt><Icon name="pin"/>Neighborhood</dt><dd>{areaName}</dd></div></dl>
-      <button type="button" className="button button-primary" onClick={()=>{setName(saved.name);setShowResult(false);setMode("profile");}}>Edit profile</button>
-      <button type="button" className="button button-outline" onClick={()=>openNeighborhood(false)}>Change neighborhood</button>
+      <dl className="settings-facts"><div><dt><Icon name="user"/><Text>{"Display name"}</Text></dt><dd>{saved.name}</dd></div><div><dt><Icon name="mail"/><Text>{"Email"}</Text></dt><dd>{email || <Text>{"Not shared"}</Text>}</dd></div><div><dt><Icon name="pin"/><Text>{"Neighborhood"}</Text></dt><dd>{areaName}</dd></div></dl>
+      <button type="button" className="button button-primary" onClick={()=>{setName(saved.name);setShowResult(false);setMode("profile");}}><Text>{"Edit profile"}</Text></button>
+      <button type="button" className="button button-outline" onClick={()=>openNeighborhood(false)}><Text>{"Change neighborhood"}</Text></button>
     </>}
     <div hidden={mode !== "profile"}>
       <form id="profile-name-form" className="auth-form" aria-busy={pending} onSubmit={event=>submit(event,"name")}>
-        <div className="sell-field"><label htmlFor="profile-name">Display name</label><input ref={nameInput} id="profile-name" name="displayName" value={name} onChange={event=>setName(event.target.value)} required minLength={2} maxLength={80} autoComplete="nickname" disabled={pending}/><p className="auth-hint">Use 2–40 characters. Save profile updates your display name.</p></div>
+        <div className="sell-field"><label htmlFor="profile-name"><Text>{"Display name"}</Text></label><input ref={nameInput} id="profile-name" name="displayName" value={name} onChange={event=>setName(event.target.value)} required minLength={2} maxLength={80} autoComplete="nickname" disabled={pending}/><p className="auth-hint"><Text>{"Use 2–40 characters. Save profile updates your display name."}</Text></p></div>
       </form>
       <EmailForm email={email}/>
-      <div className="sell-field"><p><strong>Neighborhood</strong></p><p>{areaName}</p><button type="button" className="button button-outline" disabled={pending} onClick={()=>openNeighborhood(true)}>Change neighborhood</button></div>
-      <div className="settings-edit-actions"><button type="button" className="button button-outline" disabled={pending} onClick={()=>{setMode(null);setShowResult(false);}}>Cancel</button><button form="profile-name-form" className="button button-primary" disabled={pending}>{pending ? "Saving…" : "Save profile"}</button></div>
+      <div className="sell-field"><p><strong><Text>{"Neighborhood"}</Text></strong></p><p>{areaName}</p><button type="button" className="button button-outline" disabled={pending} onClick={()=>openNeighborhood(true)}><Text>{"Change neighborhood"}</Text></button></div>
+      <div className="settings-edit-actions"><button type="button" className="button button-outline" disabled={pending} onClick={()=>{setMode(null);setShowResult(false);}}><Text>{"Cancel"}</Text></button><button form="profile-name-form" className="button button-primary" disabled={pending}>{pending ? <Text>{"Saving…"}</Text> : <Text>{"Save profile"}</Text>}</button></div>
     </div>
     {mode === "neighborhood" && <form className="auth-form" aria-busy={pending} onSubmit={event=>submit(event,"neighborhood")}>
-      <fieldset disabled={pending}><legend className="sr-only">Change neighborhood</legend><NeighborhoodFields country={country} area={area} options={neighborhoods} required onCountry={setCountry} onArea={setArea} countryRef={countryInput}/><div className="settings-edit-actions"><button type="button" className="button button-outline" disabled={pending} onClick={()=>{setMode(returnToProfile ? "profile" : null);setShowResult(false);}}>Cancel</button><button className="button button-primary" disabled={pending}>{pending ? "Saving…" : "Save neighborhood"}</button></div></fieldset>
+      <fieldset disabled={pending}><legend className="sr-only"><Text>{"Change neighborhood"}</Text></legend><NeighborhoodFields country={country} area={area} options={neighborhoods} required onCountry={setCountry} onArea={setArea} countryRef={countryInput}/><div className="settings-edit-actions"><button type="button" className="button button-outline" disabled={pending} onClick={()=>{setMode(returnToProfile ? "profile" : null);setShowResult(false);}}><Text>{"Cancel"}</Text></button><button className="button button-primary" disabled={pending}>{pending ? <Text>{"Saving…"}</Text> : <Text>{"Save neighborhood"}</Text>}</button></div></fieldset>
     </form>}
-    {showResult && state.error && <p className="auth-error" role="alert">{state.error}</p>}
-    {showResult && state.message && <p className="profile-success" role="status">{state.message}</p>}
+    {showResult && state.error && <p className="auth-error" role="alert"><Text>{state.error}</Text></p>}
+    {showResult && state.message && <p className="profile-success" role="status"><Text>{state.message}</Text></p>}
   </div>;
 }

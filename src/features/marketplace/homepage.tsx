@@ -1,4 +1,6 @@
 "use client";
+import { Text, useT } from "@/features/language/provider";
+
 import { priceLabel } from "@/features/listings/currency";
 import { useMarketplaceFeed } from "@/features/search/client/use-marketplace-feed";
 import type { FeedPage } from "@/features/search/types";
@@ -17,6 +19,7 @@ import { Icon } from "@/components/ui/icon";
 import { CategoryNav } from "@/features/categories/components/category-nav";
 import { ListingCard } from "@/features/listings/components/listing-card";
 export function Homepage({initialSearch,initialPage,initialError}:{initialSearch:string;initialPage:FeedPage;initialError?:string}) {
+  const t = useT();
   const {filters,update,items:listings,nextCursor,error,issue,changing,loadingMore,loadMore,retry}=useMarketplaceFeed(initialSearch,initialPage,initialError);
   const {category,query,minPrice,maxPrice,availableOnly}=filters;
   const location={country:filters.country,region:filters.region};
@@ -27,9 +30,8 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
   return (
     <>
       <a className="skip-link" href="#marketplace">
-        Skip to listings
-      </a>
-      <div className="utility-bar"><div className="shell"><span>Buy · Sell · Connect Locally</span><span>{location.region ? findRegion(location.region)?.regionName : location.country ? countries.find(country=>country.code===location.country)?.name : "Choose your local area"}</span></div></div>
+        <Text>{"Skip to listings"}</Text></a>
+      <div className="utility-bar"><div className="shell"><span><Text>{"Buy · Sell · Connect Locally"}</Text></span><span>{location.region ? t(findRegion(location.region)?.regionName ?? "") : location.country ? t(countries.find(country=>country.code===location.country)?.name ?? "") : <Text>{"Choose your local area"}</Text>}</span></div></div>
       <Header
         location={location}
         onCountryChange={value=>update({country:value as CountryCode|"",region:"",minPrice:"",maxPrice:"",sort:value?filters.sort:"newest"})}
@@ -41,19 +43,18 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
         <div className="hero-band"><section className="hero shell" aria-labelledby="hero-title">
           <div className="hero-copy">
             <h1 id="hero-title">
-              Good finds.<br/><span>Great neighbors.</span>
+              <Text>{"Good finds."}</Text><br/><span><Text>{"Great neighbors."}</Text></span>
             </h1>
-            <p className="hero-tagline">Buy · Sell · Connect Locally</p><p>Give pre-loved things a new beginning, right here in your neighborhood.</p><div className="hero-actions">
+            <p className="hero-tagline"><Text>{"Buy · Sell · Connect Locally"}</Text></p><p><Text>{"Give pre-loved things a new beginning, right here in your neighborhood."}</Text></p><div className="hero-actions">
             <Link className="button button-primary" href="/sell">
-              Sell an Item
-              <Icon name="arrow" />
+              <Text>{"Sell an Item"}</Text><Icon name="arrow" />
             </Link>
-<a className="button button-outline" href="#marketplace">Explore nearby</a></div>
+<a className="button button-outline" href="#marketplace"><Text>{"Explore nearby"}</Text></a></div>
           </div>
           <div className="hero-image">
             <Image
               src="/images/hero-v2.webp"
-              alt="A wooden chair, plant, lamp and vintage camera ready for a new home"
+              alt={t("A wooden chair, plant, lamp and vintage camera ready for a new home")}
               fill
               sizes="(max-width: 639px) 100vw, 55vw"
               preload
@@ -68,23 +69,23 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
         >
           <CategoryNav selected={category} onChange={category=>update({category})} />
           <div className="market-price-filters">
-            <label>Min price ({location.country ? priceLabel(location.country) : "local currency"})<input type="number" inputMode="numeric" min="0" max="1000000000000" step="1" value={minPrice} onChange={e=>update({minPrice:e.target.value},true)} disabled={!location.country}/></label>
-            <label>Max price ({location.country ? priceLabel(location.country) : "local currency"})<input type="number" inputMode="numeric" min="0" max="1000000000000" step="1" value={maxPrice} onChange={e=>update({maxPrice:e.target.value},true)} disabled={!location.country}/></label>
-            <label className="remove-confirm"><input type="checkbox" checked={availableOnly} onChange={e=>update({availableOnly:e.target.checked})}/>Available only</label>
-            <label className="feed-sort">Sort by<select aria-label="Sort by" value={filters.sort} onChange={event=>update({sort:event.target.value as FeedFilters["sort"]})}><option value="newest">Newest first</option><option value="price-asc" disabled={!location.country}>Price: low to high</option><option value="price-desc" disabled={!location.country}>Price: high to low</option></select></label>
-            <button className="button button-outline" onClick={resetFilters}>Clear filters</button>
+            <label><Text>{"Min price ("}</Text>{location.country ? priceLabel(location.country) : <Text>{"local currency"}</Text>})<input type="number" inputMode="numeric" min="0" max="1000000000000" step="1" value={minPrice} onChange={e=>update({minPrice:e.target.value},true)} disabled={!location.country}/></label>
+            <label><Text>{"Max price ("}</Text>{location.country ? priceLabel(location.country) : <Text>{"local currency"}</Text>})<input type="number" inputMode="numeric" min="0" max="1000000000000" step="1" value={maxPrice} onChange={e=>update({maxPrice:e.target.value},true)} disabled={!location.country}/></label>
+            <label className="remove-confirm"><input type="checkbox" checked={availableOnly} onChange={e=>update({availableOnly:e.target.checked})}/><Text>{"Available only"}</Text></label>
+            <label className="feed-sort"><Text>{"Sort by"}</Text><select aria-label={t("Sort by")} value={filters.sort} onChange={event=>update({sort:event.target.value as FeedFilters["sort"]})}><option value="newest"><Text>{"Newest first"}</Text></option><option value="price-asc" disabled={!location.country}><Text>{"Price: low to high"}</Text></option><option value="price-desc" disabled={!location.country}><Text>{"Price: high to low"}</Text></option></select></label>
+            <button className="button button-outline" onClick={resetFilters}><Text>{"Clear filters"}</Text></button>
           </div>
-          {!location.country && <p className="auth-hint">Choose a country to filter and sort prices in its local currency.</p>}
-          {issue && <p className="auth-error" role="alert">{issue}</p>}
+          {!location.country && <p className="auth-hint"><Text>{"Choose a country to filter and sort prices in its local currency."}</Text></p>}
+          {issue && <p className="auth-error" role="alert"><Text>{issue}</Text></p>}
           <div className="section-heading">
-            <h2 id="listings-title">Fresh finds nearby</h2>
+            <h2 id="listings-title"><Text>{"Fresh finds nearby"}</Text></h2>
             <p role="status" aria-live="polite">
-              {changing ? "Updating results…" : issue ? "Check filters" : `${listings.length} ${listings.length === 1 ? "find" : "finds"} shown`}
-              {favorites.length > 0 && ` · ${favorites.length} saved`}
+              {changing ? <Text>{"Updating results…"}</Text> : issue ? <Text>{"Check filters"}</Text> : t(listings.length === 1 ? "{count} find shown" : "{count} finds shown", { count: listings.length })}
+              {favorites.length > 0 && ` · ${t("{count} saved", { count: favorites.length })}`}
             </p>
           </div>
-          {changing && <p className="feed-notice" role="status">Updating nearby listings…</p>}
-          {error && <div className="feed-error" role="alert"><p>{error}</p><button className="button button-outline" onClick={retry} disabled={changing}>Retry search</button></div>}
+          {changing && <p className="feed-notice" role="status"><Text>{"Updating nearby listings…"}</Text></p>}
+          {error && <div className="feed-error" role="alert"><p><Text>{error}</Text></p><button className="button button-outline" onClick={retry} disabled={changing}><Text>{"Retry search"}</Text></button></div>}
           {!issue && listings.length > 0 ? (
             <div className="listing-grid">
               {listings.map((listing) => (
@@ -99,30 +100,27 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
           ) : !issue && !changing && !error ? (
             <div className="empty-state">
               <Icon name="search" />
-              <h3>No finds just yet</h3>
-              <p>Try another search, category, price, country, or region.</p>
+              <h3><Text>{"No finds just yet"}</Text></h3>
+              <p><Text>{"Try another search, category, price, country, or region."}</Text></p>
               <button className="button button-outline" onClick={resetFilters}>
-                Clear filters
-              </button>
+                <Text>{"Clear filters"}</Text></button>
             </div>
           ) : null}
-          {!issue && nextCursor && <div className="feed-pagination"><button className="button button-primary" onClick={loadMore} disabled={changing||loadingMore}>{loadingMore ? "Loading more…" : "Load more"}</button></div>}
-          {!issue && !changing && !error && listings.length>0 && !nextCursor && <p className="feed-end">You’ve reached the end of these results.</p>}
+          {!issue && nextCursor && <div className="feed-pagination"><button className="button button-primary" onClick={loadMore} disabled={changing||loadingMore}>{loadingMore ? <Text>{"Loading more…"}</Text> : <Text>{"Load more"}</Text>}</button></div>}
+          {!issue && !changing && !error && listings.length>0 && !nextCursor && <p className="feed-end"><Text>{"You’ve reached the end of these results."}</Text></p>}
         </section>
       </main>
       <footer className="footer shell">
-        <Link href="/" className="wordmark" aria-label="ZUNO home">
+        <Link href="/" className="wordmark" aria-label={t("ZUNO home")}>
           <Brand/>
         </Link>
-        <p>A little closer. A little more connected.</p>
+        <p><Text>{"A little closer. A little more connected."}</Text></p>
         <span>
-          Your neighborhood marketplace
-        </span>
+          <Text>{"Your neighborhood marketplace"}</Text></span>
       </footer>
       <Link className="button button-primary mobile-sell" href="/sell">
         <Icon name="plus" />
-        Sell an Item
-      </Link>
+        <Text>{"Sell an Item"}</Text></Link>
     </>
   );
 }

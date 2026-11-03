@@ -1,4 +1,6 @@
 "use client";
+import { Text, useT } from "@/features/language/provider";
+
 
 import Link from "next/link";
 import { GoogleButton } from "./google-button";
@@ -6,6 +8,7 @@ import { useActionState, useState } from "react";
 import { login, signup, type AuthState } from "./actions";
 
 export function AuthForm({ mode }: { mode: "login" | "signup" }) {
+ const t = useT();
   const registering = mode === "signup";
   const [email, setEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -17,12 +20,12 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     <>
       <GoogleButton />
       <div className="auth-divider">
-        <span>or continue with email</span>
+        <span><Text>{"or continue with email"}</Text></span>
       </div>
       <form action={action} className="auth-form" aria-busy={pending}>
         {registering && (
           <div>
-            <label htmlFor="displayName">Display name</label>
+            <label htmlFor="displayName"><Text>{"Display name"}</Text></label>
             <input
               id="displayName"
               name="displayName"
@@ -32,12 +35,12 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
               minLength={2}
               maxLength={40}
               autoComplete="nickname"
-              placeholder="How neighbors will know you"
+              placeholder={t("How neighbors will know you")}
             />
           </div>
         )}
         <div>
-          <label htmlFor="email">Email address</label>
+          <label htmlFor="email"><Text>{"Email address"}</Text></label>
           <input
             id="email"
             name="email"
@@ -52,7 +55,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           />
         </div>
         <div>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password"><Text>{"Password"}</Text></label>
           <input
             id="password"
             name="password"
@@ -65,27 +68,26 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           />
           {registering && (
             <p id="password-hint" className="auth-hint">
-              Use at least 8 characters.
-            </p>
+              <Text>{"Use at least 8 characters."}</Text></p>
           )}
         </div>
         {state.error && (
           <p role="alert" className="auth-error">
-            {state.error}
+            <Text>{state.error}</Text>
           </p>
         )}
         {state.message && (
           <p role="status" className="auth-success">
-            {state.message}
+            <Text>{state.message}</Text>
           </p>
         )}
         <button className="button button-primary" disabled={pending}>
-          {pending ? "Please wait…" : registering ? "Create account" : "Log in"}
+          {pending ? <Text>{"Please wait…"}</Text> : registering ? <Text>{"Create account"}</Text> : <Text>{"Log in"}</Text>}
         </button>
         <p className="auth-switch">
-          {registering ? "Already a neighbor?" : "New to ZUNO?"}{" "}
+          {registering ? <Text>{"Already a neighbor?"}</Text> : <Text>{"New to ZUNO?"}</Text>}{" "}
           <Link href={registering ? "/login" : "/signup"}>
-            {registering ? "Log in" : "Create an account"}
+            {registering ? <Text>{"Log in"}</Text> : <Text>{"Create an account"}</Text>}
           </Link>
         </p>
       </form>
