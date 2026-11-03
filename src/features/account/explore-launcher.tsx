@@ -8,7 +8,7 @@ import { ExploreMenu } from "./explore-menu";
 import "./explore-launcher.css";
 
 /** Reuses the existing feature cards and dialogs without duplicating their menus. */
-export function ExploreLauncher() {
+export function ExploreLauncher({align="end"}:{align?:"start"|"end"}) {
   const t = useT();
   const id = useId();
   const dialog = useRef<HTMLDialogElement>(null);
@@ -21,7 +21,7 @@ export function ExploreLauncher() {
     return () => viewport.removeEventListener("change", handleResize);
   }, []);
   function close() { dialog.current?.close(); }
-  return <div className="explore-launcher">
+  return <div className={`explore-launcher${align==="start"?" explore-launcher-start":""}`}>
     <button ref={trigger} type="button" className="explore-trigger" aria-label={`${t("Explore")} ZUNO`} aria-haspopup="dialog" aria-controls={id} aria-expanded={open} onClick={() => { dialog.current?.showModal(); if(dialog.current)dialog.current.scrollTop=0; setOpen(true); }}><Icon name="grid"/></button>
     <dialog ref={dialog} id={id} className="explore-popover" aria-label={`${t("Explore")} ZUNO`} onClose={event => { if(event.target!==event.currentTarget)return; setOpen(false); trigger.current?.focus(); }} onClick={event => { if(event.target===event.currentTarget)close(); }}>
       {open && <div className="explore-popover-content">

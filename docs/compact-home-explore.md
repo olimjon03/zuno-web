@@ -4,7 +4,7 @@ The homepage keeps its full content width and reduces the hero's height. The exi
 
 Category pills and price/sort controls are smaller. Mobile has a filter disclosure, sort selection and availability toggle on one row, with the two price fields and reset below. Collapsing the price row keeps entered values. Price validation, country currency, URL updates, search, categories and reset use the existing feed logic.
 
-`ExploreLauncher` adds a desktop app-grid button immediately after the account link. Its native modal dialog reuses the unmodified `ExploreMenu`: all six groups, eighteen feature rows, names, descriptions, search, planned-feature dialogs and language preferences remain. Desktop account also has the launcher; mobile keeps Explore in its original account position. Close, Escape, backdrop click and focus restoration work; nested feature dialogs close independently. Resizing into mobile closes the desktop dialog. ZUNO's existing Local Pin wordmark appears in the header and panel.
+`ExploreLauncher` places the desktop app-grid button immediately to the left of the homepage ZUNO logo, with its panel aligned to that side. The homepage account link uses a circular silhouette icon with localized accessible labels instead of visible account text. Login/account destinations and the unread badge are preserved. Its native modal dialog reuses the unmodified `ExploreMenu`: all six groups, eighteen feature rows, names, descriptions, search, planned-feature dialogs and language preferences remain. Desktop account also has the launcher; mobile keeps Explore in its original account position. Close, Escape, backdrop click and focus restoration work; nested feature dialogs close independently. Resizing into mobile closes the desktop dialog. ZUNO's existing Local Pin wordmark appears in the header and panel.
 
 The shared settings SVG keeps the outline gear shape. Its color, size and background follow the same contextual rules as neighboring icons; there is no settings-only background or color override. Existing account colors, routes, account shortcuts, sidebar and other menus remain unchanged. No dependencies, framework configuration, database changes or SQL migrations.
 
@@ -20,7 +20,7 @@ Fidelity ledger, checked against browser screenshots with view_image:
 | --- | --- |
 | Hero container | Full width retained, height reduced; measured 214–246px on mobile and 250–280px on wide desktop across tested languages. Long tablet translations may need more height. |
 | Branding | Existing ZUNO + Local Pin SVG reused, including the panel; no substitute logo. |
-| Explore panel | Right aligned, white rounded panel, search and vertical group cards retained. All 18 existing feature rows preserved rather than replacing them with mockup names. |
+| Explore panel | Homepage panel aligned with the left menu button, white rounded panel, search and vertical group cards retained. All 18 existing feature rows preserved rather than replacing them with mockup names. |
 | Icons | Shared outline gear shape; settings uses the same contextual color, size and background as neighboring line icons. |
 | Filters | Small category pills, compact toolbar and two-field price row; labels remain associated with inputs, focus indicators remain visible. |
 | Typography and copy | Smaller responsive headings/control text; no horizontal overflow at tested widths. Existing interface copy takes precedence over illustrative mockup copy. |

@@ -1,0 +1,11 @@
+.header-brand-group{display:flex;align-items:center;gap:12px;flex-shrink:0;min-width:0}
+.site-header .header-brand-group .explore-trigger{width:40px;height:40px;border:0;background:transparent;color:#334155;border-radius:12px}
+.site-header .header-brand-group .explore-trigger:hover,.site-header .header-brand-group .explore-trigger[aria-expanded=true]{color:#0f766e;background:#e6f7f2}
+.site-header .header-brand-group .explore-trigger svg{width:22px;height:22px}
+.site-header .account-icon-link{position:relative;display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;min-height:44px;padding:0;border:0;border-radius:50%;background:transparent;color:#334155}
+.site-header .account-icon-link>svg{width:30px;height:30px;stroke-width:1.7}
+.site-header .account-icon-link:hover{background:#e6f7f2;color:#0f766e}
+.site-header .account-icon-link:focus-visible{outline:3px solid #0d9488;outline-offset:3px}
+.site-header .account-icon-link .unread-badge{position:absolute;top:-2px;right:-3px;margin:0;min-width:18px;height:18px;font-size:10px;pointer-events:none}
+@media(min-width:701px){.site-header:has(.explore-launcher) .account-icon-link{padding:0}}
+@media(max-width:700px){.site-header .header-brand-group{grid-column:1;grid-row:1;justify-self:start;gap:8px}.site-header .account-icon-link{grid-column:3;grid-row:1;width:40px;height:40px;min-height:40px}.site-header .account-icon-link>svg{width:28px;height:28px}}

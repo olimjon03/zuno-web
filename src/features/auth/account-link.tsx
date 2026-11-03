@@ -1,13 +1,15 @@
 "use client";
-import { Text } from "@/features/language/provider";
+import { useT } from "@/features/language/provider";
 
 import { UnreadBadge } from "@/features/messages/unread-provider";
 import Link from "next/link";
+import { Icon } from "@/components/ui/icon";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 export function AccountLink() {
+  const t = useT();
   const [signedIn, setSignedIn] = useState(false);
   useEffect(() => {
     if (!isSupabaseConfigured()) return;
@@ -33,10 +35,12 @@ export function AccountLink() {
   }, []);
   return (
     <Link
-      className="button button-outline login"
+      className="button button-outline login account-icon-link"
+      aria-label={t(signedIn ? "Account" : "Log in")}
+      title={t(signedIn ? "Account" : "Log in")}
       href={signedIn ? "/account" : "/login"}
     >
-      {signedIn ? <Text>{"Account"}</Text> : <Text>{"Log in"}</Text>}
+      <Icon name="user-circle"/>
       {signedIn && <UnreadBadge />}
     </Link>
   );
