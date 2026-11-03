@@ -1,6 +1,6 @@
 export const languages = [
-  { code: "ko", name: "한국어", flag: "🇰🇷" },
-  { code: "uz", name: "O‘zbekcha", flag: "🇺🇿" },
+  { code: "ko", name: "Korean", flag: "🇰🇷" },
+  { code: "uz", name: "Uzbek", flag: "🇺🇿" },
   { code: "en", name: "English", flag: "🇬🇧" },
 ] as const;
 export type Language = (typeof languages)[number]["code"];
