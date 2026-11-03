@@ -9,7 +9,7 @@ export async function getAccountProfile(): Promise<AccountProfile> {
   const db = await createClient();
   const [auth, areaResult] = await Promise.all([
     db.auth.getUser(),
-    db.from("neighborhoods").select("id,name").order("id"),
+    db.from("neighborhoods").select("id,name,region_code").order("id"),
   ]);
   const { data: { user }, error } = auth;
   if (error || !user) redirect("/login?notice=session");
@@ -26,7 +26,7 @@ export async function getAccountProfile(): Promise<AccountProfile> {
   return {
     user: { id: user.id, email: user.email ?? "" },
     profile: { display_name: profile.display_name, neighborhood_id: profile.neighborhood_id === null ? null : Number(profile.neighborhood_id) },
-    neighborhoods: (areaResult.data ?? []).map(area => ({ id: Number(area.id), name: area.name as string })),
+    neighborhoods: (areaResult.data ?? []).map(area => ({ id: Number(area.id), name: area.name as string, regionCode: area.region_code as string | null })),
     avatarPath: profile.avatar_path ?? null,
   };
 }
