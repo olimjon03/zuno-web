@@ -1,6 +1,6 @@
 # Interface languages
 
-The homepage header offers Korean (🇰🇷 한국어), Uzbek (🇺🇿 O‘zbekcha), and English (🇬🇧 English). On desktop it sits between Messages and Sell; on mobile it is a compact flag selector immediately left of Account/Login. The account desktop header and the Language & appearance preference also expose the same selector. Themes and other planned features remain previews.
+The homepage header offers Korean (🇰🇷 Korean), Uzbek (🇺🇿 Uzbek), and English (🇬🇧 English). On desktop it sits between Messages and Sell; on mobile it is a compact flag selector immediately left of Account/Login. The account desktop header and the Language & appearance preference also expose the same selector. Themes and other planned features remain previews.
 
 `src/features/language/catalog.ts` defines supported language codes. `messages.ts` contains reviewed Uzbek and Korean interface dictionaries using English source keys. `translate.ts` supports named placeholders without interpreting HTML. `provider.tsx` provides `Text`, `useT`, and a shared language selection. Text returns plain React text with no extra DOM wrapper, including inside native select options.
 

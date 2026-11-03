@@ -4,7 +4,7 @@ import './helpers/register-runtime.mjs';
 const {translate}=await import('../src/features/language/translate.ts');
 const {messages}=await import('../src/features/language/messages.ts');
 const {isLanguage,languages}=await import('../src/features/language/catalog.ts');
-test('language catalog supports only Korean, Uzbek and English with native names and flags',()=>{
+test('language catalog supports only Korean, Uzbek and English with language names and flags',()=>{
  assert.deepEqual(languages.map(item=>item.code),['ko','uz','en']);
  for(const value of ['ko','uz','en'])assert.equal(isLanguage(value),true);
  for(const value of ['kr','UZ','fr',null,{},'<script>'])assert.equal(isLanguage(value),false);
