@@ -1,8 +1,9 @@
 "use server";
+import "server-only";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { parseProfile } from "./validation";
-export type ProfileState = { error?: string; message?: string };
+import { parseProfile } from "../validation";
+import type { ProfileState } from "../types";
 export async function updateProfile(
   _state: ProfileState,
   data: FormData,
@@ -54,5 +55,5 @@ export async function updateProfile(
   revalidatePath("/neighbors/[id]", "page");
   revalidatePath("/account");
   revalidatePath("/account/settings");
-  return { message: "Profile updated." };
+  return { message: "Profile updated.", profile: input };
 }

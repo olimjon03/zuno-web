@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
       "src/features/search/client/**/*.{ts,tsx}",
       "src/features/marketplace/homepage.tsx",
       "src/features/messages/*.tsx",
+      "src/features/profile/*.tsx",
+      "src/features/favorites/*.tsx",
       "src/features/messages/client/**/*.ts",
     ],
     rules: {
@@ -25,6 +27,7 @@ const eslintConfig = defineConfig([
     files: [
       "src/features/listings/{types,constants,validation,currency}.ts",
       "src/features/search/{types,validation,pagination}.ts",
+      "src/features/profile/{types,validation}.ts",
       "src/features/messages/{types,validation,inbox-model,message-model,refresh-queue}.ts",
     ],
     rules: {
@@ -34,7 +37,7 @@ const eslintConfig = defineConfig([
     },
   },
   {
-    files: ["src/app/messages/**/page.tsx", "src/app/messages/page.tsx", "src/app/page.tsx", "src/app/account/listings/page.tsx", "src/app/api/listings/**/route.ts", "src/app/api/marketplace/route.ts", "src/app/listing-photos/**/route.ts"],
+    files: ["src/app/account/page.tsx", "src/app/account/settings/page.tsx", "src/app/account/saved/page.tsx", "src/app/api/profile/avatar/route.ts", "src/app/messages/**/page.tsx", "src/app/messages/page.tsx", "src/app/page.tsx", "src/app/account/listings/page.tsx", "src/app/api/listings/**/route.ts", "src/app/api/marketplace/route.ts", "src/app/listing-photos/**/route.ts"],
     rules: {
       "no-restricted-imports": ["error", { patterns: [
         { regex: "^(?:@/lib/supabase/|node:|sharp$)", message: "Keep page/route adapters thin; use a feature server service." },

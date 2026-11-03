@@ -1,7 +1,7 @@
 "use client";
 import { startTransition, useActionState, useState, useRef, useEffect } from "react";
 import { Icon } from "@/components/ui/icon";
-import { updateProfile } from "./actions";
+import { updateProfile } from "./server/actions";
 export function ProfileForm({
   displayName,
   email,
@@ -29,8 +29,8 @@ export function ProfileForm({
   const [state, action, pending] = useActionState(async (previous: Awaited<ReturnType<typeof updateProfile>>, data: FormData) => {
     const result = await updateProfile(previous, data);
     setShowResult(true);
-    if (result.message) {
-      setSaved({name: String(data.get("displayName")), area: String(data.get("neighborhoodId"))});
+    if (result.profile) {
+      setSaved({name: result.profile.displayName, area: result.profile.neighborhoodId === null ? "" : String(result.profile.neighborhoodId)});
       setEditing(false);
     }
     return result;

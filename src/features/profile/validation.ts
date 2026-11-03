@@ -1,4 +1,5 @@
-export function parseProfile(data: FormData) {
+import type { ProfileInput } from "./types";
+export function parseProfile(data: FormData): ProfileInput {
   const name = data.get("displayName");
   const area = data.get("neighborhoodId");
   if (
