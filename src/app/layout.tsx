@@ -1,3 +1,4 @@
+import { LikesProvider } from "@/features/likes/provider";
 import { LanguageProvider } from "@/features/language/provider";
 import { Suspense } from "react";
 import { AuthRouteSync } from "@/components/layout/auth-route-sync";
@@ -33,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <LanguageProvider><LocationProvider><FavoritesProvider>
-          <UnreadProvider>{children}<Suspense fallback={null}><AuthRouteSync/><MobileNav/></Suspense></UnreadProvider>
+          <LikesProvider><UnreadProvider>{children}<Suspense fallback={null}><AuthRouteSync/><MobileNav/></Suspense></UnreadProvider></LikesProvider>
         </FavoritesProvider></LocationProvider></LanguageProvider>
       </body>
     </html>

@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {registerHooks} from 'node:module';
 import './helpers/register-runtime.mjs';
 const id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', visitor='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
-let calls=[], unavailable=false;
-globalThis.__engagementDb={rpc(name,args){calls.push({name,args});return Promise.resolve({data:name==='get_listing_engagement'?[{listing_id:id,view_count:'123',messager_count:'4'}]:null,error:unavailable?{code:'PGRST202'}:null});}};
+let calls=[], unavailable=false, likes;
+globalThis.__engagementDb={rpc(name,args){calls.push({name,args});return Promise.resolve({data:name==='get_listing_engagement'?[{listing_id:id,view_count:'123',messager_count:'4',...(likes===undefined?{}:{like_count:likes})}]:null,error:unavailable?{code:'PGRST202'}:null});}};
 registerHooks({resolve(specifier,context,next){
  if(specifier==='@/lib/supabase/public')return {url:'data:text/javascript,export const createPublicClient=()=>globalThis.__engagementDb',shortCircuit:true};
  if(specifier==='@/lib/supabase/server')return {url:'data:text/javascript,export const createClient=async()=>globalThis.__engagementDb',shortCircuit:true};
@@ -27,4 +27,10 @@ test('view endpoint requires same-origin POST context and reuses an HttpOnly dai
  response=await recordListingView(new NextRequest('https://zuno.example/api/view',{method:'POST',headers:{Origin:'https://zuno.example',Cookie:`zuno_listing_viewer=${visitor}`}}),id);assert.equal(response.status,204);assert.equal(calls.at(-1).args.p_visitor_id,visitor);assert.equal(response.headers.get('set-cookie'),null);
  response=await recordListingView(new NextRequest('https://zuno.example/api/view',{method:'POST',headers:{Origin:'https://zuno.example'}}),id);assert.match(response.headers.get('set-cookie'),/HttpOnly/);assert.match(response.headers.get('set-cookie'),/SameSite=lax/);assert.match(response.headers.get('cache-control'),/no-store/);
  unavailable=true;response=await recordListingView(new NextRequest('https://zuno.example/api/view',{method:'POST',headers:{Origin:'https://zuno.example'}}),id);assert.equal(response.status,503);assert.equal(response.headers.get('set-cookie'),null);unavailable=false;
+});
+
+test('card enrichment accepts validated like totals and omits unavailable or malformed like counts',async()=>{
+ likes='8';assert.equal((await withListingEngagement([{id}]))[0].engagement.likes,8);
+ likes=-1;assert.equal((await withListingEngagement([{id}]))[0].engagement.likes,undefined);
+ likes=undefined;assert.deepEqual((await withListingEngagement([{id}]))[0].engagement,{views:123,messagers:4});
 });

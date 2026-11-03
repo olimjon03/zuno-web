@@ -55,7 +55,7 @@ export function Header({
           </button>
         )}
       </form>
-      <Link prefetch={true} className="header-saved" href="/account/saved"><Icon name="heart"/><Text>{"Saved"}</Text></Link>
+      <Link prefetch={true} className="header-saved" href="/account/saved"><Icon name="bookmark"/><Text>{"Saved"}</Text></Link>
       <Link prefetch={true} className="header-saved" href="/messages"><Icon name="chat"/><Text>{"Messages"}</Text></Link>
       <LanguageSelector/>
       <Link prefetch={true} className="button button-primary header-sell" href="/sell"><Text>{"Sell"}</Text></Link>

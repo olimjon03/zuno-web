@@ -2,7 +2,7 @@ import type { CountryCode } from "../locations/catalog";
 import type { categories, conditions } from "./constants";
 export type Category = (typeof categories)[number];
 export type Listing = {
-  engagement?: { views: number; messagers: number };
+  engagement?: { views: number; messagers: number; likes?: number };
   id: string;
   title: string;
   price: number;

@@ -636,10 +636,6 @@ export const messages: Record<string, Record<Exclude<Language, "en">, string>> =
     "uz": "Saqlangan buyumlaringiz shu yerda. O‘chirilgan e’lonlar ko‘rsatilmaydi.",
     "ko": "관심 상품을 모아두었어요. 삭제된 상품은 표시되지 않아요."
   },
-  "You have no saved items. Tap the heart on a marketplace listing to save it.": {
-    "uz": "Saqlangan e’lonlar yo‘q. Saqlash uchun e’londagi yurakchani bosing.",
-    "ko": "아직 관심 상품이 없어요. 상품의 하트를 눌러 저장하세요."
-  },
   "Saved items are temporarily unavailable": {
     "uz": "Saqlangan e’lonlar vaqtincha ochilmayapti",
     "ko": "관심 상품을 일시적으로 불러올 수 없어요"
@@ -2491,5 +2487,41 @@ export const messages: Record<string, Record<Exclude<Language, "en">, string>> =
   "Current cover": {
     "uz": "Joriy muqova",
     "ko": "현재 대표 사진"
+  },
+  "You have no saved items. Tap the bookmark on a marketplace listing to save it.": {
+    "uz": "Saqlangan e’lonlar yo‘q. Saqlash uchun e’londagi xatcho‘p belgisini bosing.",
+    "ko": "아직 관심 상품이 없어요. 상품의 북마크를 눌러 저장하세요."
+  },
+  "Log in to like items.": {
+    "uz": "Like bosish uchun hisobga kiring.",
+    "ko": "좋아요를 누르려면 로그인하세요."
+  },
+  "We couldn’t update your like. Please try again.": {
+    "uz": "Like saqlanmadi. Qayta urinib ko‘ring.",
+    "ko": "좋아요를 변경하지 못했어요. 다시 시도해 주세요."
+  },
+  "Likes notification": {
+    "uz": "Like bildirishnomasi",
+    "ko": "좋아요 알림"
+  },
+  "Like {title}": {
+    "uz": "{title} — yoqtirish",
+    "ko": "{title} 좋아요"
+  },
+  "Unlike {title}": {
+    "uz": "{title} — like’ni bekor qilish",
+    "ko": "{title} 좋아요 취소"
+  },
+  "{count} likes": {
+    "uz": "{count} ta like",
+    "ko": "좋아요 {count}개"
+  },
+  "Retry likes": {
+    "uz": "Like’larni qayta yuklash",
+    "ko": "좋아요 다시 불러오기"
+  },
+  "Likes are temporarily unavailable. Click to retry.": {
+    "uz": "Like’lar vaqtincha ishlamayapti. Qayta yuklash uchun bosing.",
+    "ko": "좋아요를 일시적으로 사용할 수 없어요. 눌러서 다시 시도하세요."
   }
 };

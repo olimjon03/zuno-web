@@ -144,7 +144,7 @@ export function ListingDetail({
                 aria-pressed={saved}
                 onClick={() => toggleFavorite(listing.id)}
               >
-                <Icon name="heart" />
+                <Icon name="bookmark" />
                 {saved ? <Text>{"Saved"}</Text> : <Text>{"Save item"}</Text>}
               </button>
             </div>

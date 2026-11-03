@@ -40,7 +40,7 @@ export function ListingCard({
           aria-pressed={favorite}
           onClick={onToggleFavorite}
         >
-          <Icon name="heart" />
+          <Icon name="bookmark" />
         </button>
       </div>
       <h3>
@@ -55,7 +55,7 @@ export function ListingCard({
       <div className="listing-bottom"><p className="listing-location">
         <Icon name="pin" />
         <span>{formatLocationLabel(listing)}</span>
-      </p><ListingEngagement counts={listing.engagement}/></div>
+      </p><ListingEngagement counts={listing.engagement} id={listing.id} title={listing.title}/></div>
     </article>
   );
 }

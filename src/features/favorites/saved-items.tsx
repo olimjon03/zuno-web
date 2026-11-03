@@ -35,6 +35,6 @@ export function SavedItems({ listings }: { listings: Listing[] }) {
     </div>
   ) : (
     <p>
-      <Text>{"You have no saved items. Tap the heart on a marketplace listing to save it."}</Text></p>
+      <Text>{"You have no saved items. Tap the bookmark on a marketplace listing to save it."}</Text></p>
   );
 }

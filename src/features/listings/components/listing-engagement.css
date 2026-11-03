@@ -4,3 +4,10 @@
 .listing-card .listing-engagement{display:inline-flex;align-items:center;gap:9px;flex:0 0 auto;font-size:11px;color:#7b8490;white-space:nowrap}
 .listing-card .listing-engagement>span{display:inline-flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums}
 .listing-card .listing-engagement svg{flex-shrink:0;width:14px;height:14px}
+
+.listing-card .listing-like{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:30px;min-height:32px;padding:2px 3px;margin:-7px -3px;border:0;border-radius:7px;background:transparent;color:inherit;font:inherit;font-variant-numeric:tabular-nums;cursor:pointer}
+.listing-card .listing-like:hover{background:#fff1f2;color:#e11d48}
+.listing-card .listing-like.is-liked{color:#e11d48}
+.listing-card .listing-like.is-liked svg{fill:currentColor}
+.listing-card .listing-like:focus-visible{outline:2px solid #0d9488;outline-offset:2px}
+.listing-card .listing-like:disabled{cursor:wait;opacity:.6}

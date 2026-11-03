@@ -11,7 +11,7 @@ export function MessagesWorkspace({ entries, now, activeId, children }: { entrie
   return <main className={`messages-workspace ${activeId ? "has-conversation" : "inbox-only"}`}>
     <div className="messages-frame">
       <header className="messages-topbar"><Link href="/" prefetch className="wordmark" aria-label="ZUNO home"><Brand/></Link><BackHomeNav/>
-        <nav aria-label="Messages navigation"><Link href="/account/saved" prefetch><Icon name="heart"/><Text>{"Saved"}</Text></Link><Link href="/messages" prefetch aria-current="page"><Icon name="chat"/><Text>{"Messages"}</Text></Link><Link href="/account" prefetch><Icon name="user"/><Text>{"My ZUNO"}</Text></Link></nav>
+        <nav aria-label="Messages navigation"><Link href="/account/saved" prefetch><Icon name="bookmark"/><Text>{"Saved"}</Text></Link><Link href="/messages" prefetch aria-current="page"><Icon name="chat"/><Text>{"Messages"}</Text></Link><Link href="/account" prefetch><Icon name="user"/><Text>{"My ZUNO"}</Text></Link></nav>
       </header>
       <div className="messages-columns">
         <aside className="messages-sidebar" aria-label="Conversations"><InboxLiveRefresh/><h1><Text>{"Messages"}</Text></h1><InboxList entries={entries} now={now} activeId={activeId}/></aside>
