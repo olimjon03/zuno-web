@@ -3,6 +3,7 @@ import "server-only";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { readSafetyState } from "@/features/moderation/actions";
+import { getLiveListing } from "@/features/listings/server/data";
 import { getInboxSnapshot } from "./inbox-data";
 import { readMessages } from "./actions";
 import { isUuid } from "@/features/listings/validation";
@@ -25,7 +26,18 @@ export async function getConversationPage(id: string) {
   if (error) throw new Error("Conversation unavailable.");
   if (!c || (c.buyer_id !== user.id && c.seller_id !== user.id)) notFound();
   const otherId = c.buyer_id === user.id ? c.seller_id : c.buyer_id;
-  const [result, safety] = await Promise.all([readMessages(id), readSafetyState(otherId)]);
+  const [result, safety, inbox, listing, profiles] = await Promise.all([
+    readMessages(id), readSafetyState(otherId), getInboxSnapshot(db, user.id),
+    c.listing_id ? getLiveListing(c.listing_id).catch(() => null) : null,
+    db.rpc("get_public_profile", { profile_id: user.id }),
+  ]);
+  const counterpart = inbox.entries.find(entry => entry.id === id);
+  let person = { id: otherId, name: counterpart?.otherName ?? (c.buyer_id === user.id ? c.seller_name : c.buyer_name), avatarPath: counterpart?.avatarPath ?? null, neighborhood: counterpart?.neighborhood ?? null };
+  if (!counterpart) {
+    const { data } = await db.rpc("get_public_profile", { profile_id: otherId });
+    if (data?.[0]) person = { id: otherId, name: data[0].display_name, avatarPath: data[0].avatar_path, neighborhood: data[0].neighborhood };
+  }
+  const self = { name: profiles.data?.[0]?.display_name ?? "You", avatarPath: profiles.data?.[0]?.avatar_path ?? null };
   if (!result.messages) throw new Error("Messages unavailable.");
-  return { c, userId: user.id, otherId, messages: result.messages, canMessage: safety.state?.canMessage ?? true };
+  return { c, userId: user.id, otherId, messages: result.messages, mediaReady: result.mediaReady ?? false, inbox, person, self, listing: listing?.listing ?? null, canMessage: safety.state?.canMessage ?? true };
 }
