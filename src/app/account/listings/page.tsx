@@ -1,3 +1,4 @@
+import { Text } from "@/features/language/provider";
 import { SectionLoading } from "@/components/layout/section-loading";
 import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
@@ -24,15 +25,15 @@ async function OwnedListings() {
         <Link className="wordmark" href="/">
           <Brand/>
         </Link><BackHomeNav/></header>
-      <div className="owned-listings-title-row"><h1>Your listings</h1><Link className="button button-primary" href="/sell">Sell an Item</Link></div>
+      <div className="owned-listings-title-row"><h1><Text>{"Your listings"}</Text></h1><Link className="button button-primary" href="/sell"><Text>{"Sell an Item"}</Text></Link></div>
       {!data?.length ? (
-        <p>You have no listings yet.</p>
+        <p><Text>{"You have no listings yet."}</Text></p>
       ) : (
         <>
           {data.map((item) => (
             <ManageListing key={item.id} item={item} {...options} />
           ))}
-          <p className="auth-hint">Showing your latest {data.length} {data.length === 1 ? "listing" : "listings"}.</p>
+          <p className="auth-hint"><Text>{"Showing your latest"}</Text>{data.length} {data.length === 1 ? <Text>{"listing"}</Text> : <Text>{"listings"}</Text>}.</p>
         </>
       )}
     </main>

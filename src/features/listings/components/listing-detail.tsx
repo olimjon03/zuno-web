@@ -1,4 +1,6 @@
 "use client";
+import { Text, useT } from "@/features/language/provider";
+
 import { ListingViewTracker } from "./listing-view-tracker";
 import { resolveLocation } from "@/features/locations/catalog";
 import { formatLocationLabel } from "@/features/locations/catalog";
@@ -24,6 +26,7 @@ export function ListingDetail({
   listing: Listing;
   details: ListingDetails;
 }) {
+ const t = useT();
   const [dialog, setDialog] = useState<"photo" | "contact" | null>(null);
   const { favorites, toggleFavorite } = useFavorites();
   const saved = favorites.includes(listing.id);
@@ -36,33 +39,32 @@ export function ListingDetail({
   return (
     <>
       <a className="skip-link" href="#listing-detail">
-        Skip to listing
-      </a>
+        <Text>{"Skip to listing"}</Text></a>
       <header className="shell detail-header">
-        <Link href="/" className="wordmark" aria-label="ZUNO home">
+        <Link href="/" className="wordmark" aria-label={t("ZUNO home")}>
           <Brand/>
         </Link><BackHomeNav/></header>
       <main id="listing-detail" className="shell detail-page">
         {real && <ListingViewTracker id={listing.id}/>}
-        <nav aria-label="Breadcrumb" className="detail-breadcrumb">
-          <Link href="/">Marketplace</Link>
+        <nav aria-label={t("Breadcrumb")} className="detail-breadcrumb">
+          <Link href="/"><Text>{"Marketplace"}</Text></Link>
           <span aria-hidden="true">/</span>
           <span>{listing.category}</span>
         </nav>
         {listing.status && listing.status !== "active" && (
           <p className="listing-status" role="status">
             {listing.status === "sold"
-              ? "This item has been sold."
-              : "This item is reserved."}
+              ? <Text>{"This item has been sold."}</Text>
+              : <Text>{"This item is reserved."}</Text>}
           </p>
         )}
         <p className="detail-demo">
           {real
-            ? "Local pickup · Inspect the item before exchanging."
-            : "Sample listing · Explore the demo. No purchases or messages are sent."}
+            ? <Text>{"Local pickup · Inspect the item before exchanging."}</Text>
+            : <Text>{"Sample listing · Explore the demo. No purchases or messages are sent."}</Text>}
         </p>
         <div className="detail-grid">
-          <section aria-label="Listing photos" className="detail-gallery">
+          <section aria-label={t("Listing photos")} className="detail-gallery">
             <button
               className="detail-photo"
               aria-label={`Enlarge photo of ${listing.title}`}
@@ -82,7 +84,7 @@ export function ListingDetail({
               <span>
                 {photos.length} {photos.length === 1 ? "photo" : "photos"}
               </span>
-              <button onClick={() => setDialog("photo")}>View larger ↗</button>
+              <button onClick={() => setDialog("photo")}><Text>{"View larger ↗"}</Text></button>
             </div>
             {photos.length > 1 && (
               <div className="photo-thumbnails">
@@ -114,16 +116,16 @@ export function ListingDetail({
             <p className="detail-price">{formatPrice(listing.price, listing.countryCode ?? resolveLocation(listing.neighborhood, listing.regionCode).countryCode)}</p>
             <dl className="detail-facts">
               <div>
-                <dt>Condition</dt>
-                <dd>{details.condition}</dd>
+                <dt><Text>{"Condition"}</Text></dt>
+                <dd><Text>{details.condition}</Text></dd>
               </div>
               <div>
-                <dt>Category</dt>
+                <dt><Text>{"Category"}</Text></dt>
                 <dd>{listing.category}</dd>
               </div>
               <div>
-                <dt>Exchange</dt>
-                <dd>Local pickup</dd>
+                <dt><Text>{"Exchange"}</Text></dt>
+                <dd><Text>{"Local pickup"}</Text></dd>
               </div>
             </dl>
             <div className="detail-actions">
@@ -134,8 +136,7 @@ export function ListingDetail({
                   className="button button-primary"
                   onClick={() => setDialog("contact")}
                 >
-                  Contact seller
-                  <Icon name="arrow" />
+                  <Text>{"Contact seller"}</Text><Icon name="arrow" />
                 </button>
               )}
               <button
@@ -144,27 +145,27 @@ export function ListingDetail({
                 onClick={() => toggleFavorite(listing.id)}
               >
                 <Icon name="heart" />
-                {saved ? "Saved" : "Save item"}
+                {saved ? <Text>{"Saved"}</Text> : <Text>{"Save item"}</Text>}
               </button>
             </div>
             <p role="status" className="detail-save-status">
               {saved
                 ? real
-                  ? "Saved to your account."
-                  : "Sample saved for this visit."
+                  ? <Text>{"Saved to your account."}</Text>
+                  : <Text>{"Sample saved for this visit."}</Text>
                 : real
-                  ? "Save this find to your account."
-                  : "Save a sample for this visit."}
+                  ? <Text>{"Save this find to your account."}</Text>
+                  : <Text>{"Save a sample for this visit."}</Text>}
             </p>
             <div className="detail-seller">
               <span className="seller-avatar" aria-hidden="true">
                 {details.seller.charAt(0)}
               </span>
               <div>
-                <h2>{details.sellerId ? <Link href={`/neighbors/${details.sellerId}`}>{details.seller} · View profile</Link> : details.seller}</h2>
+                <h2>{details.sellerId ? <Link href={`/neighbors/${details.sellerId}`}>{details.seller} <Text>{"· View profile"}</Text></Link> : details.seller}</h2>
                 <p>
                   {real
-                    ? "Local seller"
+                    ? <Text>{"Local seller"}</Text>
                     : `Sample seller · Joined ${details.joined}`}
                 </p>
               </div>
@@ -175,32 +176,29 @@ export function ListingDetail({
           className="detail-description"
           aria-labelledby="description-title"
         >
-          <h2 id="description-title">About this item</h2>
+          <h2 id="description-title"><Text>{"About this item"}</Text></h2>
           <p>{details.description}</p>
-          <h2>Meet nearby</h2>
+          <h2><Text>{"Meet nearby"}</Text></h2>
           <p>
-            Pickup in {formatLocationLabel(listing)}. Agree on a public meeting
-            place and inspect the item before exchanging. Exact addresses are
-            not displayed.
-          </p>
+            <Text>{"Pickup in"}</Text>{formatLocationLabel(listing)}<Text>{". Agree on a public meeting place and inspect the item before exchanging. Exact addresses are not displayed."}</Text></p>
         </section>
         {real && details.sellerId && <SafetyControls userId={details.sellerId} name={details.seller} listingId={listing.id}/>}
       </main>
       <footer className="shell footer">
-        <Link href="/" className="wordmark" aria-label="ZUNO home">
+        <Link href="/" className="wordmark" aria-label={t("ZUNO home")}>
           <Brand/>
         </Link>
-        <p>Buy · Sell · Connect Locally</p>
+        <p><Text>{"Buy · Sell · Connect Locally"}</Text></p>
         <span>
           {real
-            ? "Your neighborhood marketplace"
-            : "Sample listings · Demo marketplace"}
+            ? <Text>{"Your neighborhood marketplace"}</Text>
+            : <Text>{"Sample listings · Demo marketplace"}</Text>}
         </span>
       </footer>
       {dialog && (
         <DemoDialog
           title={
-            dialog === "photo" ? listing.title : `Contact ${details.sellerId ? <Link href={`/neighbors/${details.sellerId}`}>{details.seller} · View profile</Link> : details.seller}`
+            dialog === "photo" ? listing.title : `Contact ${details.sellerId ? <Link href={`/neighbors/${details.sellerId}`}>{details.seller} <Text>{"· View profile"}</Text></Link> : details.seller}`
           }
           onClose={() => setDialog(null)}
         >
@@ -217,8 +215,8 @@ export function ListingDetail({
           ) : (
             <p>
               {real
-                ? "Messaging is coming soon. No message has been sent. You can save this item for now."
-                : "Messaging is coming soon. This is a sample seller and no message will be sent."}
+                ? <Text>{"Messaging is coming soon. No message has been sent. You can save this item for now."}</Text>
+                : <Text>{"Messaging is coming soon. This is a sample seller and no message will be sent."}</Text>}
             </p>
           )}
         </DemoDialog>

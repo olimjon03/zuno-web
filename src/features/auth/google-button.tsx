@@ -1,4 +1,6 @@
 "use client";
+import { Text } from "@/features/language/provider";
+
 
 import { useActionState } from "react";
 import { loginWithGoogle } from "./google-action";
@@ -30,11 +32,11 @@ export function GoogleButton() {
             d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"
           />
         </svg>
-        {pending ? "Connecting to Google…" : "Continue with Google"}
+        {pending ? <Text>{"Connecting to Google…"}</Text> : <Text>{"Continue with Google"}</Text>}
       </button>
       {state.error && (
         <p role="alert" className="auth-error">
-          {state.error}
+          <Text>{state.error}</Text>
         </p>
       )}
     </form>

@@ -1,3 +1,5 @@
+"use client";
+import { Text, useT } from "@/features/language/provider";
 import { categories } from "@/features/listings/constants";
 import type { Category } from "@/features/listings/types";
 import { Icon, type IconName } from "@/components/ui/icon";
@@ -9,8 +11,9 @@ export function CategoryNav({
   selected: Category;
   onChange: (category: Category) => void;
 }) {
+  const t = useT();
   return (
-    <nav className="category-nav" aria-label="Marketplace categories">
+    <nav className="category-nav" aria-label={t("Marketplace categories")}>
       {categories.map((category, index) => (
         <button
           key={category}
@@ -19,7 +22,7 @@ export function CategoryNav({
           onClick={() => onChange(category)}
         >
           <Icon name={icons[index]}/>
-          {category}
+          <Text>{category}</Text>
         </button>
       ))}
     </nav>

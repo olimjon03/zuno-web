@@ -1,3 +1,4 @@
+import { Text } from "@/features/language/provider";
 import { getSavedPage } from "@/features/favorites/server/page-data";
 import { SectionLoading } from "@/components/layout/section-loading";
 import { BackHomeNav } from "@/components/layout/back-home-nav";
@@ -22,8 +23,8 @@ async function Saved() {
         <Link prefetch={true} href="/" className="wordmark">
           <Brand/>
         </Link><BackHomeNav/></header>
-      <h1>Saved items</h1>
-      <p>Your saved finds, ready when you are. Removed listings are hidden.</p>
+      <h1><Text>{"Saved items"}</Text></h1>
+      <p><Text>{"Your saved finds, ready when you are. Removed listings are hidden."}</Text></p>
       <SavedItems listings={listings} />
     </main>
   );

@@ -1,4 +1,5 @@
 "use client";
+import { useT } from "@/features/language/provider";
 import {
   createContext,
   useContext,
@@ -164,11 +165,12 @@ export function useUnread() {
   return useContext(Context);
 }
 export function UnreadBadge({ conversationId }: { conversationId?: string }) {
+  const t = useT();
   const hydrated = useHydrated();
   const { counts, total, available } = useUnread();
   const count = conversationId ? (counts[conversationId] ?? 0) : total;
   return hydrated && available && count > 0 ? (
-    <span className="unread-badge" aria-label={`${count} unread messages`}>
+    <span className="unread-badge" aria-label={t("{count} unread messages", { count })}>
       {count > 99 ? "99+" : count}
     </span>
   ) : null;

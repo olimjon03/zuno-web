@@ -1,4 +1,6 @@
 "use client";
+import { Text, useT } from "@/features/language/provider";
+
 import Link from "next/link";
 import {
   createContext,
@@ -22,6 +24,7 @@ const FavoritesContext = createContext<{
   toggleFavorite: (id: string) => void;
 } | null>(null);
 export function FavoritesProvider({ children }: { children: ReactNode }) {
+ const t = useT();
   const [favorites, setFavorites] = useState<string[]>([]);
   const [ready, setReady] = useState(false);
   const [loadError, setLoadError] = useState("");
@@ -163,13 +166,13 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       {notice && (
         <aside
           className="favorite-notice"
-          aria-label="Saved items notification"
+          aria-label={t("Saved items notification")}
         >
-          <p role="status">{notice}</p>
-          {login && <Link href="/login">Log in</Link>}
+          <p role="status"><Text>{notice}</Text></p>
+          {login && <Link href="/login"><Text>{"Log in"}</Text></Link>}
           <button
             type="button"
-            aria-label="Dismiss notification"
+            aria-label={t("Dismiss notification")}
             onClick={() => setNotice("")}
           >
             ×

@@ -1,3 +1,4 @@
+import { Text, useT } from "@/features/language/provider";
 import { ListingEngagement } from "./listing-engagement";
 import "./listing-engagement.css";
 import { resolveLocation } from "@/features/locations/catalog";
@@ -16,13 +17,14 @@ export function ListingCard({
   favorite: boolean;
   onToggleFavorite: () => void;
 }) {
+  const t = useT();
   return (
     <article className="listing-card">
       <div className="listing-image">
         <Link
           className="image-link"
           href={`/listings/${listing.id}`}
-          aria-label={`View ${listing.title}`}
+          aria-label={t("View {title}", { title: listing.title })}
         >
           <Image
             src={listing.image}
@@ -34,7 +36,7 @@ export function ListingCard({
         </Link>
         <button
           className={`favorite ${favorite ? "is-favorite" : ""}`}
-          aria-label={`${favorite ? "Unsave" : "Save"} ${listing.title}`}
+          aria-label={t(favorite ? "Unsave {title}" : "Save {title}", { title: listing.title })}
           aria-pressed={favorite}
           onClick={onToggleFavorite}
         >
@@ -46,7 +48,7 @@ export function ListingCard({
       </h3>
       {listing.status && listing.status !== "active" && (
         <p className="listing-status">
-          {listing.status === "sold" ? "Sold" : "Reserved"}
+          {listing.status === "sold" ? <Text>{"Sold"}</Text> : <Text>{"Reserved"}</Text>}
         </p>
       )}
       <p className="price">{formatPrice(listing.price, listing.countryCode ?? resolveLocation(listing.neighborhood, listing.regionCode).countryCode)}</p>

@@ -1,4 +1,6 @@
 "use client";
+import { Text, useT } from "@/features/language/provider";
+
 import Link from "next/link";
 import { useLocation } from "@/features/locations/location-provider";
 import type { CountryCode } from "@/features/locations/catalog";
@@ -20,6 +22,7 @@ export function CreateListingForm({
   neighborhoods: LookupOption[];
   ready: boolean;
 }) {
+  const t = useT();
   const router = useRouter();
   const [photos, setPhotos] = useState<PhotoChoice[]>([]);
   const {location}=useLocation();
@@ -89,25 +92,24 @@ export function CreateListingForm({
     >
       {!ready && (
         <p role="status" className="auth-error">
-          Posting is being prepared. Please try again later.
-        </p>
+          <Text>{"Posting is being prepared. Please try again later."}</Text></p>
       )}
       <fieldset disabled={pending}>
-        <legend className="sr-only">Item details and photos</legend>
+        <legend className="sr-only"><Text>{"Item details and photos"}</Text></legend>
         <div className="sell-field">
-          <label htmlFor="listing-title">Title</label>
+          <label htmlFor="listing-title"><Text>{"Title"}</Text></label>
           <input
             id="listing-title"
             name="title"
             required
             minLength={3}
             maxLength={120}
-            placeholder="What are you selling?"
+            placeholder={t("What are you selling?")}
           />
         </div>
         <div className="sell-fields">
           <div className="sell-field">
-            <label htmlFor="listing-price">Price ({priceLabel(country)})</label>
+            <label htmlFor="listing-price"><Text>{"Price ("}</Text>{priceLabel(country)})</label>
             <input
               id="listing-price"
               name="price"
@@ -119,10 +121,10 @@ export function CreateListingForm({
               step={1}
               placeholder="0"
             />
-            <p className="auth-hint">Use 0 if you’re giving it away. Currency follows the selected country; amounts are not converted.</p>
+            <p className="auth-hint"><Text>{"Use 0 if you’re giving it away. Currency follows the selected country; amounts are not converted."}</Text></p>
           </div>
           <div className="sell-field">
-            <label htmlFor="listing-condition">Condition</label>
+            <label htmlFor="listing-condition"><Text>{"Condition"}</Text></label>
             <select
               id="listing-condition"
               name="condition"
@@ -130,11 +132,10 @@ export function CreateListingForm({
               defaultValue=""
             >
               <option value="" disabled>
-                Choose condition
-              </option>
+                <Text>{"Choose condition"}</Text></option>
               {conditions.map((value) => (
                 <option key={value} value={value}>
-                  {conditionLabels[value]}
+                  <Text>{conditionLabels[value]}</Text>
                 </option>
               ))}
             </select>
@@ -142,7 +143,7 @@ export function CreateListingForm({
         </div>
         <div className="sell-fields">
           <div className="sell-field">
-            <label htmlFor="listing-category">Category</label>
+            <label htmlFor="listing-category"><Text>{"Category"}</Text></label>
             <select
               id="listing-category"
               name="categoryId"
@@ -150,11 +151,10 @@ export function CreateListingForm({
               defaultValue=""
             >
               <option value="" disabled>
-                Choose category
-              </option>
+                <Text>{"Choose category"}</Text></option>
               {categories.map((option) => (
                 <option key={option.id} value={option.id}>
-                  {option.name}
+                  <Text>{option.name}</Text>
                 </option>
               ))}
             </select>
@@ -162,7 +162,7 @@ export function CreateListingForm({
         </div>
         <ListingLocationFields id="create" country={country} neighborhoodId={neighborhoodId} options={neighborhoods} onCountry={setCountry} onNeighborhood={setNeighborhoodId}/>
         <div className="sell-field">
-          <label htmlFor="listing-description">Description</label>
+          <label htmlFor="listing-description"><Text>{"Description"}</Text></label>
           <textarea
             id="listing-description"
             name="description"
@@ -170,34 +170,30 @@ export function CreateListingForm({
             minLength={10}
             maxLength={5000}
             rows={6}
-            placeholder="Mention its condition, what’s included, and pickup arrangements."
+            placeholder={t("Mention its condition, what’s included, and pickup arrangements.")}
           />
           <p className="auth-hint">
-            Share your neighborhood, not your home address or phone number.
-          </p>
+            <Text>{"Share your neighborhood, not your home address or phone number."}</Text></p>
         </div>
         <PhotoPicker id="listing-photos" photos={photos} onChange={value=>{setPhotos(value);requestId.current=null;}} onError={setError} disabled={pending}/>
       </fieldset>
       {error && (
         <p role="alert" className="auth-error">
-          {error}
+          <Text>{error}</Text>
         </p>
       )}
       {needsLogin && (
         <Link href="/login" className="button button-outline">
-          Log in again
-        </Link>
+          <Text>{"Log in again"}</Text></Link>
       )}
       <p className="auth-hint">
-        Your listing and photos will be visible to other visitors when
-        published.
-      </p>
+        <Text>{"Your listing and photos will be visible to other visitors when published."}</Text></p>
       <button className="button button-primary" disabled={pending || !ready}>
-        {pending ? "Publishing your item…" : "Publish item"}
+        {pending ? <Text>{"Publishing your item…"}</Text> : <Text>{"Publish item"}</Text>}
       </button>
       <p role="status" className="auth-hint">
         {pending
-          ? "Uploading photos and saving your listing. Please keep this page open."
+          ? <Text>{"Uploading photos and saving your listing. Please keep this page open."}</Text>
           : ""}
       </p>
     </form>

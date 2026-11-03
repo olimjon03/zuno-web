@@ -1,17 +1,17 @@
 "use client";
+import { Text } from "@/features/language/provider";
+
 import { BackHomeNav } from "@/components/layout/back-home-nav";
 import Link from "next/link";
 export default function SellError({ reset }: { reset: () => void }) {
   return (
     <main className="shell detail-message"><BackHomeNav/>
-      <h1>Posting is temporarily unavailable</h1>
-      <p>Please try again in a moment.</p>
+      <h1><Text>{"Posting is temporarily unavailable"}</Text></h1>
+      <p><Text>{"Please try again in a moment."}</Text></p>
       <button className="button button-primary" onClick={reset}>
-        Try again
-      </button>
+        <Text>{"Try again"}</Text></button>
       <Link className="button button-outline" href="/">
-        Back to marketplace
-      </Link>
+        <Text>{"Back to marketplace"}</Text></Link>
     </main>
   );
 }
