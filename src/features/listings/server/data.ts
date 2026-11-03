@@ -4,6 +4,7 @@ import { cacheLife } from "next/cache";
 import { createPublicClient } from "@/lib/supabase/public";
 import { isUuid } from "../validation";
 import { LISTING_COLUMNS } from "./constants";
+import { withListingEngagement } from "./engagement";
 import { mapRow } from "./mapper";
 import type { ListingRow } from "./types";
 export const getLiveListing = cache(async (id: string) => {
@@ -54,13 +55,11 @@ export async function getSavedListings() {
     .order("created_at", { ascending: false })
     .limit(1000);
   if (error) throw new Error("Saved items are temporarily unavailable.");
-  return ((data as unknown as { listing: ListingRow }[]) ?? []).map(
-    (row) => mapRow(row.listing).listing,
-  );
+  return withListingEngagement(((data as unknown as { listing: ListingRow }[]) ?? []).map(row => mapRow(row.listing).listing));
 }
 
 export async function getSellerListings(sellerId: string) {
   const {data,error}=await createPublicClient().from("listings").select(LISTING_COLUMNS).eq("seller_id",sellerId).eq("status","active").order("created_at",{ascending:false}).limit(60).returns<ListingRow[]>();
   if(error) throw new Error("This neighbor’s listings are temporarily unavailable.");
-  return (data??[]).map(row=>mapRow(row).listing);
+  return withListingEngagement((data??[]).map(row=>mapRow(row).listing));
 }

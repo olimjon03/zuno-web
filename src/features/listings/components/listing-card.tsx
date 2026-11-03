@@ -1,3 +1,5 @@
+import { ListingEngagement } from "./listing-engagement";
+import "./listing-engagement.css";
 import { resolveLocation } from "@/features/locations/catalog";
 import { formatLocationLabel } from "@/features/locations/catalog";
 import Image from "next/image";
@@ -48,10 +50,10 @@ export function ListingCard({
         </p>
       )}
       <p className="price">{formatPrice(listing.price, listing.countryCode ?? resolveLocation(listing.neighborhood, listing.regionCode).countryCode)}</p>
-      <p className="listing-location">
+      <div className="listing-bottom"><p className="listing-location">
         <Icon name="pin" />
-        {formatLocationLabel(listing)}
-      </p>
+        <span>{formatLocationLabel(listing)}</span>
+      </p><ListingEngagement counts={listing.engagement}/></div>
     </article>
   );
 }
