@@ -6,7 +6,7 @@ Category pills and price/sort controls are smaller. Mobile has a filter disclosu
 
 `ExploreLauncher` adds a desktop app-grid button immediately after the account link. Its native modal dialog reuses the unmodified `ExploreMenu`: all six groups, eighteen feature rows, names, descriptions, search, planned-feature dialogs and language preferences remain. Desktop account also has the launcher; mobile keeps Explore in its original account position. Close, Escape, backdrop click and focus restoration work; nested feature dialogs close independently. Resizing into mobile closes the desktop dialog. ZUNO's existing Local Pin wordmark appears in the header and panel.
 
-The shared settings SVG and scoped stylesheet give every settings icon a teal outline gear on a pale mint rounded square. Existing account colors, routes, account shortcuts, sidebar and other menus remain unchanged. No dependencies, framework configuration, database changes or SQL migrations.
+The shared settings SVG keeps the outline gear shape. Its color, size and background follow the same contextual rules as neighboring icons; there is no settings-only background or color override. Existing account colors, routes, account shortcuts, sidebar and other menus remain unchanged. No dependencies, framework configuration, database changes or SQL migrations.
 
 ## Design and validation
 
@@ -21,7 +21,7 @@ Fidelity ledger, checked against browser screenshots with view_image:
 | Hero container | Full width retained, height reduced; measured 214–246px on mobile and 250–280px on wide desktop across tested languages. Long tablet translations may need more height. |
 | Branding | Existing ZUNO + Local Pin SVG reused, including the panel; no substitute logo. |
 | Explore panel | Right aligned, white rounded panel, search and vertical group cards retained. All 18 existing feature rows preserved rather than replacing them with mockup names. |
-| Icons | Shared teal gear/mint-square treatment; existing line icons retained for other menus. |
+| Icons | Shared outline gear shape; settings uses the same contextual color, size and background as neighboring line icons. |
 | Filters | Small category pills, compact toolbar and two-field price row; labels remain associated with inputs, focus indicators remain visible. |
 | Typography and copy | Smaller responsive headings/control text; no horizontal overflow at tested widths. Existing interface copy takes precedence over illustrative mockup copy. |
 | Account | Original dark account design intentionally preserved; the generated white account example was not applied because the user required existing menus/design to remain. |
