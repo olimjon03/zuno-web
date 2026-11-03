@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useCallback, useContext, useEffect, useSyncExternalStore, type ReactNode } from "react";
-import { isLanguage, LANGUAGE_STORAGE_KEY, type Language } from "./catalog";
+import { useCountry } from "@/features/locations/country-provider";
+import { countryLanguages, isLanguage, LANGUAGE_STORAGE_KEY, type Language } from "./catalog";
 import { translate, type TranslationValues } from "./translate";
 const eventName = "zuno:language";
 let current: Language = "en";
@@ -18,8 +19,10 @@ function subscribe(callback: () => void) {
   return () => { window.removeEventListener(eventName, callback); window.removeEventListener("storage", onStorage); };
 }
 const LanguageContext = createContext<{ language: Language; setLanguage: (value: Language) => void }>({ language: "en", setLanguage: () => {} });
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const language = useSyncExternalStore(subscribe, read, () => "en" as const);
+export function LanguageProvider({ children, welcome=false }: { children: ReactNode; welcome?:boolean }) {
+  const storedLanguage = useSyncExternalStore(subscribe, read, () => "en" as const);
+  const country=useCountry();
+  const language=countryLanguages(country,welcome).includes(storedLanguage)?storedLanguage:"en";
   const setLanguage = useCallback((value: Language) => {
     if (!isLanguage(value)) return;
     current = value;
@@ -27,7 +30,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     try { localStorage.setItem(LANGUAGE_STORAGE_KEY, value); } catch { /* Session-only selection still works. */ }
     window.dispatchEvent(new Event(eventName));
   }, []);
-  useEffect(() => { document.documentElement.lang = language; }, [language]);
+  useEffect(() => { document.documentElement.lang = language; return ()=>{if(welcome)document.documentElement.lang=countryLanguages(country).includes(storedLanguage)?storedLanguage:"en";}; }, [language,welcome,country,storedLanguage]);
   return <LanguageContext.Provider value={{ language, setLanguage }}>{children}</LanguageContext.Provider>;
 }
 export function useLanguage() { return useContext(LanguageContext); }

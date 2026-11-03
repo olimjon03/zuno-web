@@ -1,4 +1,5 @@
 "use client";
+import { useCountry, notifyCountryChange } from "@/features/locations/country-provider";
 import { Text } from "@/features/language/provider";
 
 import { startTransition, useActionState, useState, useRef, useEffect } from "react";
@@ -20,6 +21,7 @@ export function ProfileForm({
   neighborhoodId: number | null;
   neighborhoods: ProfileNeighborhood[];
 }) {
+  const selectedCountry=useCountry();
   const [name, setName] = useState(displayName);
   const [area, setArea] = useState(
     neighborhoodId === null ? "" : String(neighborhoodId),
@@ -32,11 +34,11 @@ export function ProfileForm({
   const [showResult, setShowResult] = useState(false);
   const nameInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    const openNeighborhood = () => { if (window.location.hash === "#profile-neighborhood") { setReturnToProfile(false); setMode("neighborhood"); } };
+    const openNeighborhood = () => { if (window.location.hash === "#profile-neighborhood") { setReturnToProfile(false); setCountry(current=>current||selectedCountry); setMode("neighborhood"); } };
     const frame = requestAnimationFrame(openNeighborhood);
     window.addEventListener("hashchange", openNeighborhood);
     return () => { cancelAnimationFrame(frame); window.removeEventListener("hashchange", openNeighborhood); };
-  }, []);
+  }, [selectedCountry]);
   useEffect(() => { if (mode === "profile") nameInput.current?.focus(); else if (mode === "neighborhood") countryInput.current?.focus(); }, [mode]);
   const [state, action, pending] = useActionState(async (previous: ProfileState, data: FormData) => {
     const result = await (data.get("intent") === "neighborhood" ? updateNeighborhood(previous, data) : updateDisplayName(previous, data));
@@ -44,6 +46,7 @@ export function ProfileForm({
     const savedName = result.displayName;
     if (savedName) { setSaved(current => ({...current, name: savedName})); setMode(null); }
     if (result.neighborhoodId !== undefined) {
+      notifyCountryChange();
       setSaved(current => ({...current, area: String(result.neighborhoodId)}));
       setMode(returnToProfile ? "profile" : null);
     }
@@ -51,7 +54,7 @@ export function ProfileForm({
   }, {});
   const areaName = neighborhoods.find(item => String(item.id) === saved.area)?.name || "Not selected";
   function openNeighborhood(fromProfile: boolean) {
-    setReturnToProfile(fromProfile);setArea(saved.area);setCountry(profileAreaCountry(neighborhoods,saved.area));setShowResult(false);setMode("neighborhood");
+    setReturnToProfile(fromProfile);setArea(saved.area);setCountry(selectedCountry || profileAreaCountry(neighborhoods,saved.area));setShowResult(false);setMode("neighborhood");
   }
   function submit(event: React.FormEvent<HTMLFormElement>, intent: "name" | "neighborhood") {
     event.preventDefault();
@@ -76,7 +79,7 @@ export function ProfileForm({
       <div className="settings-edit-actions"><button type="button" className="button button-outline" disabled={pending} onClick={()=>{setMode(null);setShowResult(false);}}><Text>{"Cancel"}</Text></button><button form="profile-name-form" className="button button-primary" disabled={pending}>{pending ? <Text>{"Saving…"}</Text> : <Text>{"Save profile"}</Text>}</button></div>
     </div>
     {mode === "neighborhood" && <form className="auth-form" aria-busy={pending} onSubmit={event=>submit(event,"neighborhood")}>
-      <fieldset disabled={pending}><legend className="sr-only"><Text>{"Change neighborhood"}</Text></legend><NeighborhoodFields country={country} area={area} options={neighborhoods} required onCountry={setCountry} onArea={setArea} countryRef={countryInput}/><div className="settings-edit-actions"><button type="button" className="button button-outline" disabled={pending} onClick={()=>{setMode(returnToProfile ? "profile" : null);setShowResult(false);}}><Text>{"Cancel"}</Text></button><button className="button button-primary" disabled={pending}>{pending ? <Text>{"Saving…"}</Text> : <Text>{"Save neighborhood"}</Text>}</button></div></fieldset>
+      <fieldset disabled={pending}><legend className="sr-only"><Text>{"Change neighborhood"}</Text></legend><NeighborhoodFields country={country} area={area} options={neighborhoods} required onCountry={setCountry} onArea={setArea} countryRef={countryInput} allowCountry={!returnToProfile}/><div className="settings-edit-actions"><button type="button" className="button button-outline" disabled={pending} onClick={()=>{setMode(returnToProfile ? "profile" : null);setShowResult(false);}}><Text>{"Cancel"}</Text></button><button className="button button-primary" disabled={pending}>{pending ? <Text>{"Saving…"}</Text> : <Text>{"Save neighborhood"}</Text>}</button></div></fieldset>
     </form>}
     {showResult && state.error && <p className="auth-error" role="alert"><Text>{state.error}</Text></p>}
     {showResult && state.message && <p className="profile-success" role="status"><Text>{state.message}</Text></p>}

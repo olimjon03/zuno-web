@@ -4,7 +4,7 @@ export function filterInbox(entries: InboxEntry[], query: string, unreadOnly: bo
   return entries.filter(entry=>(!unreadOnly || (counts[entry.id] ?? 0)>0) &&
     `${entry.otherName} ${entry.listingTitle} ${entry.lastMessage ?? ""} ${entry.neighborhood ?? ""}`.toLocaleLowerCase().includes(term));
 }
-export function inboxTime(value: string, now: number, language: "en" | "uz" | "ko" = "en") {
+export function inboxTime(value: string, now: number, language: "en" | "uz" | "ko" | "ru" | "vi" = "en") {
   const time=new Date(value).getTime();
   if(!Number.isFinite(time))return "";
   const minutes=Math.max(0,Math.floor((now-time)/60000));

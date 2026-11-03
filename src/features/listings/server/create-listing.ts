@@ -75,7 +75,7 @@ export async function createListing(request: NextRequest) {
     );
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("display_name")
+    .select("display_name,country_code")
     .eq("id", user.id)
     .maybeSingle();
   if (profileError || !profile)
@@ -83,6 +83,8 @@ export async function createListing(request: NextRequest) {
       "Your profile is temporarily unavailable. Please try again.",
       503,
     );
+  const {data:area,error:areaError}=await supabase.from("neighborhoods").select("region_code").eq("id",input.neighborhoodId).maybeSingle();
+  if(areaError||!profile.country_code||!area||!area.region_code?.startsWith(profile.country_code+"-"))return reply("Choose a neighborhood from this country.",400);
   let processed: Buffer[];
   try {
     processed = [];

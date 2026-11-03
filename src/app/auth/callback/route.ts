@@ -1,3 +1,4 @@
+import { clearCountryPreference } from "@/features/onboarding/server/preference";
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getSiteUrl } from "@/lib/supabase/config";
@@ -12,8 +13,10 @@ export async function GET(request: NextRequest) {
     try {
       const supabase = await createClient();
       const { error } = await supabase.auth.exchangeCodeForSession(code);
-      if (!error)
-        return NextResponse.redirect(new URL("/", getSiteUrl()));
+      if (!error) {
+        await clearCountryPreference();
+        return NextResponse.redirect(new URL("/welcome", getSiteUrl()));
+      }
     } catch {
       /* Return a safe error page; never echo codes or provider errors. */
     }

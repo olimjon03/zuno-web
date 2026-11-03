@@ -5,6 +5,7 @@ import './helpers/register-runtime.mjs';
 let calls=[];
 globalThis.__confirmDb={auth:{verifyOtp:async input=>{calls.push(input);return {error:null};}}};
 registerHooks({resolve(specifier,context,next){
+ if(specifier==='@/features/onboarding/server/preference')return {url:'data:text/javascript,export const clearCountryPreference=async()=>{}',shortCircuit:true};
  if(specifier==='@/lib/supabase/server')return {url:'data:text/javascript,export const createClient=async()=>globalThis.__confirmDb',shortCircuit:true};
  if(specifier==='@/lib/supabase/config')return {url:'data:text/javascript,export const getSiteUrl=()=>"https://zuno.example"',shortCircuit:true};
  if(specifier==='next/cache')return {url:'data:text/javascript,export const revalidatePath=()=>{}',shortCircuit:true};
@@ -17,6 +18,6 @@ test('email-change confirmation uses the correct OTP type and fixed settings red
  const response=await GET(new NextRequest('https://zuno.example/auth/confirm?type=email_change&token_hash=fixture-token'));
  assert.equal(calls[0].type,'email_change');assert.equal(response.headers.get('location'),'https://zuno.example/account/settings');
  const signup=await GET(new NextRequest('https://zuno.example/auth/confirm?type=email&token_hash=fixture-token'));
- assert.equal(calls[1].type,'email');assert.equal(signup.headers.get('location'),'https://zuno.example/');
+ assert.equal(calls[1].type,'email');assert.equal(signup.headers.get('location'),'https://zuno.example/welcome');
  calls=[];await GET(new NextRequest('https://zuno.example/auth/confirm?type=recovery&token_hash=fixture-token'));assert.deepEqual(calls,[]);
 });

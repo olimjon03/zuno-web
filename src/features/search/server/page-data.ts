@@ -1,4 +1,5 @@
 import "server-only";
+import { readCountryPreference } from "@/features/onboarding/server/preference";
 import { getMarketplacePage } from "./data";
 import { feedIssue,parseFeedFilters } from "../validation";
 import type { FeedPage,MarketplaceHomeData,RawFeedSearchParameters } from "../types";
@@ -9,6 +10,8 @@ export async function getMarketplaceHome(raw:RawFeedSearchParameters):Promise<Ma
   if(typeof value==="string")params.set(key,value);
   else if(Array.isArray(value)&&value[0])params.set(key,value[0]);
  }
+ const preference=await readCountryPreference();
+ if(preference){if(params.get("country")!==preference.country){params.delete("region");params.delete("district");}params.set("country",preference.country);}
  const filters=parseFeedFilters(params);
  let page:FeedPage={items:[],nextCursor:null};let error:string|undefined;
  if(!feedIssue(filters)){

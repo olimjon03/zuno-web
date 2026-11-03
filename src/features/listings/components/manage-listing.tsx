@@ -23,7 +23,7 @@ function CoverPhoto({photoId,title}:{photoId?:string;title:string}) {
 export function ManageListing({item,categories,neighborhoods}:{item:OwnedListing;categories:LookupOption[];neighborhoods:LookupOption[]}) {
  const area=neighborhoods.find(n=>n.id===item.neighborhood_id);
  const originalCountry=optionCountry(area);
- const [country,setCountry]=useState<CountryCode|"">(originalCountry ?? "");
+ const country:CountryCode|""=originalCountry ?? "";
  const [draft,setDraft]=useState({...item,price:String(item.price)});
  const [result,setResult]=useState<ManageResult>({});
  const [pending,setPending]=useState(false);
@@ -79,7 +79,7 @@ export function ManageListing({item,categories,neighborhoods}:{item:OwnedListing
       <div className="sell-field"><label htmlFor={`${item.id}-condition`}><Text>{"Condition"}</Text></label><select id={`${item.id}-condition`} name="condition" value={draft.condition} onChange={e=>update("condition",e.target.value)}>{conditions.map(c=><option key={c} value={c}><Text>{conditionLabels[c]}</Text></option>)}</select></div>
       <div className="sell-field"><label htmlFor={`${item.id}-category`}><Text>{"Category"}</Text></label><select id={`${item.id}-category`} name="categoryId" value={draft.category_id} onChange={e=>update("category_id",Number(e.target.value))}>{categories.map(c=><option key={c.id} value={c.id}><Text>{c.name}</Text></option>)}</select></div>
      </div>
-     <ListingLocationFields id={item.id} country={country} neighborhoodId={draft.neighborhood_id ? String(draft.neighborhood_id) : ""} options={neighborhoods} onCountry={setCountry} onNeighborhood={value=>update("neighborhood_id",value ? Number(value) : 0)}/>
+     <ListingLocationFields id={item.id} country={country} neighborhoodId={draft.neighborhood_id ? String(draft.neighborhood_id) : ""} options={neighborhoods} onNeighborhood={value=>update("neighborhood_id",value ? Number(value) : 0)}/>
      <div className="sell-field"><label htmlFor={`${item.id}-status`}><Text>{"Availability"}</Text></label><select key={item.status} id={`${item.id}-status`} name="status" defaultValue={item.status}><option value="active"><Text>{"Available"}</Text></option><option value="reserved"><Text>{"Reserved"}</Text></option><option value="sold"><Text>{"Sold"}</Text></option></select></div>
      <div className="sell-field"><label htmlFor={`${item.id}-description`}><Text>{"Description"}</Text></label><textarea id={`${item.id}-description`} name="description" required minLength={10} maxLength={5000} rows={4} value={draft.description} onChange={e=>update("description",e.target.value)}/></div>
      <p className="auth-hint"><Text>{"Changing country changes the price currency. Enter the appropriate amount; prices are not converted."}</Text></p>

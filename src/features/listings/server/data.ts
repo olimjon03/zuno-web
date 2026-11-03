@@ -26,7 +26,7 @@ export async function getListingOptions() {
   const supabase = createPublicClient();
   const [category, neighborhood, images] = await Promise.all([
     supabase.from("categories").select("id,name_en").order("sort_order"),
-    supabase.from("neighborhoods").select("id,name,region_code").order("id"),
+    supabase.from("neighborhoods").select("id,name,region_code,district_code").order("id"),
     supabase.from("listing_images").select("id").limit(1),
   ]);
   if (category.error || neighborhood.error)
@@ -39,7 +39,7 @@ export async function getListingOptions() {
     neighborhoods: (neighborhood.data ?? []).map((row) => ({
       id: Number(row.id),
       name: row.name as string,
-      regionCode: row.region_code as string | null,
+      districtCode: row.district_code as string | null, regionCode: row.region_code as string | null,
     })),
     ready: !images.error,
   };

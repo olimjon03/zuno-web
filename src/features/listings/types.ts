@@ -33,7 +33,7 @@ export type ListingInput = {
   neighborhoodId: number;
   condition: (typeof conditions)[number];
 };
-export type LookupOption = { id:number; name:string; regionCode?:string|null };
+export type LookupOption = { id:number; name:string; regionCode?:string|null; districtCode?:string|null };
 export type ListingPhoto = { id:string; sort_order:number };
 export type ManageResult = { error?:string; message?:string };
 export type OwnedListing = {

@@ -1,3 +1,4 @@
+import { COUNTRY_COOKIE, parseCountryPreference } from "@/features/locations/country-preference";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseConfig, isSupabaseConfigured } from "@/lib/supabase/config";
@@ -19,7 +20,15 @@ export async function proxy(request: NextRequest) {
   });
   // Page/actions still verify the user themselves. Refresh failures never grant access.
   try {
-    await supabase.auth.getClaims();
+    const { data } = await supabase.auth.getClaims();
+    const userId=data?.claims?.sub;
+    const preference=parseCountryPreference(request.cookies.get(COUNTRY_COOKIE)?.value);
+    const path=request.nextUrl.pathname;
+    if(userId && request.method==="GET" && (path==="/" || path.startsWith("/account") || path.startsWith("/messages") || path==="/sell") && (!preference || preference.userId!==userId)){
+      const redirect=NextResponse.redirect(new URL("/welcome",request.url));
+      for(const cookie of response.cookies.getAll())redirect.cookies.set(cookie);
+      return redirect;
+    }
   } catch {
     /* The protected page handles unavailable authentication. */
   }
@@ -29,6 +38,8 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/",
+    "/welcome",
     "/account/:path*",
     "/messages/:path*",
     "/sell",

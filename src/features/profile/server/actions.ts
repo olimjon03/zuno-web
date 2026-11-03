@@ -1,5 +1,6 @@
 "use server";
 import "server-only";
+import { writeCountryPreference } from "@/features/onboarding/server/preference";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { resolveLocation } from "@/features/locations/catalog";
@@ -71,8 +72,9 @@ export async function updateNeighborhood(_state: ProfileState, data: FormData): 
     if (areaError) return { error: "We couldn’t check the neighborhood. Please try again." };
     if (!area || resolveLocation(area.name, area.region_code).countryCode !== input.country) return { error: "Choose a neighborhood from this country." };
     // Neighborhood changes never write display_name, including forged form fields.
-    const { data: saved, error } = await db.from("profiles").update({ neighborhood_id: input.neighborhoodId }).eq("id", user.id).select("id").maybeSingle();
-    if (error || !saved) return { error: "We couldn’t save your neighborhood. Please try again." };
+    const { error } = await db.rpc("set_marketplace_country", {p_country:input.country,p_neighborhood_id:input.neighborhoodId});
+    if (error) return { error: "We couldn’t save your neighborhood. Please try again." };
+    await writeCountryPreference(user.id,input.country);
   } catch { return { error: "We couldn’t connect. Your selection has been kept." }; }
   revalidatePath("/neighbors/[id]", "page");
   revalidatePath("/account");
