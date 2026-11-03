@@ -3,26 +3,18 @@ import { BackHomeNav } from "@/components/layout/back-home-nav";
 import { Brand } from "@/components/ui/brand";
 import { InboxLiveRefresh } from "@/features/messages/inbox-live-refresh";
 import { InboxList } from "@/features/messages/inbox-list";
-import { getInboxSnapshot } from "@/features/messages/inbox-data";
+import { getInboxPage } from "@/features/messages/server/page-data";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { connection } from "next/server";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 export const metadata: Metadata = {
   title: "Messages | ZUNO",
   robots: { index: false, follow: false },
 };
 async function Inbox() {
   await connection();
-  const db = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await db.auth.getUser();
-  if (authError || !user) redirect("/login?notice=session");
-  const {entries,now} = await getInboxSnapshot(db,user.id);
+  const {entries,now} = await getInboxPage();
   return (
     <main className="shell inbox-page">
       <InboxLiveRefresh />

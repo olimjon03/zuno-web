@@ -1,6 +1,6 @@
 "use client";
 import { useActionState } from "react";
-import { beginConversation } from "./actions";
+import { beginConversation } from "./server/actions";
 export function ContactSeller({ listingId }: { listingId: string }) {
   const [state, action, pending] = useActionState(beginConversation, {});
   return (

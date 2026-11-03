@@ -6,7 +6,8 @@ import { Icon } from "@/components/ui/icon";
 import { Avatar } from "@/features/profile/avatar";
 import { useHydrated } from "@/lib/use-hydrated";
 import { UnreadBadge, useUnread } from "./unread-provider";
-import { filterInbox, inboxTime, type InboxEntry } from "./inbox-model";
+import { filterInbox, inboxTime } from "./inbox-model";
+import type { InboxEntry } from "./types";
 function ProfileImage({name,path}:{name:string;path:string|null}) {
   const [failed,setFailed]=useState(false);
   return <span className="inbox-avatar" onErrorCapture={()=>setFailed(true)}><Avatar name={name} path={failed ? null : path}/></span>;

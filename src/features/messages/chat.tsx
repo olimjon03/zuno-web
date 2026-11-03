@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { createRefreshQueue } from "./realtime";
+import { createRefreshQueue } from "./refresh-queue";
 import { useUnread } from "./unread-provider";
-import { markMessagesRead } from "./unread-actions";
-import { postMessage, readMessages } from "./actions";
-import type { Message } from "./validation";
+import { markMessagesRead } from "./server/unread-actions";
+import { postMessage, readMessages } from "./server/actions";
+import { mergeMessages } from "./message-model";
+import type { Message } from "./types";
 export function Chat({
   conversationId,
   userId,
@@ -78,9 +79,7 @@ export function Chat({
   }, [conversationId, newest]);
   function merge(items: Message[]) {
     setMessages((current) => {
-      const map = new Map(current.map((m) => [m.id, m]));
-      for (const item of items) map.set(item.id, item);
-      const next = [...map.values()].sort((a, b) => a.id - b.id);
+      const next = mergeMessages(current, items);
       ids.current = { first: next[0]?.id, last: next.at(-1)?.id };
       return next;
     });

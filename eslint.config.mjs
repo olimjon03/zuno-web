@@ -11,10 +11,12 @@ const eslintConfig = defineConfig([
       "src/features/listings/client/**/*.{ts,tsx}",
       "src/features/search/client/**/*.{ts,tsx}",
       "src/features/marketplace/homepage.tsx",
+      "src/features/messages/*.tsx",
+      "src/features/messages/client/**/*.ts",
     ],
     rules: {
       "no-restricted-imports": ["error", { patterns: [
-        { regex: "(?:^|/)server/(?!actions(?:$|\\.))", message: "Client UI must use shared types and server actions, not server services." },
+        { regex: "(?:^|/)server/(?!(?:actions|unread-actions)(?:$|\\.))", message: "Client UI must use shared types and server actions, not server services." },
         { regex: "^(?:node:|sharp$|@/lib/supabase/(?:server|public)$)", message: "Keep Node and database services behind the server boundary." },
       ] }],
     },
@@ -23,6 +25,7 @@ const eslintConfig = defineConfig([
     files: [
       "src/features/listings/{types,constants,validation,currency}.ts",
       "src/features/search/{types,validation,pagination}.ts",
+      "src/features/messages/{types,validation,inbox-model,message-model,refresh-queue}.ts",
     ],
     rules: {
       "no-restricted-imports": ["error", { patterns: [
@@ -31,7 +34,7 @@ const eslintConfig = defineConfig([
     },
   },
   {
-    files: ["src/app/page.tsx", "src/app/account/listings/page.tsx", "src/app/api/listings/**/route.ts", "src/app/api/marketplace/route.ts", "src/app/listing-photos/**/route.ts"],
+    files: ["src/app/messages/**/page.tsx", "src/app/messages/page.tsx", "src/app/page.tsx", "src/app/account/listings/page.tsx", "src/app/api/listings/**/route.ts", "src/app/api/marketplace/route.ts", "src/app/listing-photos/**/route.ts"],
     rules: {
       "no-restricted-imports": ["error", { patterns: [
         { regex: "^(?:@/lib/supabase/|node:|sharp$)", message: "Keep page/route adapters thin; use a feature server service." },

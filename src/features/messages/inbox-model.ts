@@ -1,15 +1,4 @@
-export type InboxEntry = {
-  id: string;
-  listingId: string | null;
-  listingTitle: string;
-  otherId: string;
-  otherName: string;
-  avatarPath: string | null;
-  neighborhood: string | null;
-  lastMessage: string | null;
-  lastMessageAt: string;
-  thumbnailId: string | null;
-};
+import type { InboxEntry } from "./types";
 export function filterInbox(entries: InboxEntry[], query: string, unreadOnly: boolean, counts: Record<string, number>) {
   const term=query.trim().toLocaleLowerCase();
   return entries.filter(entry=>(!unreadOnly || (counts[entry.id] ?? 0)>0) &&

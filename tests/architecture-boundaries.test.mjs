@@ -17,3 +17,12 @@ test('shared validation and thin route adapters cannot pull in database infrastr
  assert.equal(await blocked('import { createClient } from "@/lib/supabase/server"; void createClient;','src/app/api/listings/route.ts'),true);
  assert.equal(await blocked('import { createListing } from "@/features/listings/server/create-listing"; void createListing;','src/app/api/listings/route.ts'),false);
 });
+
+test('messages UI uses server action entrypoints and shared contracts',async()=>{
+ const file='src/features/messages/chat.tsx';
+ assert.equal(await blocked('import { postMessage } from "./server/actions"; void postMessage;',file),false);
+ assert.equal(await blocked('import { markMessagesRead } from "./server/unread-actions"; void markMessagesRead;',file),false);
+ assert.equal(await blocked('import { getInbox } from "./server/inbox-data"; void getInbox;',file),true);
+ assert.equal(await blocked('import { createClient } from "@/lib/supabase/server"; void createClient;',file),true);
+ assert.equal(await blocked('import { createClient } from "@/lib/supabase/client"; void createClient;','src/features/messages/validation.ts'),true);
+});

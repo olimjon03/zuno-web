@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createRefreshQueue, subscribeToMessageChanges } from '../src/features/messages/realtime.ts';
+import { createRefreshQueue } from '../src/features/messages/refresh-queue.ts';
+import './helpers/register-runtime.mjs';
+const { subscribeToMessageChanges }=await import('../src/features/messages/client/realtime.ts');
 const tick=()=>new Promise(resolve=>setTimeout(resolve,0));
 test('Realtime events during a fetch trigger one trailing refresh; disposal cancels queued work',async()=>{
  let calls=0,release;const queue=createRefreshQueue(async()=>{calls++;if(calls===1)await new Promise(resolve=>{release=resolve;});});
