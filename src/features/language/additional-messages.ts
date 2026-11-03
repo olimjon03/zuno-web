@@ -1,5 +1,24 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Slide {current} of {total}: {title}": {"ru": "Слайд {current} из {total}: {title}", "vi": "Trang {current} trên {total}: {title}"},
+  "Next slide": {"ru": "Следующий слайд", "vi": "Trang tiếp theo"},
+  "Previous slide": {"ru": "Предыдущий слайд", "vi": "Trang trước"},
+  "Show slide {number}: {title}": {"ru": "Показать слайд {number}: {title}", "vi": "Xem trang {number}: {title}"},
+  "Choose a slide": {"ru": "Выберите слайд", "vi": "Chọn trang trình chiếu"},
+  "How ZUNO works": {"ru": "Как работает ZUNO", "vi": "Cách dùng ZUNO"},
+  "carousel": {"ru": "карусель", "vi": "băng chuyền"},
+  "Headphones, a camera and books collected on a wooden table": {"ru": "Наушники, камера и книги на деревянном столе", "vi": "Tai nghe, máy ảnh và sách trên bàn gỗ"},
+  "Tap the bookmark on a listing to keep it in Saved. Compare your finds and come back when you’re ready.": {"ru": "Нажмите закладку на объявлении, чтобы добавить его в сохранённое. Сравните находки и вернитесь, когда будете готовы.", "vi": "Nhấn dấu trang trên tin đăng để thêm vào Đã lưu. So sánh những món đồ và quay lại khi bạn sẵn sàng."},
+  "Find it later.": {"ru": "Вернитесь позже.", "vi": "Xem lại sau."},
+  "See it. Save it.": {"ru": "Нашли? Сохраните.", "vi": "Thấy hay? Lưu lại."},
+  "Two neighbors inspecting a camera at a public cafe": {"ru": "Двое соседей проверяют камеру в кафе", "vi": "Hai người kiểm tra máy ảnh tại quán cà phê"},
+  "Ask the seller a question in Messages. Agree on a public meeting place and inspect the item before paying.": {"ru": "Задайте вопрос продавцу в сообщениях. Договоритесь о встрече в общественном месте и проверьте товар до оплаты.", "vi": "Hỏi người bán trong Tin nhắn. Hẹn gặp nơi công cộng và kiểm tra món đồ trước khi trả tiền."},
+  "Meet nearby.": {"ru": "Встречайтесь рядом.", "vi": "Gặp ở gần đây."},
+  "Say hello.": {"ru": "Поздоровайтесь.", "vi": "Gửi lời chào."},
+  "A neighbor photographing a second-hand camera for a listing": {"ru": "Сосед фотографирует подержанную камеру для объявления", "vi": "Một người chụp máy ảnh cũ để đăng bán"},
+  "Add up to 10 photos, describe your item, and choose a price. Your next sale starts with a simple listing.": {"ru": "Добавьте до 10 фото, опишите товар и укажите цену. Продажа начинается с простого объявления.", "vi": "Thêm tối đa 10 ảnh, mô tả món đồ và đặt giá. Bắt đầu bán bằng một tin đăng đơn giản."},
+  "Sell locally.": {"ru": "Продавайте рядом.", "vi": "Bán gần nhà."},
+  "Make space.": {"ru": "Освободите место.", "vi": "Dọn thêm chỗ."},
   "Welcome to ZUNO": {
     "ru": "Добро пожаловать в ZUNO",
     "vi": "Chào mừng đến với ZUNO"
