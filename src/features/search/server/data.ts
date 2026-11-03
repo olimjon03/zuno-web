@@ -1,5 +1,6 @@
 import "server-only";
 import { createPublicClient } from "@/lib/supabase/public";
+import { withListingEngagement } from "@/features/listings/server/engagement";
 import { mapRow } from "@/features/listings/server/mapper";
 import type { ListingRow } from "@/features/listings/server/types";
 import type { FeedFilters,FeedPage } from "../types";
@@ -18,5 +19,5 @@ export async function getMarketplacePage(filters:FeedFilters,cursor?:string,sign
  const {data,error}=await (signal?query.abortSignal(signal):query);
  if(error)throw Error("Listings are temporarily unavailable. Please try again.");
  const rows=(data??[]) as ListingRow[];const page=rows.slice(0,24);
- return {items:page.map(row=>mapRow(row).listing),nextCursor:rows.length>24?encodeFeedCursor(page[23],filters):null};
+ return {items:await withListingEngagement(page.map(row=>mapRow(row).listing),signal),nextCursor:rows.length>24?encodeFeedCursor(page[23],filters):null};
 }

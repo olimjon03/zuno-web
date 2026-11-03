@@ -1,4 +1,5 @@
 "use client";
+import { ListingViewTracker } from "./listing-view-tracker";
 import { resolveLocation } from "@/features/locations/catalog";
 import { formatLocationLabel } from "@/features/locations/catalog";
 import { BackHomeNav } from "@/components/layout/back-home-nav";
@@ -42,6 +43,7 @@ export function ListingDetail({
           <Brand/>
         </Link><BackHomeNav/></header>
       <main id="listing-detail" className="shell detail-page">
+        {real && <ListingViewTracker id={listing.id}/>}
         <nav aria-label="Breadcrumb" className="detail-breadcrumb">
           <Link href="/">Marketplace</Link>
           <span aria-hidden="true">/</span>

@@ -1,0 +1,6 @@
+.listing-card .listing-bottom{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap}
+.listing-card .listing-bottom .listing-location{flex:1 1 65px;min-width:0;margin:0}
+.listing-card .listing-bottom .listing-location>span{overflow-wrap:anywhere}
+.listing-card .listing-engagement{display:inline-flex;align-items:center;gap:9px;flex:0 0 auto;font-size:11px;color:#7b8490;white-space:nowrap}
+.listing-card .listing-engagement>span{display:inline-flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums}
+.listing-card .listing-engagement svg{flex-shrink:0;width:14px;height:14px}
