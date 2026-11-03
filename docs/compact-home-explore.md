@@ -29,8 +29,8 @@ Fidelity ledger, checked against browser screenshots with view_image:
 Above-fold copy review: existing navigation, category labels, hero stories, both CTAs and filter functions retained. Only localized 'Filters' disclosure and 'Close' control copy added. The panel repeats the existing brand. Actual fixture listing counts/images differ from illustrative sample product cards in the concept.
 
 
-## Soft Mint palette
+## Homepage palette
 
-The selected background preview is option 01 in `exec-d7d66f2c-953e-4856-9ec5-7f4bde7d7740.png`. The homepage alone uses #F4FAF8 with a very faint mint glow, white header/listing surfaces and the existing layout. The profile SVG is now a teal circle with a white silhouette, and the homepage menu trigger uses the same #0D9488 background with white grid lines. Their hover colors use #0F766E. No carousel dimensions, text, menus, routes or filtering logic changed. Other routes retain their prior background colors.
+The homepage canvas is solid white (#FFFFFF), following the user's latest request. The previous Soft Mint tint and corner glow are removed. The profile SVG remains a teal circle with a white silhouette, and the homepage menu trigger keeps the same #0D9488 background with white grid lines. Hover colors use #0F766E. No carousel, layout, menu or filtering changes.
 
-Scoped styles are in `src/features/marketplace/soft-mint.css`; the homepage wrapper prevents palette changes from leaking into account or messaging pages. Browser checks at 320/390/768/1440px confirmed #F4FAF8 on the homepage, matching teal for both icons, no horizontal overflow and all 18 Explore feature rows. Desktop/mobile screenshots were visually reviewed against option 01; existing content and structure take precedence over illustrative preview labels.
+Scoped surface styles remain in `src/features/marketplace/soft-mint.css` to avoid unnecessary file/import changes. Existing white header/listing surfaces and the account/messages page colors are preserved. The earlier 320/390/768/1440px layout and menu checks remain applicable; this follow-up only changes the canvas background declarations.
