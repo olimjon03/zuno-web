@@ -1,0 +1,26 @@
+.explore-launcher{display:inline-flex;flex-shrink:0}
+.explore-trigger{width:40px;height:40px;display:grid;place-items:center;border:1px solid #c9e8e2;border-radius:12px;background:#e6f7f2;color:#0d9488;cursor:pointer}
+.explore-trigger:hover,.explore-trigger[aria-expanded=true]{background:#d0eee5;border-color:#8bd0c2}
+.explore-trigger:focus-visible,.explore-popover button:focus-visible{outline:3px solid #0d9488;outline-offset:3px}
+.explore-popover{position:fixed;inset:100px max(20px,calc((100vw - 1280px)/2)) auto auto;margin:0;padding:0;width:min(600px,calc(100vw - 40px));max-height:calc(100dvh - 125px);border:1px solid #b3dfd5;border-radius:20px;background:#fff;color:#1f2328;box-shadow:0 16px 60px #123e3429;overflow:auto;overscroll-behavior:contain}
+.explore-popover::backdrop{background:#102f2914}
+.explore-popover-content{padding:22px}
+.explore-popover-brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.explore-popover-brand .brand-lockup{font-size:24px;font-weight:800;color:#0f766e}
+.explore-popover-brand .brand-pin{width:21px;height:26px}
+.explore-popover-brand button{display:grid;place-items:center;width:36px;height:36px;border:1px solid #e5e7eb;border-radius:50%;background:#fff;color:#475569;cursor:pointer}
+.explore-popover .explore-zuno h2{font-size:26px;letter-spacing:-.035em}
+.explore-popover .explore-zuno>p{color:#64748b;font-size:13px;margin:7px 0 16px;line-height:1.6}
+.explore-popover .feature-search{background:#f8fbfa;border-color:#e2e8e5;color:#64748b;padding:12px 14px}
+.explore-popover .feature-search input{color:#1f2328}
+.explore-popover .feature-groups{display:grid;grid-template-columns:1fr;gap:16px}
+.explore-popover .account-card{background:#fff;border:1px solid #e2e8e5;border-radius:16px;box-shadow:0 2px 8px #143e3408;color:#1f2328}
+.explore-popover .feature-group header{padding:16px}
+.explore-popover .feature-group h3{font-size:16px}
+.explore-popover .coming-soon{border-color:#d8eae4;color:#58766b;background:#f0faf6}
+.explore-popover .feature-row{padding:16px;min-height:82px;border-color:#edf1ef}
+.explore-popover .feature-row:hover{background:#f3fbf8}
+.explore-popover .feature-row>svg:first-child{box-sizing:content-box;width:21px;height:21px;padding:9px;border-radius:12px;background:#e3f7ef;color:#0d9488}
+.explore-popover .feature-row strong{font-size:14px}.explore-popover .feature-row small{font-size:12px;color:#667085}
+@media(min-width:701px){.account-explore-inline{display:none}}
+@media(max-width:700px){.explore-launcher{display:none}.account-explore-inline{display:block}}

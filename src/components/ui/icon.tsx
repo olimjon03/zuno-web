@@ -1,7 +1,9 @@
 import type { SVGProps } from "react";
 
-export type IconName = "eye" | "bookmark" | "pencil" | "trash" | "clock" | "bag-check" | "check-circle" | "image" | "mail" | "heart" | "search" | "pin" | "arrow" | "plus" | "close" | "home" | "user" | "chat" | "settings" | "list" | "help" | "chevron" | "calendar" | "briefcase" | "bell" | "shield" | "book" | "store" | "chart" | "people";
+export type IconName = "sliders" | "grid" | "eye" | "bookmark" | "pencil" | "trash" | "clock" | "bag-check" | "check-circle" | "image" | "mail" | "heart" | "search" | "pin" | "arrow" | "plus" | "close" | "home" | "user" | "chat" | "settings" | "list" | "help" | "chevron" | "calendar" | "briefcase" | "bell" | "shield" | "book" | "store" | "chart" | "people";
 const paths: Record<IconName, React.ReactNode> = {
+  sliders: <><path d="M3 6h4m4 0h10M3 12h10m4 0h4M3 18h4m4 0h10"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="9" cy="18" r="2"/></>,
+  grid: <><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></>,
   eye: <><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></>,
   bookmark: <path d="M6 3h12a2 2 0 0 1 2 2v15a1 1 0 0 1-1.65.76L12 15l-6.35 5.76A1 1 0 0 1 4 20V5a2 2 0 0 1 2-2Z"/>,
   pencil: <><path d="m15 4 5 5M4 20l5-1L21 7a2.1 2.1 0 0 0-5-3L4 16Z"/></>,
@@ -14,7 +16,7 @@ const paths: Record<IconName, React.ReactNode> = {
   home: <path d="m3 10 9-7 9 7v11h-6v-7H9v7H3Z" />,
   user: <><circle cx="12" cy="7" r="4"/><path d="M4 21v-3a8 8 0 0 1 16 0v3Z"/></>,
   chat: <path d="M21 11a9 9 0 0 1-9 9H3l2-5a9 9 0 1 1 16-4Z"/>,
-  settings: <><circle cx="12" cy="12" r="4"/><path d="m9 3 6 0 1 3 3 1 2 5-2 5-3 1-1 3H9l-1-3-3-1-2-5 2-5 3-1Z"/></>,
+  settings: <><path d="M9.3 3.7 10 2h4l.7 1.7 1.6.9 1.8-.2 2 3.4-1.1 1.4v1.8l1.1 1.4-2 3.4-1.8-.2-1.6.9-.7 1.7h-4l-.7-1.7-1.6-.9-1.8.2-2-3.4L5 11V9.2L3.9 7.8l2-3.4 1.8.2Z" transform="translate(0 1.9)"/><circle cx="12" cy="12" r="3.2"/></>,
   list: <path d="M8 5h13M8 12h13M8 19h13M3 5h.01M3 12h.01M3 19h.01"/>,
   help: <><circle cx="12" cy="12" r="9"/><path d="M9 8a3 3 0 1 1 4 3c-1 1-1 1-1 3m0 3h.01"/></>,
   chevron: <path d="m9 5 7 7-7 7"/>,
@@ -60,6 +62,7 @@ export function Icon({
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
+      data-icon={name}
       {...props}
     >
       {paths[name]}

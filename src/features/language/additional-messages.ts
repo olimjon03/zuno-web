@@ -1,5 +1,7 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Close": {"ru": "Закрыть", "vi": "Đóng"},
+  "Filters": {"ru": "Фильтры", "vi": "Bộ lọc"},
   "Keep your home address private. Choose a public meeting place and inspect the item together.": {"ru": "Не раскрывайте домашний адрес. Встречайтесь в общественном месте и проверяйте товар вместе.", "vi": "Giữ kín địa chỉ nhà. Hẹn ở nơi công cộng và cùng kiểm tra món đồ."},
   "Meet safely.": {"ru": "Встречайтесь безопасно.", "vi": "Gặp nhau an toàn."},
   "Trade thoughtfully.": {"ru": "Торгуйте обдуманно.", "vi": "Giao dịch cẩn thận."},

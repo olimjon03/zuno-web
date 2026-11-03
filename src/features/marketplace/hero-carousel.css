@@ -47,3 +47,35 @@
 @media(max-width:700px){.zuno-hero-dots{max-width:none}.zuno-hero-dots button{flex-basis:29px}}
 @media(max-width:359px){.zuno-hero-dots button{flex-basis:24px}}
 @media(prefers-reduced-motion:reduce){.zuno-hero-carousel .zuno-hero-words,.zuno-hero-carousel .zuno-hero-description,.zuno-hero-frame,.zuno-hero-video{transition:none;transform:none;filter:none}.zuno-hero-dots{scroll-behavior:auto}}
+/* Accepted compact banner: preserve full content width, reduce vertical footprint. */
+.hero.shell.zuno-hero-carousel{min-height:0;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:10px 28px;padding:20px 24px;border-radius:20px}
+.zuno-hero-carousel .zuno-hero-copy{padding:0}
+.zuno-hero-carousel .hero-copy h1{font-size:clamp(24px,2.5vw,34px);line-height:1.08;letter-spacing:-.04em}
+.zuno-hero-carousel .zuno-hero-words>span,.zuno-hero-carousel .zuno-hero-words strong{display:inline}
+.zuno-hero-carousel .zuno-hero-words>span:after{content:" "}
+.zuno-hero-carousel .hero-copy .hero-tagline{margin:8px 0;font-size:12px}
+.zuno-hero-carousel .zuno-hero-description{font-size:13px;line-height:1.5;max-width:560px}
+.zuno-hero-carousel .hero-actions{margin-top:12px;gap:8px}
+.zuno-hero-carousel .hero-actions .button{min-height:38px;padding:8px 14px;font-size:12px}
+.zuno-hero-carousel .zuno-hero-images{min-height:210px;border-radius:15px}
+.zuno-hero-controls{padding:0;gap:10px}.zuno-hero-dots{padding-block:0;max-width:200px}.zuno-hero-dots button{height:34px;flex-basis:24px}.zuno-hero-arrows button{width:34px;height:34px}.zuno-hero-counter{font-size:10px;padding-left:10px}
+@media(max-width:700px){
+ .hero.shell.zuno-hero-carousel{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);grid-template-rows:1fr auto;gap:10px 12px;padding:16px;border-radius:16px}
+ .zuno-hero-carousel .hero-copy h1{font-size:clamp(19px,5vw,26px);line-height:1.12}
+ .zuno-hero-carousel .hero-copy .hero-tagline{font-size:10px;margin:7px 0}
+ .zuno-hero-carousel .zuno-hero-description{font-size:11px;line-height:1.4}
+ .zuno-hero-carousel .hero-actions{gap:6px;margin-top:9px;flex-wrap:wrap}
+ .zuno-hero-carousel .hero-actions .button{padding:7px 8px;font-size:10px;min-height:34px;flex:1 1 100%}
+ .zuno-hero-carousel .hero-actions .button svg{width:14px;height:14px}
+ .zuno-hero-carousel .zuno-hero-images{grid-column:2;grid-row:1;height:auto;aspect-ratio:auto;min-height:180px;border-radius:12px}
+ .zuno-hero-controls{grid-column:1/-1;grid-row:2;gap:8px}.zuno-hero-dots{max-width:180px}.zuno-hero-arrows{gap:6px}.zuno-hero-dots button{flex-basis:24px;height:32px}.zuno-hero-arrows button{width:32px;height:32px}
+}
+
+@media(max-width:700px){
+ .zuno-hero-carousel .hero-copy h1{font-size:clamp(18px,4.7vw,24px)}
+ /* Detailed tips remain available to assistive technology in the compact banner. */
+ .zuno-hero-carousel .zuno-hero-descriptions{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+ .zuno-hero-carousel .hero-actions .button{flex:1 1 0;min-width:0;font-size:10px;padding:6px;min-height:34px}
+ .zuno-hero-carousel .hero-actions .button svg{display:none}
+ .zuno-hero-carousel .zuno-hero-images{min-height:140px}
+}

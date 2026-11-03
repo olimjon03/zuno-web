@@ -1,6 +1,7 @@
 "use client";
 import { Text, useT } from "@/features/language/provider";
 import { LanguageSelector } from "@/features/language/language-selector";
+import { ExploreLauncher } from "@/features/account/explore-launcher";
 import { Brand } from "@/components/ui/brand";
 import Link from "next/link";
 import { AccountLink } from "@/features/auth/account-link";
@@ -60,6 +61,7 @@ export function Header({
       <LanguageSelector/>
       <Link prefetch={true} className="button button-primary header-sell" href="/sell"><Text>{"Sell"}</Text></Link>
       <AccountLink />
+      <ExploreLauncher/>
     </header>
   );
 }
