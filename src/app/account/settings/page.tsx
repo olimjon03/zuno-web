@@ -22,10 +22,10 @@ async function Account() {
   const {user, profile, neighborhoods, avatarPath} = await getAccountProfile();
   return (
     <div className="profile-settings-page">
-      <header className="shell detail-header settings-header"><Link href="/" className="wordmark" aria-label="ZUNO home"><Brand/></Link><BackHomeNav/></header>
+      <header className="shell detail-header settings-header"><Link prefetch={true} href="/" className="wordmark" aria-label="ZUNO home"><Brand/></Link><BackHomeNav/></header>
       <main className="settings-main settings-soft"><h1>Profile settings</h1><p className="settings-intro">Your place in the ZUNO neighborhood.</p>
       <section className="settings-profile" aria-label="Your profile">
-      <div className="settings-identity"><Avatar name={profile.display_name} path={avatarPath}/><div><h2>{profile.display_name}</h2><p>{neighborhoods.find(area=>area.id===Number(profile.neighborhood_id))?.name || "Neighborhood not selected"}</p><Link href={`/neighbors/${user.id}`}>View public profile</Link></div></div>
+      <div className="settings-identity"><Avatar name={profile.display_name} path={avatarPath}/><div><h2>{profile.display_name}</h2><p>{neighborhoods.find(area=>area.id===Number(profile.neighborhood_id))?.name || "Neighborhood not selected"}</p><Link prefetch={true} href={`/neighbors/${user.id}`}>View public profile</Link></div></div>
       <details className="settings-photo"><summary>Change photo</summary><AvatarForm/></details>
       </section>
       <ProfileForm

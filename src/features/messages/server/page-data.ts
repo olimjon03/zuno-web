@@ -1,3 +1,4 @@
+import { getVerifiedUser } from "@/features/auth/server/user";
 import "server-only";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -8,7 +9,7 @@ import { isUuid } from "@/features/listings/validation";
 
 export async function getInboxPage() {
   const db = await createClient();
-  const { data: { user }, error } = await db.auth.getUser();
+  const { data: { user }, error } = await getVerifiedUser();
   if (error || !user) redirect("/login?notice=session");
   return getInboxSnapshot(db, user.id);
 }
@@ -16,7 +17,7 @@ export async function getInboxPage() {
 export async function getConversationPage(id: string) {
   if (!isUuid(id)) notFound();
   const db = await createClient();
-  const { data: { user }, error: authError } = await db.auth.getUser();
+  const { data: { user }, error: authError } = await getVerifiedUser();
   if (authError || !user) redirect("/login?notice=session");
   const { data: c, error } = await db.from("conversations")
     .select("id,listing_id,listing_title,buyer_id,seller_id,buyer_name,seller_name")

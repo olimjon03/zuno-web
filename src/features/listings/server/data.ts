@@ -1,5 +1,6 @@
 import "server-only";
 import { cache } from "react";
+import { cacheLife } from "next/cache";
 import { createPublicClient } from "@/lib/supabase/public";
 import { isUuid } from "../validation";
 import { LISTING_COLUMNS } from "./constants";
@@ -18,6 +19,9 @@ export const getLiveListing = cache(async (id: string) => {
   return data ? mapRow(data) : null;
 });
 export async function getListingOptions() {
+  "use cache";
+  // Public lookup tables only; no session, listing content or owner data.
+  cacheLife({ stale: 300, revalidate: 60, expire: 3600 });
   const supabase = createPublicClient();
   const [category, neighborhood, images] = await Promise.all([
     supabase.from("categories").select("id,name_en").order("sort_order"),

@@ -1,4 +1,5 @@
 "use server";
+import { getVerifiedUser } from "@/features/auth/server/user";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid } from "@/features/listings/validation";
@@ -6,7 +7,7 @@ import { parseReport } from "./validation";
 export type SafetyResult = {error?:string;message?:string};
 export type SafetyState = {isSelf:boolean;blocked:boolean;canMessage:boolean};
 async function authenticated() {
- const db=await createClient();const {data:{user},error}=await db.auth.getUser();
+ const db=await createClient();const {data:{user},error}=await getVerifiedUser();
  if(error || !user)throw new Error("Please log in to use safety controls.");
  return db;
 }
