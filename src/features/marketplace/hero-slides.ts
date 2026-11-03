@@ -1,27 +1,21 @@
-export const HERO_INTERVAL_MS = 5000;
-export const heroSlides = [
- {
-  id:"discover", first:"Good finds.", second:"Great neighbors.",
-  description:"Give pre-loved things a new beginning, right here in your neighborhood.",
-  image:"/images/hero-v2.webp",
-  alt:"A wooden chair, plant, lamp and vintage camera ready for a new home",
- },
- {
-  id:"sell", first:"Make space.", second:"Sell locally.",
-  description:"Add up to 10 photos, describe your item, and choose a price. Your next sale starts with a simple listing.",
-  image:"/images/hero-selling.webp",
-  alt:"A neighbor photographing a second-hand camera for a listing",
- },
- {
-  id:"connect", first:"Say hello.", second:"Meet nearby.",
-  description:"Ask the seller a question in Messages. Agree on a public meeting place and inspect the item before paying.",
-  image:"/images/hero-meeting.webp",
-  alt:"Two neighbors inspecting a camera at a public cafe",
- },
- {
-  id:"save", first:"See it. Save it.", second:"Find it later.",
-  description:"Tap the bookmark on a listing to keep it in Saved. Compare your finds and come back when you’re ready.",
-  image:"/images/hero-saved.webp",
-  alt:"Headphones, a camera and books collected on a wooden table",
- },
-] as const;
+export const HERO_INTERVAL_MS = 8000;
+export type HeroSlide = {
+ id:string; first:string; second:string; description:string; image:string; alt:string; video?:string;
+};
+export const heroSlides: readonly HeroSlide[] = [
+ {id:"discover",first:"Good finds.",second:"Great neighbors.",description:"Give pre-loved things a new beginning, right here in your neighborhood.",image:"/images/hero-v2.webp",alt:"A wooden chair, plant, lamp and vintage camera ready for a new home"},
+ {id:"sell",first:"Make space.",second:"Sell locally.",description:"Add up to 10 photos, describe your item, and choose a price. Your next sale starts with a simple listing.",image:"/images/hero-selling.webp",alt:"A neighbor photographing a second-hand camera for a listing",video:"/videos/hero-selling.mp4"},
+ {id:"connect",first:"Say hello.",second:"Meet nearby.",description:"Ask the seller a question in Messages. Agree on a public meeting place and inspect the item before paying.",image:"/images/hero-meeting.webp",alt:"Two neighbors inspecting a camera at a public cafe",video:"/videos/hero-neighborhood.mp4"},
+ {id:"save",first:"See it. Save it.",second:"Find it later.",description:"Tap the bookmark on a listing to keep it in Saved. Compare your finds and come back when you’re ready.",image:"/images/hero-saved.webp",alt:"Headphones, a camera and books collected on a wooden table"},
+ {id:"search",first:"Looking for it?",second:"Search for it.",description:"Search by item name, then choose a category to narrow down your nearby finds.",image:"/images/hero-workspace.webp",alt:"A laptop, headphones and books arranged on a wooden desk"},
+ {id:"nearby",first:"Choose your area.",second:"Stay close.",description:"Use All nearby to choose a region and district in your selected country.",image:"/images/hero-bicycle.webp",alt:"A city bicycle outside a neighborhood cafe"},
+ {id:"photos",first:"Show the details.",second:"Let photos help.",description:"Add clear photos from different angles. Put your best photo first to make it the cover.",image:"/images/hero-selling.webp",alt:"A neighbor photographing a second-hand camera for a listing"},
+ {id:"condition",first:"Be clear.",second:"Build trust.",description:"Choose the item’s condition and mention signs of wear. Honest details help buyers decide.",image:"/images/hero-wardrobe.webp",alt:"Neatly folded clothing and sneakers beside a wooden chair"},
+ {id:"budget",first:"Your budget.",second:"Your next find.",description:"Set minimum and maximum prices, then sort from low to high to find items in your budget.",image:"/images/hero-workspace.webp",alt:"A laptop, headphones and books arranged on a wooden desk",video:"/videos/hero-finds.mp4"},
+ {id:"currency",first:"A local market.",second:"A local price.",description:"New listing prices use so‘m in Uzbekistan and won in Korea. Check the amount before publishing.",image:"/images/hero-saved.webp",alt:"Headphones, a camera and books collected on a wooden table"},
+ {id:"reserved",first:"Found a buyer?",second:"Update the status.",description:"Mark your item reserved when a pickup is arranged, and sold when the exchange is complete.",image:"/images/hero-bicycle.webp",alt:"A city bicycle outside a neighborhood cafe"},
+ {id:"manage",first:"Your listing.",second:"Easy to update.",description:"Open Your listings to edit details and photos, change availability, or remove an item.",image:"/images/hero-selling.webp",alt:"A neighbor photographing a second-hand camera for a listing"},
+ {id:"attachments",first:"A closer look.",second:"A clearer chat.",description:"Share photos and files in Messages when a buyer needs more information about your item.",image:"/images/hero-meeting.webp",alt:"Two neighbors inspecting a camera at a public cafe"},
+ {id:"profile",first:"Make it yours.",second:"Meet your neighbors.",description:"Add a profile photo and display name so neighbors can recognize you in conversations.",image:"/images/hero-wardrobe.webp",alt:"Neatly folded clothing and sneakers beside a wooden chair"},
+ {id:"safe-trade",first:"Trade thoughtfully.",second:"Meet safely.",description:"Keep your home address private. Choose a public meeting place and inspect the item together.",image:"/images/hero-meeting.webp",alt:"Two neighbors inspecting a camera at a public cafe",video:"/videos/hero-neighborhood.mp4"},
+];
