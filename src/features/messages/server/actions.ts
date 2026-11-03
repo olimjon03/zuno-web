@@ -4,7 +4,7 @@ import "server-only";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid } from "@/features/listings/validation";
-import type { Message } from "../types";
+import type { MessageAttachment, Message } from "../types";
 import { parseMessage } from "../validation";
 export async function beginConversation(
   _state: { error?: string },
@@ -104,9 +104,14 @@ export async function readMessages(id: string, cursor?: number, older = false) {
     const { data, error } = await query.order("id", { ascending }).limit(50);
     if (error)
       return { error: "Messages could not be loaded. Please try again." };
-    return {
-      messages: ascending ? (data as Message[]) : (data as Message[]).reverse(),
-    };
+    const { data: attachments, error: mediaError } = await db.from("message_attachments")
+      .select("id,message_id,name,mime,size,sort_order").in("message_id", data?.length ? data.map(row => row.id) : [0]).order("sort_order");
+    const missingMedia = mediaError && ["42P01", "PGRST205", "PGRST200"].includes(mediaError.code);
+    if (mediaError && !missingMedia) return { error: "Attachments could not be loaded. Please retry." };
+    const items = (data ?? []) as Message[];
+    for (const message of items) message.attachments = ((attachments ?? []) as MessageAttachment[]).filter(file => file.message_id === message.id);
+    return { messages: ascending ? items : items.reverse(), mediaReady: !missingMedia };
+
   } catch {
     return { error: "We couldn’t refresh messages. Please try again." };
   }

@@ -1,4 +1,10 @@
 "use client";
+import Image from "next/image";
+import { Icon } from "@/components/ui/icon";
+import { PersonAvatar } from "./person-avatar";
+import { MessageIcon } from "./message-icon";
+import { prepareAttachments } from "./client/prepare-attachments";
+import { formatFileSize, validateAttachmentSelection } from "./attachments";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createRefreshQueue } from "./refresh-queue";
 import { useUnread } from "./unread-provider";
@@ -11,15 +17,45 @@ export function Chat({
   userId,
   initialMessages,
   canMessage = true,
+  mediaReady = false,
+  person,
+  self,
 }: {
   conversationId: string;
   userId: string;
   initialMessages: Message[];
   canMessage?: boolean;
+  mediaReady?: boolean;
+  person: { name: string; avatarPath: string | null };
+  self: { name: string; avatarPath: string | null };
 }) {
   const { realtime } = useUnread();
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
+  const [attachmentMenu, setAttachmentMenu] = useState(false);
+  const photoInput = useRef<HTMLInputElement>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (!attachmentMenu) return;
+    const dismiss = (event: PointerEvent) => {
+      if (event.target instanceof Element && !event.target.closest(".message-attach-control")) setAttachmentMenu(false);
+    };
+    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") setAttachmentMenu(false); };
+    document.addEventListener("pointerdown", dismiss);
+    document.addEventListener("keydown", escape);
+    return () => { document.removeEventListener("pointerdown", dismiss); document.removeEventListener("keydown", escape); };
+  }, [attachmentMenu]);
+  const scroller = useRef<HTMLDivElement>(null);
+  function selectFiles(selected: FileList | null) {
+    if (!selected) return;
+    const next = [...files, ...Array.from(selected)];
+    try { validateAttachmentSelection(next); setFiles(next); setError(""); }
+    catch (error) { setError(error instanceof Error ? error.message : "Choose valid files."); }
+    setAttachmentMenu(false);
+    if (photoInput.current) photoInput.current.value = "";
+    if (fileInput.current) fileInput.current.value = "";
+  }
   const [refreshError, setRefreshError] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -29,7 +65,7 @@ export function Chat({
     first: initialMessages[0]?.id,
     last: initialMessages.at(-1)?.id,
   });
-  const retry = useRef<{ id: string; body: string } | null>(null);
+  const retry = useRef<{ id: string; body: string; files: File[] } | null>(null);
   const locked = useRef(false);
   const alive = useRef(true);
   const end = useRef<HTMLDivElement>(null);
@@ -77,12 +113,18 @@ export function Chat({
       document.removeEventListener("visibilitychange", visible);
     };
   }, [conversationId, newest]);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => { if (scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight; });
+    return () => cancelAnimationFrame(frame);
+  }, []);
   function merge(items: Message[]) {
+    const follow = scroller.current && scroller.current.scrollHeight - scroller.current.scrollTop - scroller.current.clientHeight < 140;
     setMessages((current) => {
       const next = mergeMessages(current, items);
       ids.current = { first: next[0]?.id, last: next.at(-1)?.id };
       return next;
     });
+    if (follow) requestAnimationFrame(() => { if (scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight; });
   }
   useEffect(() => {
     alive.current = true;
@@ -145,16 +187,26 @@ export function Chat({
     setPending(true);
     setError("");
     retry.current =
-      retry.current?.body === draft
+      retry.current?.body === draft && retry.current.files === files
         ? retry.current
-        : { id: crypto.randomUUID(), body: draft };
+        : { id: crypto.randomUUID(), body: draft, files };
     try {
-      const result = await postMessage(conversationId, retry.current.id, draft);
+      let result: { error?: string };
+      if (files.length) {
+        const prepared = await prepareAttachments(files);
+        const form = new FormData();
+        form.set("conversationId", conversationId); form.set("clientId", retry.current.id); form.set("body", draft);
+        for (const file of prepared) form.append("files", file);
+        const response = await fetch("/api/messages/attachments", { method: "POST", body: form });
+        result = await response.json();
+        if (!response.ok && !result.error) result.error = "Files could not be sent. Please retry.";
+      } else result = await postMessage(conversationId, retry.current.id, draft);
       if (result.error) {
         setError(result.error);
         return;
       }
       setDraft("");
+      setFiles([]);
       retry.current = null;
       const refreshed = await readMessages(conversationId, ids.current.last);
       if (refreshed.messages) merge(refreshed.messages);
@@ -193,84 +245,50 @@ export function Chat({
     }
   }
   return (
-    <section aria-label="Conversation messages" className="chat-panel">
-      <p className="auth-hint">
-        {realtime
-          ? "Live messages connected."
-          : "Connecting to live messages. Updates are also checked automatically."}
-      </p>
-      {more && (
-        <button
-          className="button button-outline"
-          onClick={older}
-          disabled={loadingOlder}
-        >
-          {loadingOlder ? "Loading…" : "Load older messages"}
-        </button>
-      )}
-      {refreshError && <p role="status" className="auth-hint">{refreshError} Updates will retry automatically.</p>}
-      {readError && (
-        <p role="status" className="auth-hint">
-          {readError}
-        </p>
-      )}
-      <p className="sr-only" role="status">
-        {messages.length} messages loaded.
-      </p>
-      <ol className="chat-history" aria-label="Message history">
-        {messages.map((message) => (
-          <li
-            key={message.id}
-            className={
-              message.sender_id === userId ? "chat-message own" : "chat-message"
-            }
-          >
-            <span className="chat-author">
-              {message.sender_id === userId ? "You" : "Neighbor"}
-            </span>
-            <p>{message.body}</p>
-            <time dateTime={message.created_at}>
-              {new Date(message.created_at).toLocaleString("en-GB", {
-                timeZone: "Asia/Seoul",
-                month: "short",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}{" "}
-              KST
-            </time>
-          </li>
-        ))}
-      </ol>
-      {!messages.length && (
-        <p>No messages yet. Say hello and ask about this item.</p>
-      )}
-      <div ref={end} />
-      {!canMessage && <p role="status">Messaging is unavailable between you and this user. You can still read previous messages.</p>}
-      <form className="sell-form sell-field chat-compose" onSubmit={submit}>
-        <label htmlFor="message-body">Your message</label>
-        <textarea
-          id="message-body"
-          value={draft}
-          onChange={(event) => setDraft(event.target.value)}
-          maxLength={2000}
-          required
-          disabled={pending || !canMessage}
-          rows={3}
-        />
-        <p className="auth-hint">{Array.from(draft).length}/2,000 characters</p>
-        <button
-          className="button button-primary"
-          disabled={pending || !canMessage || !draft.trim()}
-        >
-          {pending ? "Sending…" : "Send message"}
-        </button>
-        {pending && <p role="status">Sending your message…</p>}
-        {error && (
-          <p role="alert" className="auth-error">
-            {error}
-          </p>
-        )}
+    <section aria-label="Conversation messages" className="media-chat">
+      <p className="sr-only" role="status">{realtime ? "Live messages connected." : "Connecting to live messages. Updates are also checked automatically."}</p>
+      {refreshError && <p role="status" className="message-feedback">{refreshError} Updates will retry automatically.</p>}
+      {readError && <p role="status" className="message-feedback">{readError}</p>}
+      <div className="message-scroll" ref={scroller}>
+        {more && <button className="message-load-older" onClick={older} disabled={loadingOlder}>{loadingOlder ? "Loading…" : "Load older messages"}</button>}
+        <p className="sr-only" role="status">{messages.length} messages loaded.</p>
+        <ol className="message-history" aria-label="Message history">
+          {messages.map(message => {
+            const own = message.sender_id === userId;
+            const author = own ? self : person;
+            const attachments = message.attachments ?? [];
+            const autoBody = attachments.length && (message.body === "Photo" || message.body === attachments[0].name);
+            return <li key={message.id} className={`message-row ${own ? "own" : ""}`}>
+              <PersonAvatar name={author.name} path={author.avatarPath}/>
+              <div className="message-content"><span className="sr-only">{own ? "You" : author.name}</span>
+                {!autoBody && message.body && <p className="message-bubble">{message.body}</p>}
+                {attachments.some(file => file.mime === "image/webp") && <div className="message-photos">{attachments.filter(file => file.mime === "image/webp").map(file => <a key={file.id} href={`/api/messages/attachments/${file.id}`} target="_blank" rel="noopener noreferrer" aria-label={`Open photo ${file.name}`}><Image src={`/api/messages/attachments/${file.id}`} alt={file.name} width={400} height={300} unoptimized/></a>)}</div>}
+                {attachments.filter(file => file.mime !== "image/webp").map(file => <a key={file.id} className="message-file" href={`/api/messages/attachments/${file.id}?download=1`} download={file.name} aria-label={`Download ${file.name}`}><span className="message-file-icon"><MessageIcon name="file"/></span><span><strong>{file.name}</strong><small>{file.name.split(".").at(-1)?.toUpperCase()} · {formatFileSize(file.size)}</small></span><span className="message-file-download"><MessageIcon name="download"/></span></a>)}
+                <div className="message-time"><time dateTime={message.created_at}>{new Date(message.created_at).toLocaleTimeString("en-GB", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit" })}</time>{own && <span aria-label="Sent"><Icon name="check-circle" width="14" height="14"/></span>}</div>
+              </div>
+            </li>;
+          })}
+        </ol>
+        {!messages.length && <div className="conversation-empty"><Icon name="chat"/><p>Say hello to your neighbor.</p></div>}
+        <div ref={end}/>
+      </div>
+      {!canMessage && <p role="status" className="message-feedback">Messaging is unavailable between you and this user. You can still read previous messages.</p>}
+      <form className="message-compose" onSubmit={submit} aria-busy={pending}>
+        {files.length > 0 && <ul className="message-selected" aria-label="Selected attachments">{files.map((file, index) => <li key={index}><MessageIcon name="file"/><span>{file.name}<small>{formatFileSize(file.size)}</small></span><button type="button" aria-label={`Remove ${file.name}`} disabled={pending} onClick={() => setFiles(files.filter((_, i) => i !== index))}><Icon name="close"/></button></li>)}</ul>}
+        <div className="message-compose-row">
+          <div className="message-attach-control">
+            <button type="button" className="message-icon-button" aria-label="Attach photos or files" aria-expanded={attachmentMenu} disabled={pending || !canMessage || !mediaReady} onClick={() => setAttachmentMenu(!attachmentMenu)}><MessageIcon name="attach"/></button>
+            {attachmentMenu && <div className="message-attach-menu"><button type="button" onClick={() => photoInput.current?.click()}><Icon name="image"/>Photo</button><button type="button" onClick={() => fileInput.current?.click()}><MessageIcon name="file"/>File</button></div>}
+          </div>
+          <button type="button" className="message-icon-button message-gallery" aria-label="Choose photos" disabled={pending || !canMessage || !mediaReady} onClick={() => photoInput.current?.click()}><Icon name="image"/></button>
+          <input className="sr-only" ref={photoInput} type="file" multiple disabled={pending || !canMessage || !mediaReady} accept="image/jpeg,image/png,image/webp" aria-label="Choose chat photos" tabIndex={-1} onChange={event => selectFiles(event.target.files)}/>
+          <input className="sr-only" ref={fileInput} type="file" multiple disabled={pending || !canMessage || !mediaReady} accept=".pdf,.txt,.csv,.zip,.docx,.xlsx" aria-label="Choose chat files" tabIndex={-1} onChange={event => selectFiles(event.target.files)}/>
+          <label className="sr-only" htmlFor="message-body">Your message</label>
+          <textarea id="message-body" value={draft} onChange={event => setDraft(event.target.value)} placeholder="Write a message…" maxLength={2000} disabled={pending || !canMessage} rows={1} onKeyDown={event => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing && !pending && canMessage && (draft.trim() || files.length)) { event.preventDefault(); event.currentTarget.form?.requestSubmit(); } }}/>
+          <button className="message-send" aria-label={pending ? "Sending message" : "Send message"} disabled={pending || !canMessage || (!draft.trim() && !files.length)}><MessageIcon name="send"/></button>
+        </div>
+        <p className="message-compose-hint">{pending ? "Sending your message…" : files.length ? "Up to 4 attachments · 3 MB total after photo preparation" : !mediaReady ? "Photo and file sharing is being prepared. Text messages still work." : "Photos up to 10 MB · Files up to 3 MB"}<span>{Array.from(draft).length}/2,000</span></p>
+        {error && <p role="alert" className="message-feedback message-error">{error}</p>}
       </form>
     </section>
   );

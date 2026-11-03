@@ -7,7 +7,7 @@ const actor='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 let authenticated=true, conversation, calls=[], rpcError=null;
 const db={auth:{getUser:async()=>({data:{user:authenticated?{id:actor}:null},error:null})},
  rpc:async(name)=>{calls.push(name);return {data:null,error:rpcError};},
- from(table){calls.push(table);const q={select(){return q;},eq(){return q;},lt(){calls.push('older');return q;},gt(){calls.push('newer');return q;},maybeSingle:async()=>({data:conversation,error:null}),order(_field,{ascending}){calls.push(ascending?'asc':'desc');return q;},limit:async()=>({data:[{id:2},{id:1}],error:null})};return q;}};
+ from(table){calls.push(table);const q={select(){return q;},in(){return q;},eq(){return q;},lt(){calls.push('older');return q;},gt(){calls.push('newer');return q;},maybeSingle:async()=>({data:conversation,error:null}),order(_field,{ascending}={}){if(table==="message_attachments")return Promise.resolve({data:[],error:null});calls.push(ascending?'asc':'desc');return q;},limit:async()=>({data:[{id:2},{id:1}],error:null})};return q;}};
 globalThis.__messageTestDb=db;
 registerHooks({resolve(specifier,context,next){
  if(specifier==='@/features/auth/server/user')return next(new URL('../src/features/auth/server/user.ts',import.meta.url).href,context);

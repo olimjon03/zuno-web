@@ -1,4 +1,6 @@
+export type MessageAttachment = { id: string; message_id?: number; name: string; mime: string; size: number; sort_order: number };
 export type Message = {
+  attachments?: MessageAttachment[];
   id: number;
   sender_id: string;
   body: string;
