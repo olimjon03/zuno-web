@@ -1,8 +1,10 @@
 "use server";
+import "server-only";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid } from "@/features/listings/validation";
-import { parseMessage, type Message } from "./validation";
+import type { Message } from "../types";
+import { parseMessage } from "../validation";
 export async function beginConversation(
   _state: { error?: string },
   form: FormData,
@@ -86,10 +88,10 @@ export async function readMessages(id: string, cursor?: number, older = false) {
       return { error: "Please log in again to read messages." };
     const { data: conversation, error: accessError } = await db
       .from("conversations")
-      .select("id")
+      .select("id,buyer_id,seller_id")
       .eq("id", id)
       .maybeSingle();
-    if (accessError || !conversation)
+    if (accessError || !conversation || (conversation.buyer_id !== user.id && conversation.seller_id !== user.id))
       return { error: "This conversation is unavailable." };
     let query = db
       .from("messages")

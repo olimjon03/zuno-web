@@ -1,4 +1,5 @@
 "use server";
+import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid } from "@/features/listings/validation";
 export async function getUnreadCounts() {

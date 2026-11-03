@@ -9,7 +9,8 @@ import {
 import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { createRefreshQueue, subscribeToMessageChanges } from "./realtime";
+import { createRefreshQueue } from "./refresh-queue";
+import { subscribeToMessageChanges } from "./client/realtime";
 import { useHydrated } from "@/lib/use-hydrated";
 import { isUuid } from "@/features/listings/validation";
 const Context = createContext<{
@@ -35,7 +36,17 @@ export function UnreadProvider({ children }: { children: ReactNode }) {
         if (!alive || document.hidden || !userId) return;
         const version = generation;
         // Read through RLS directly: background badges must not queue Server Actions.
-        const { data, error } = await db.rpc("get_unread_counts");
+        let response;
+        try {
+          response = await db.rpc("get_unread_counts");
+        } catch {
+          if (alive && version === generation) {
+            setCounts({});
+            setAvailable(false);
+          }
+          return;
+        }
+        const { data, error } = response;
         const next: Record<string, number> = {};
         for (const row of data ?? []) {
           const count = Number(row.unread_count);

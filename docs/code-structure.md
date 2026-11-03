@@ -1,6 +1,6 @@
-# Feature boundaries — phase 1
+# Feature boundaries
 
-ZUNO remains one Next.js repository. This refactor standardizes **listings and search**, keeping existing routes, UI, HTTP responses, authentication, RLS checks, upload limits, cache lifetimes and SQL unchanged. Auth, profile, favorites, messages and moderation remain in their established feature folders; their broader reorganization is a later phase.
+ZUNO remains one Next.js repository. This refactor standardizes **listings and search**, keeping existing routes, UI, HTTP responses, authentication, RLS checks, upload limits, cache lifetimes and SQL unchanged. Auth, profile, favorites and moderation remain in their established feature folders; their broader reorganization is a later phase. Messages are covered by phase 2 below.
 
 ```text
 src/
@@ -58,3 +58,20 @@ ESLint boundary tests prove that action/shared-type imports remain allowed while
 Behavior checks cover existing listing validation, bounded bodies, image decoding, search/cursor precision and pagination. Build/type checks validate the actual server/client dependency graph. Browser smoke checks use isolated local data; no real user records are modified.
 
 Phase 1 validation: lint, TypeScript/production build and all 32 Node tests pass. Isolated browser checks cover login, owner status/detail/photo editing, publishing and serving an uploaded image, Saved, sending a chat message, server-rendered search, Load more, invalid cursors and Unicode query reloads. The five extracted HTTP/action implementations were also compared with their original bodies. Hosted Supabase policies/provider configuration were not changed or revalidated by these local fixtures. No SQL migration, dependency, Next configuration or intentional visual change is part of this refactor.
+
+## Phase 2 — messages
+
+Messages now follows the same boundaries:
+
+- `types.ts`: message and inbox DTOs.
+- `validation.ts`, `inbox-model.ts`, `message-model.ts`, `refresh-queue.ts`: pure validation, filtering, deduplication and queued refresh coordination.
+- `client/realtime.ts`: browser-only Supabase subscription lifecycle. Cleanup silences stale channel events.
+- `server/actions.ts`, `server/unread-actions.ts`: authenticated message/read actions; database RPCs retain participant, blocking and retry-id guarantees.
+- `server/inbox-data.ts`, `server/page-data.ts`: server-only inbox and conversation readers; pages render the resulting data.
+- Existing React components remain at the feature root to preserve current component conventions.
+
+Realtime badge reads intentionally use the authenticated browser Supabase client through RLS; routing background refreshes through Server Actions would serialize UI work. Polling, reconnect refresh and event names remain unchanged. Rejected badge RPCs now check the auth generation before changing state, so an old account's rejected request cannot clear the next account's badges. Both the conversation page and history action explicitly check participant IDs in addition to database RLS.
+
+Messages UI and pure modules have lint import boundaries; message pages cannot access Supabase directly. Tests cover overlapping history/send/reconnect batches, trailing refreshes, cleanup, rejected refresh retries, unauthenticated/outsider history access, cursor direction and blocked-send errors. No new migration or dependency is required.
+
+Phase 2 validation: lint, production build (including TypeScript) and all 36 Node tests pass. Existing SQL regression suites were run locally in PGlite, including participant-only chat, retry deduplication, unread cursor privacy/monotonicity and blocking. Isolated browser checks cover login/inbox, mobile message sending, incoming replies, deduplication, fallback delivery while Realtime is disconnected, read-state filtering and desktop reopening. These fixtures do not verify hosted Google OAuth, the hosted publication configuration or actual device networking. The design and polling intervals are unchanged.
