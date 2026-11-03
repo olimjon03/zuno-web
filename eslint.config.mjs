@@ -27,7 +27,7 @@ const eslintConfig = defineConfig([
     files: [
       "src/features/listings/{types,constants,validation,currency}.ts",
       "src/features/search/{types,validation,pagination}.ts",
-      "src/features/profile/{types,validation}.ts",
+      "src/features/profile/{types,validation,location}.ts",
       "src/features/messages/{types,validation,attachments,inbox-model,message-model,refresh-queue}.ts",
     ],
     rules: {

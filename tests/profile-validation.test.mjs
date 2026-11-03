@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parseProfile } from "../src/features/profile/validation.ts";
+import "./helpers/register-runtime.mjs";
+const { parseProfile, parseNeighborhood } = await import("../src/features/profile/validation.ts");
 function form(name = "Neighbor", area = "") {
   const data = new FormData();
   data.set("displayName", name);
@@ -35,4 +36,20 @@ test("profile rejects malformed names, non-text fields and unsafe neighborhood I
   const missing = form();
   missing.delete("neighborhoodId");
   assert.throws(() => parseProfile(missing));
+});
+
+test("neighborhood changes require a valid country and positive area ID without a name",()=>{
+ const data=new FormData();data.set("country","UZ");data.set("neighborhoodId","3");
+ assert.deepEqual(parseNeighborhood(data),{country:"UZ",neighborhoodId:3});
+ data.set("displayName","forged");assert.deepEqual(parseNeighborhood(data),{country:"UZ",neighborhoodId:3});
+ for(const country of ["","US","uz"]){data.set("country",country);assert.throws(()=>parseNeighborhood(data));}
+ data.set("country","KR");for(const area of ["","0","-1","1e3","9007199254740992"]){data.set("neighborhoodId",area);assert.throws(()=>parseNeighborhood(data));}
+});
+const {profileAreasForCountry,profileAreaCountry}=await import('../src/features/profile/location.ts');
+test('profile area choices separate countries and exclude unknown locations',()=>{
+ const areas=[{id:1,name:'Seongsu-dong',regionCode:'KR-11'},{id:2,name:'Seoul Forest'},{id:3,name:'Toshkent shahri',regionCode:'UZ-TK'},{id:4,name:'Unknown'}];
+ assert.deepEqual(profileAreasForCountry(areas,'UZ').map(a=>a.id),[3]);
+ assert.deepEqual(profileAreasForCountry(areas,'KR').map(a=>a.id),[1,2]);
+ assert.deepEqual(profileAreasForCountry(areas,''),[]);
+ assert.equal(profileAreaCountry(areas,'3'),'UZ');assert.equal(profileAreaCountry(areas,'4'),'');
 });
