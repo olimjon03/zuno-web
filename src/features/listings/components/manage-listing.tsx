@@ -2,6 +2,7 @@
 import { Text, useT } from "@/features/language/provider";
 
 import Link from "next/link";
+import "./listing-statistics.css";
 import Image from "next/image";
 import { useRef, useState, type FormEvent } from "react";
 import { Icon } from "@/components/ui/icon";
@@ -62,6 +63,7 @@ export function ManageListing({item,categories,neighborhoods}:{item:OwnedListing
    <div className="owned-product-copy"><h2><Link href={`/listings/${item.id}`}>{item.title}</Link></h2><p className="owned-price">{formatPrice(Number(item.price),originalCountry)}</p><p className="owned-area"><Icon name="pin"/>{area?.name ?? <Text>{"Nearby"}</Text>}</p><span className={`owned-status owned-status-${item.status}`}><Text>{statusName}</Text></span></div>
    <Link href={`/listings/${item.id}`} className="owned-cover-link" aria-label={`View ${item.title}`}><CoverPhoto key={orderedPhotos[0]?.id ?? "missing"} photoId={orderedPhotos[0]?.id} title={item.title}/></Link>
   </div>
+  <Link className="owned-statistics-link" href={`/account/listings/${item.id}/statistics`}><Icon name="chart"/><Text>{"View statistics"}</Text></Link>
   <form className="owned-status-actions" onSubmit={submit} aria-label={`Change status of ${item.title}`}>
    <button type="submit" name="intent" value="reserved" disabled={pending||item.status==="reserved"}><Icon name="clock"/><span><Text>{"Mark reserved"}</Text></span></button>
    <button type="submit" name="intent" value="sold" disabled={pending||item.status==="sold"}><Icon name="bag-check"/><span><Text>{"Mark sold"}</Text></span></button>

@@ -7,9 +7,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { cacheLife } from "next/cache";
 import { getOwnedListingData } from "@/features/listings/server/owned-data";
-import {
-  ManageListing,
-} from "@/features/listings/components/manage-listing";
+import { OwnedListingsGrid } from "@/features/listings/components/owned-listings";
 export const metadata: Metadata = {
   title: "Your listings | ZUNO",
   robots: { index: false, follow: false },
@@ -30,9 +28,7 @@ async function OwnedListings() {
         <p><Text>{"You have no listings yet."}</Text></p>
       ) : (
         <>
-          {data.map((item) => (
-            <ManageListing key={item.id} item={item} {...options} />
-          ))}
+          <OwnedListingsGrid items={data} {...options}/>
           <p className="auth-hint"><Text>{"Showing your latest"}</Text>{data.length} {data.length === 1 ? <Text>{"listing"}</Text> : <Text>{"listings"}</Text>}.</p>
         </>
       )}

@@ -1,5 +1,25 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en">, string>> = {
+  "Listing status": {"uz":"E’lon holati","ko":"게시글 상태"},
+  "No listings with this status.": {"uz":"Bu holatda e’lonlar yo‘q.","ko":"해당 상태의 게시글이 없습니다."},
+  "Likes and saves count people who still have this item liked or saved in the selected period. Messages count distinct buyers who sent a message.": {"uz": "Layk va saqlashlar tanlangan davrda qo‘shilib, hozir ham saqlangan belgilarni hisoblaydi. Xabarlar — xabar yuborgan alohida xaridorlar soni.", "ko": "좋아요와 저장 수는 선택 기간에 추가되어 현재 유지 중인 항목입니다. 문의 수는 메시지를 보낸 구매자 수입니다."},
+  "Date": {"uz": "Sana", "ko": "날짜"},
+  "View data table": {"uz": "Ma’lumotlar jadvalini ko‘rish", "ko": "데이터 표 보기"},
+  "Daily view history starts when statistics tracking is enabled. Dates use UTC.": {"uz": "Kunlik ko‘rishlar tarixi statistika yoqilgandan boshlanadi. Sanalar UTC bo‘yicha.", "ko": "일별 조회 기록은 통계 수집을 시작한 시점부터 제공됩니다. 날짜는 UTC 기준입니다."},
+  "Statistics are temporarily unavailable. Please try again.": {"uz": "Statistika vaqtincha mavjud emas. Qayta urinib ko‘ring.", "ko": "일시적으로 통계를 불러올 수 없습니다. 다시 시도해 주세요."},
+  "Loading listing statistics…": {"uz": "E’lon statistikasi yuklanmoqda…", "ko": "게시글 통계를 불러오는 중…"},
+  "Listed on": {"uz": "Joylangan sana", "ko": "등록일"},
+  "Views over time": {"uz": "Vaqt bo‘yicha ko‘rishlar", "ko": "기간별 조회수"},
+  "Saves": {"uz": "Saqlashlar", "ko": "저장 수"},
+  "People messaged": {"uz": "Xabar yozganlar", "ko": "문의한 사람"},
+  "Likes": {"uz": "Layklar", "ko": "좋아요"},
+  "Views": {"uz": "Ko‘rishlar", "ko": "조회수"},
+  "All time": {"uz": "Barcha vaqt", "ko": "전체 기간"},
+  "30 days": {"uz": "30 kun", "ko": "30일"},
+  "7 days": {"uz": "7 kun", "ko": "7일"},
+  "Time period": {"uz": "Vaqt oralig‘i", "ko": "기간"},
+  "Listing statistics": {"uz": "E’lon statistikasi", "ko": "게시글 통계"},
+  "View statistics": {"uz": "Statistikani ko‘rish", "ko": "통계 보기"},
   "Language": {
     "uz": "Til",
     "ko": "언어"
