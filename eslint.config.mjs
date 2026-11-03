@@ -18,7 +18,7 @@ const eslintConfig = defineConfig([
     ],
     rules: {
       "no-restricted-imports": ["error", { patterns: [
-        { regex: "(?:^|/)server/(?!(?:actions|unread-actions)(?:$|\\.))", message: "Client UI must use shared types and server actions, not server services." },
+        { regex: "(?:^|/)server/(?!(?:actions|unread-actions|email-actions)(?:$|\\.))", message: "Client UI must use shared types and server actions, not server services." },
         { regex: "^(?:node:|sharp$|@/lib/supabase/(?:server|public)$)", message: "Keep Node and database services behind the server boundary." },
       ] }],
     },

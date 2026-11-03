@@ -1,6 +1,6 @@
 # Separate neighborhood changes
 
-Change neighborhood opens a dedicated mode in Profile settings, including the existing Account link to `#profile-neighborhood`. That mode shows Country followed by Region / neighborhood and Save neighborhood; no display-name input is rendered. Edit profile remains available separately.
+Change neighborhood opens a dedicated mode in Profile settings, including the existing Account link to `#profile-neighborhood`. That mode shows Country followed by Region / neighborhood and Save neighborhood; no display-name input is shown. Edit profile keeps the country picker out of its main view, with name, email, photo and a neighborhood shortcut instead.
 
 Area options carry the existing `region_code` metadata. Uzbekistan and South Korea are filtered separately, grouped by the existing country catalog. Switching country clears the old area. An existing area preselects its country; unknown places are excluded instead of being guessed. Only the four original Seoul seed areas retain the existing legacy fallback.
 

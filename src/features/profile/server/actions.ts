@@ -79,3 +79,22 @@ export async function updateNeighborhood(_state: ProfileState, data: FormData): 
   revalidatePath("/account/settings");
   return { message: "Neighborhood updated.", neighborhoodId: input.neighborhoodId };
 }
+
+export async function updateDisplayName(_state: ProfileState, data: FormData): Promise<ProfileState> {
+  const onlyName = new FormData();
+  const value = data.get("displayName");
+  if (typeof value === "string") onlyName.set("displayName", value);
+  onlyName.set("neighborhoodId", "");
+  let input;
+  try { input = parseProfile(onlyName); }
+  catch (error) { return { error: error instanceof Error ? error.message : "Check your display name." }; }
+  try {
+    const db = await createClient();
+    const { data: { user }, error: authError } = await db.auth.getUser();
+    if (authError || !user) return { error: "Please log in again to update your profile." };
+    const { data: saved, error } = await db.from("profiles").update({ display_name: input.displayName }).eq("id", user.id).select("id").maybeSingle();
+    if (error || !saved) return { error: "We couldn’t save your name. Please try again." };
+  } catch { return { error: "We couldn’t connect. Your changes have been kept." }; }
+  revalidatePath("/neighbors/[id]", "page");revalidatePath("/account");revalidatePath("/account/settings");
+  return { message: "Profile updated.", displayName: input.displayName };
+}

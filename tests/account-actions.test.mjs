@@ -20,7 +20,7 @@ registerHooks({resolve(specifier,context,next){
  if(specifier==='@/features/listings/validation')return next(new URL('../src/features/listings/validation.ts',import.meta.url).href,context);
  return next(specifier,context);
 }});
-const {updateProfile,updateNeighborhood}=await import('../src/features/profile/server/actions.ts');
+const {updateProfile,updateNeighborhood,updateDisplayName}=await import('../src/features/profile/server/actions.ts');
 const {saveFavorite}=await import('../src/features/favorites/server/actions.ts');
 function form(){const f=new FormData();f.set('displayName','  QA Neighbor  ');f.set('neighborhoodId','');f.set('id',listing);f.set('email','forged@example.invalid');return f;}
 test('profile update derives identity from Auth, limits fields and returns normalized saved values',async()=>{
@@ -63,4 +63,11 @@ test('neighborhood action writes only the verified user area and rejects a diffe
  assert.ok(calls.some(c=>c[0]==='eq'&&c[1]==='id'&&c[2]===actor));
  calls=[];data.set('country','UZ');assert.match((await updateNeighborhood({},data)).error,/this country/);assert.ok(!calls.some(c=>c[0]==='update'));
  calls=[];signed=false;data.set('country','KR');assert.match((await updateNeighborhood({},data)).error,/log in/);assert.deepEqual(calls,[]);signed=true;
+});
+
+test('name-only saves ignore stale neighborhood and forged email values',async()=>{
+ calls=[];const data=form();data.set('neighborhoodId','999');
+ const result=await updateDisplayName({},data);assert.equal(result.displayName,'QA Neighbor');
+ assert.deepEqual(calls.find(c=>c[0]==='update'),['update',{display_name:'QA Neighbor'}]);
+ assert.ok(!calls.some(c=>c[0]==='table'&&c[1]==='neighborhoods'));
 });
