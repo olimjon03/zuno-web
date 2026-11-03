@@ -1,3 +1,4 @@
+import { CountryProvider } from "@/features/locations/country-provider";
 import { LikesProvider } from "@/features/likes/provider";
 import { LanguageProvider } from "@/features/language/provider";
 import { Suspense } from "react";
@@ -23,7 +24,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "ZUNO | Buy · Sell · Connect Locally",
   description:
-    "Discover second-hand finds in your Seoul neighborhood. Buy, sell, and connect locally with ZUNO. Sample marketplace.",
+    "Discover second-hand finds in your neighborhood in Uzbekistan and South Korea. Buy, sell, and connect locally with ZUNO.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -33,9 +34,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <LanguageProvider><LocationProvider><FavoritesProvider>
+        <CountryProvider><LanguageProvider><LocationProvider><FavoritesProvider>
           <LikesProvider><UnreadProvider>{children}<Suspense fallback={null}><AuthRouteSync/><MobileNav/></Suspense></UnreadProvider></LikesProvider>
-        </FavoritesProvider></LocationProvider></LanguageProvider>
+        </FavoritesProvider></LocationProvider></LanguageProvider></CountryProvider>
       </body>
     </html>
   );

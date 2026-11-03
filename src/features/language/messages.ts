@@ -1,5 +1,17 @@
 import type { Language } from "./catalog";
-export const messages: Record<string, Record<Exclude<Language, "en">, string>> = {
+export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "We couldn’t save your country. Please try again.": {"uz": "Davlatni saqlab bo‘lmadi. Qayta urinib ko‘ring.", "ko": "국가를 저장하지 못했어요. 다시 시도해 주세요."},
+  "Please log in again to choose your country.": {"uz": "Davlatni tanlash uchun qayta kiring.", "ko": "국가를 선택하려면 다시 로그인하세요."},
+  "Choose your country to continue.": {"uz": "Davom etish uchun davlatni tanlang.", "ko": "계속하려면 국가를 선택하세요."},
+  "All districts": {"uz": "Barcha tumanlar", "ko": "모든 시·군·구"},
+  "District / city": {"uz": "Tuman / shahar", "ko": "시·군·구"},
+  "Choose region": {"uz": "Viloyatni tanlang", "ko": "시·도를 선택하세요"},
+  "Korea": {"uz": "Korea", "ko": "한국"},
+  "You can change your country later in Change neighborhood.": {"uz": "Davlatni keyinchalik “Change neighborhood” bo‘limida o‘zgartirishingiz mumkin.", "ko": "나중에 동네 변경에서 국가를 바꿀 수 있어요."},
+  "Confirm & continue": {"uz": "Tasdiqlash va davom etish", "ko": "확인하고 계속하기"},
+  "Choose your country": {"uz": "Davlatingizni tanlang", "ko": "국가를 선택하세요"},
+  "Choose your country to find great things nearby.": {"uz": "Yaqin atrofdagi yaxshi topilmalar uchun davlatingizni tanlang.", "ko": "주변의 좋은 물건을 찾으려면 국가를 선택하세요."},
+  "Welcome to ZUNO": {"uz": "ZUNO’ga xush kelibsiz", "ko": "ZUNO에 오신 것을 환영합니다"},
   "Listing status": {"uz":"E’lon holati","ko":"게시글 상태"},
   "No listings with this status.": {"uz":"Bu holatda e’lonlar yo‘q.","ko":"해당 상태의 게시글이 없습니다."},
   "Likes and saves count people who still have this item liked or saved in the selected period. Messages count distinct buyers who sent a message.": {"uz": "Layk va saqlashlar tanlangan davrda qo‘shilib, hozir ham saqlangan belgilarni hisoblaydi. Xabarlar — xabar yuborgan alohida xaridorlar soni.", "ko": "좋아요와 저장 수는 선택 기간에 추가되어 현재 유지 중인 항목입니다. 문의 수는 메시지를 보낸 구매자 수입니다."},
@@ -1536,9 +1548,9 @@ export const messages: Record<string, Record<Exclude<Language, "en">, string>> =
     "uz": "Bu menyular rejalashtirilgan imkoniyatlarni ko‘rsatadi. Hali sozlamalarni saqlamaydi yoki xizmat ko‘rsatmaydi.",
     "ko": "예정된 기능을 미리 보여주는 메뉴예요. 아직 설정 저장, 알림 전송, 서비스 제공은 하지 않아요."
   },
-  "ZUNO is a neighborhood marketplace for buying and selling second-hand items in South Korea.": {
-    "uz": "ZUNO — Janubiy Koreyada ishlatilgan buyumlarni yaqin atrofda sotish va xarid qilish bozori.",
-    "ko": "ZUNO는 대한민국 이웃들이 중고 물건을 사고파는 동네 마켓이에요."
+  "ZUNO is a neighborhood marketplace for buying and selling second-hand items in Uzbekistan and South Korea.": {
+    "uz": "ZUNO — Uzbekistan va Koreada ishlatilgan buyumlarni mahalliy sotib olish va sotish bozori.",
+    "ko": "ZUNO는 우즈베키스탄과 한국에서 중고 물품을 사고파는 동네 마켓입니다."
   },
   "{count} finds shown": {
     "uz": "{count} ta e’lon ko‘rsatildi",

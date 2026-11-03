@@ -1,3 +1,4 @@
+import { findDistrict } from "../locations/districts";
 import { findRegion,isCountryCode } from "../locations/catalog";
 import { categories } from "../listings/constants";
 import type { Category } from "../listings/types";
@@ -13,6 +14,7 @@ export function parseFeedFilters(params:URLSearchParams):FeedFilters {
   query:Array.from(params.get("q")??"").slice(0,100).join(""),
   category:categories.includes(category as Category)?category as Category:"All items",
   country,region:country&&findRegion(region)?.countryCode===country?region:"",
+  ...(params.get("district") && findDistrict(params.get("district")!)?.regionCode===region && country && findRegion(region)?.countryCode===country ? {district:params.get("district")!} : {}),
   minPrice:country?(params.get("min")??"").slice(0,32):"",
   maxPrice:country?(params.get("max")??"").slice(0,32):"",
   availableOnly:params.get("available")==="1",
@@ -24,6 +26,7 @@ export function feedParams(filters:FeedFilters) {
  if(filters.query.trim())params.set("q",filters.query);
  if(filters.country)params.set("country",filters.country);
  if(filters.region)params.set("region",filters.region);
+ if(filters.district)params.set("district",filters.district);
  if(filters.category!=="All items")params.set("category",filters.category);
  if(filters.country&&filters.minPrice)params.set("min",filters.minPrice);
  if(filters.country&&filters.maxPrice)params.set("max",filters.maxPrice);

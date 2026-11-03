@@ -3,6 +3,7 @@ import { Text, useT } from "@/features/language/provider";
 
 import Link from "next/link";
 import { useLocation } from "@/features/locations/location-provider";
+import { useCountry } from "@/features/locations/country-provider";
 import type { CountryCode } from "@/features/locations/catalog";
 import { priceLabel } from "../currency";
 import { preparePhotos } from "../client/prepare-photos";
@@ -26,7 +27,8 @@ export function CreateListingForm({
   const router = useRouter();
   const [photos, setPhotos] = useState<PhotoChoice[]>([]);
   const {location}=useLocation();
-  const [country,setCountry]=useState<CountryCode|"">(location.country || "KR");
+  const selectedCountry=useCountry();
+  const country:CountryCode|""=selectedCountry || location.country;
   const [neighborhoodId,setNeighborhoodId]=useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -160,7 +162,7 @@ export function CreateListingForm({
             </select>
           </div>
         </div>
-        <ListingLocationFields id="create" country={country} neighborhoodId={neighborhoodId} options={neighborhoods} onCountry={setCountry} onNeighborhood={setNeighborhoodId}/>
+        <ListingLocationFields id="create" country={country} neighborhoodId={neighborhoodId} options={neighborhoods} onNeighborhood={setNeighborhoodId}/>
         <div className="sell-field">
           <label htmlFor="listing-description"><Text>{"Description"}</Text></label>
           <textarea

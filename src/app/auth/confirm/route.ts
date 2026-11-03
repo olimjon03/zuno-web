@@ -1,3 +1,4 @@
+import { clearCountryPreference } from "@/features/onboarding/server/preference";
 import { revalidatePath } from "next/cache";
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
@@ -14,8 +15,9 @@ export async function GET(request: NextRequest) {
         token_hash,
       });
       if (!error) {
+        if(type!=="email_change")await clearCountryPreference();
         revalidatePath("/", "layout");
-        return NextResponse.redirect(new URL(type === "email_change" ? "/account/settings" : "/", getSiteUrl()));
+        return NextResponse.redirect(new URL(type === "email_change" ? "/account/settings" : "/welcome", getSiteUrl()));
       }
     } catch {
       /* Show only a generic failure. Redirect targets are fixed. */

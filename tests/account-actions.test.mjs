@@ -5,13 +5,14 @@ import './helpers/register-runtime.mjs';
 const actor='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const listing='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 let signed=true, fail=false, calls=[], invalidations=[];
-const db={auth:{getUser:async()=>({data:{user:signed?{id:actor,email:"qa@example.invalid",user_metadata:{private:"not-for-ui"}}:null},error:null})},from(table){
+const db={rpc:async(name,input)=>{calls.push(["rpc",name,input]);return {error:fail?{}:null};},auth:{getUser:async()=>({data:{user:signed?{id:actor,email:"qa@example.invalid",user_metadata:{private:"not-for-ui"}}:null},error:null})},from(table){
  calls.push(['table',table]);
  const q={order:async()=>({data:[{id:1,name:"Neighborhood",region_code:"KR-11"}],error:null}),select(){return q;},eq(key,value){calls.push(['eq',key,value]);return q;},update(value){calls.push(['update',value]);return q;},upsert(value){calls.push(['upsert',value]);return Promise.resolve({error:fail?{}:null});},delete(){calls.push(['delete']);return q;},maybeSingle:async()=>({data:fail?null:table==="neighborhoods"?{id:1,name:"Seongsu-dong",region_code:"KR-11"}:{id:actor,display_name:"QA Neighbor",neighborhood_id:1,avatar_path:null},error:fail?{}:null}),then(resolve){return Promise.resolve({error:fail?{}:null}).then(resolve);}};
  return q;
 }};
 globalThis.__accountTestDb=db;globalThis.__accountInvalidations=invalidations;
 registerHooks({resolve(specifier,context,next){
+ if(specifier==='@/features/onboarding/server/preference')return {url:'data:text/javascript,export const writeCountryPreference=async()=>{}',shortCircuit:true};
  if(specifier==='@/features/locations/catalog')return next(new URL('../src/features/locations/catalog.ts',import.meta.url).href,context);
  if(specifier==='@/lib/supabase/server')return {url:'data:text/javascript,export const createClient=async()=>globalThis.__accountTestDb',shortCircuit:true};
  if(specifier==='@/lib/supabase/config')return {url:'data:text/javascript,export const isSupabaseConfigured=()=>true',shortCircuit:true};
@@ -51,7 +52,7 @@ test('account reader fetches the profile once and returns a minimal verified-use
  assert.deepEqual(result.user,{id:actor,email:'qa@example.invalid'});
  assert.deepEqual(result.profile,{display_name:'QA Neighbor',neighborhood_id:1});
  assert.equal(result.avatarPath,null);
- assert.deepEqual(result.neighborhoods,[{id:1,name:'Neighborhood',regionCode:'KR-11'}]);
+ assert.deepEqual(result.neighborhoods,[{id:1,name:'Neighborhood',regionCode:'KR-11',districtCode:undefined}]);
  signed=false;await assert.rejects(getAccountProfile(),/login/);signed=true;
 });
 
@@ -59,8 +60,8 @@ test('neighborhood action writes only the verified user area and rejects a diffe
  const data=new FormData();data.set('country','KR');data.set('neighborhoodId','1');data.set('displayName','FORGED NAME');data.set('id',listing);
  calls=[];const result=await updateNeighborhood({},data);
  assert.equal(result.neighborhoodId,1);
- assert.deepEqual(calls.find(c=>c[0]==='update'),['update',{neighborhood_id:1}]);
- assert.ok(calls.some(c=>c[0]==='eq'&&c[1]==='id'&&c[2]===actor));
+ assert.deepEqual(calls.find(c=>c[0]==='rpc'),['rpc','set_marketplace_country',{p_country:'KR',p_neighborhood_id:1}]);
+ assert.ok(!calls.some(c=>c[0]==='update'));
  calls=[];data.set('country','UZ');assert.match((await updateNeighborhood({},data)).error,/this country/);assert.ok(!calls.some(c=>c[0]==='update'));
  calls=[];signed=false;data.set('country','KR');assert.match((await updateNeighborhood({},data)).error,/log in/);assert.deepEqual(calls,[]);signed=true;
 });

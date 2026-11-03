@@ -1,4 +1,4 @@
-export type ProfileNeighborhood = { id: number; name: string; regionCode?: string | null };
+export type ProfileNeighborhood = { id: number; name: string; regionCode?: string | null; districtCode?:string|null };
 export type ProfileInput = { displayName: string; neighborhoodId: number | null };
 export type ProfileState = { error?: string; message?: string; displayName?: string; profile?: ProfileInput; neighborhoodId?: number };
 export type AccountProfile = {

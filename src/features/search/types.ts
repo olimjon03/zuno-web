@@ -2,7 +2,7 @@ import type { CountryCode } from "../locations/catalog";
 import type { Category,Listing } from "../listings/types";
 export type FeedSort = "newest" | "price-asc" | "price-desc";
 export type FeedFilters = {
- query:string; category:Category; country:CountryCode|""; region:string;
+ query:string; category:Category; country:CountryCode|""; region:string; district?:string;
  minPrice:string; maxPrice:string; availableOnly:boolean; sort:FeedSort;
 };
 export type FeedPage={items:Listing[];nextCursor:string|null};

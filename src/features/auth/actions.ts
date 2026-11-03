@@ -1,5 +1,6 @@
 "use server";
 
+import { clearCountryPreference } from "@/features/onboarding/server/preference";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
@@ -36,7 +37,8 @@ export async function login(
     return { error: unavailable };
   }
   revalidatePath("/", "layout");
-  redirect("/");
+  await clearCountryPreference();
+  redirect("/welcome");
 }
 
 export async function signup(
@@ -71,7 +73,8 @@ export async function signup(
   }
   if (signedIn) {
     revalidatePath("/", "layout");
-    redirect("/");
+    await clearCountryPreference();
+    redirect("/welcome");
   }
   return {
     message:

@@ -1,7 +1,7 @@
 export type CountryCode = "UZ" | "KR";
 export type Region = { code: string; name: string; kind: "province" | "city" | "republic" };
 export const countries: readonly {code: CountryCode; name: string}[] = [
-  {code:"UZ",name:"Uzbekistan"}, {code:"KR",name:"S. Korea"},
+  {code:"UZ",name:"Uzbekistan"}, {code:"KR",name:"Korea"},
 ];
 // Official regional lists and current Korean special-province names:
 // https://my.gov.uz/ru/for-foreigners
@@ -44,7 +44,7 @@ export const regions: Record<CountryCode, readonly Region[]> = {
     {code:"KR-49",name:"Jeju Special Self-Governing Province",kind:"province"},
   ],
 };
-export type LocationSelection = { country: CountryCode | ""; region: string };
+export type LocationSelection = { country: CountryCode | ""; region: string; district?:string };
 export function isCountryCode(value: string): value is CountryCode { return value === "UZ" || value === "KR"; }
 export function selectCountry(country: string): LocationSelection {
   return {country:isCountryCode(country) ? country : "",region:""};

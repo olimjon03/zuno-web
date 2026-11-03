@@ -9,7 +9,8 @@ import { feedIssue } from "../validation";
 export async function getMarketplacePage(filters:FeedFilters,cursor?:string,signal?:AbortSignal):Promise<FeedPage> {
  const issue=feedIssue(filters);if(issue)throw Error(issue);
  const after=decodeFeedCursor(cursor,filters);
- const query=createPublicClient().rpc("search_listings",{
+ const query=createPublicClient().rpc("search_listings_in_area",{
+  p_district:filters.district||null,
   p_query:filters.query.trim(),p_category:filters.category==="All items"?null:filters.category,
   p_country:filters.country||null,p_region:filters.region||null,
   p_min_price:filters.minPrice?Number(filters.minPrice):null,p_max_price:filters.maxPrice?Number(filters.maxPrice):null,

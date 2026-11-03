@@ -10,14 +10,14 @@ import type { LocationSelection } from "@/features/locations/catalog";
 
 type Props = {
   location: LocationSelection;
-  onCountryChange: (value: string) => void;
+  onDistrictChange: (value: string) => void;
   onRegionChange: (value: string) => void;
   query: string;
   onQueryChange: (value: string) => void;
 };
 export function Header({
   location,
-  onCountryChange,
+  onDistrictChange,
   onRegionChange,
   query,
   onQueryChange,
@@ -28,7 +28,7 @@ export function Header({
       <Link prefetch={true} className="wordmark" href="/" aria-label={t("ZUNO home")}>
         <Brand/>
       </Link>
-      <LocationSelector location={location} onCountryChange={onCountryChange} onRegionChange={onRegionChange}/>
+      <LocationSelector location={location} onRegionChange={onRegionChange} onDistrictChange={onDistrictChange}/>
       <form
         className="search"
         role="search"

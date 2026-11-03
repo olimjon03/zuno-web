@@ -1,4 +1,5 @@
 "use client";
+import { useCountry } from "@/features/locations/country-provider";
 import { Text, useT } from "@/features/language/provider";
 
 import { priceLabel } from "@/features/listings/currency";
@@ -6,7 +7,6 @@ import { useMarketplaceFeed } from "@/features/search/client/use-marketplace-fee
 import type { FeedPage } from "@/features/search/types";
 import type { FeedFilters } from "@/features/search/types";
 import { parseFeedFilters } from "@/features/search/validation";
-import type { CountryCode } from "@/features/locations/catalog";
 import { Brand } from "@/components/ui/brand";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,13 +20,15 @@ import { CategoryNav } from "@/features/categories/components/category-nav";
 import { ListingCard } from "@/features/listings/components/listing-card";
 export function Homepage({initialSearch,initialPage,initialError}:{initialSearch:string;initialPage:FeedPage;initialError?:string}) {
   const t = useT();
+  const country=useCountry();
   const {filters,update,items:listings,nextCursor,error,issue,changing,loadingMore,loadMore,retry}=useMarketplaceFeed(initialSearch,initialPage,initialError);
   const {category,query,minPrice,maxPrice,availableOnly}=filters;
-  const location={country:filters.country,region:filters.region};
+  const location={country:country||filters.country,region:filters.region,district:filters.district};
   const {setSelection}=useLocation();
+  useEffect(()=>{if(window.location.pathname==="/"&&country&&filters.country!==country)update({country,region:"",district:undefined,minPrice:"",maxPrice:""},true);},[country,filters.country,update]);
   useEffect(()=>{setSelection({country:filters.country,region:filters.region});},[setSelection,filters.country,filters.region]);
   const {favorites,toggleFavorite}=useFavorites();
-  function resetFilters(){update(parseFeedFilters(new URLSearchParams()));}
+  function resetFilters(){update({...parseFeedFilters(new URLSearchParams()),country:country||filters.country});}
   return (
     <>
       <a className="skip-link" href="#marketplace">
@@ -34,8 +36,8 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
       <div className="utility-bar"><div className="shell"><span><Text>{"Buy · Sell · Connect Locally"}</Text></span><span>{location.region ? t(findRegion(location.region)?.regionName ?? "") : location.country ? t(countries.find(country=>country.code===location.country)?.name ?? "") : <Text>{"Choose your local area"}</Text>}</span></div></div>
       <Header
         location={location}
-        onCountryChange={value=>update({country:value as CountryCode|"",region:"",minPrice:"",maxPrice:"",sort:value?filters.sort:"newest"})}
-        onRegionChange={region=>update({region})}
+        onRegionChange={region=>update({region,district:undefined})}
+        onDistrictChange={district=>update({district})}
         query={query}
         onQueryChange={query=>update({query},true)}
       />
@@ -88,7 +90,7 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
           {error && <div className="feed-error" role="alert"><p><Text>{error}</Text></p><button className="button button-outline" onClick={retry} disabled={changing}><Text>{"Retry search"}</Text></button></div>}
           {!issue && listings.length > 0 ? (
             <div className="listing-grid">
-              {listings.map((listing) => (
+              {listings.filter(listing=>!country||listing.countryCode===country).map((listing) => (
                 <ListingCard
                   key={listing.id}
                   listing={listing}
