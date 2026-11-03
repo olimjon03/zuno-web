@@ -1,4 +1,5 @@
 "use server";
+import { getVerifiedUser } from "@/features/auth/server/user";
 import "server-only";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -18,7 +19,7 @@ export async function beginConversation(
     const {
       data: { user },
       error,
-    } = await db.auth.getUser();
+    } = await getVerifiedUser();
     if (!error && user) {
       const { data, error: startError } = await db.rpc("start_conversation", {
         p_listing_id: id,
@@ -55,7 +56,7 @@ export async function postMessage(
     const {
       data: { user },
       error: authError,
-    } = await db.auth.getUser();
+    } = await getVerifiedUser();
     if (authError || !user)
       return { error: "Please log in again to send messages." };
     const { error } = await db.rpc("send_message", {
@@ -83,7 +84,7 @@ export async function readMessages(id: string, cursor?: number, older = false) {
     const {
       data: { user },
       error: authError,
-    } = await db.auth.getUser();
+    } = await getVerifiedUser();
     if (authError || !user)
       return { error: "Please log in again to read messages." };
     const { data: conversation, error: accessError } = await db

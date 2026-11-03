@@ -7,19 +7,21 @@ import { getInboxPage } from "@/features/messages/server/page-data";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { connection } from "next/server";
+import { cacheLife } from "next/cache";
 export const metadata: Metadata = {
   title: "Messages | ZUNO",
   robots: { index: false, follow: false },
 };
 async function Inbox() {
-  await connection();
+  "use cache: private";
+  cacheLife({ stale: 30 });
+
   const {entries,now} = await getInboxPage();
   return (
     <main className="shell inbox-page">
       <InboxLiveRefresh />
       <header className="inbox-header">
-        <Link href="/" className="wordmark">
+        <Link prefetch={true} href="/" className="wordmark">
           <Brand/>
         </Link><BackHomeNav/></header>
       <h1>Messages</h1>

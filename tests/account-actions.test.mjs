@@ -5,14 +5,16 @@ import './helpers/register-runtime.mjs';
 const actor='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const listing='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 let signed=true, fail=false, calls=[], invalidations=[];
-const db={auth:{getUser:async()=>({data:{user:signed?{id:actor}:null},error:null})},from(table){
+const db={auth:{getUser:async()=>({data:{user:signed?{id:actor,email:"qa@example.invalid",user_metadata:{private:"not-for-ui"}}:null},error:null})},from(table){
  calls.push(['table',table]);
- const q={select(){return q;},eq(key,value){calls.push(['eq',key,value]);return q;},update(value){calls.push(['update',value]);return q;},upsert(value){calls.push(['upsert',value]);return Promise.resolve({error:fail?{}:null});},delete(){calls.push(['delete']);return q;},maybeSingle:async()=>({data:fail?null:{id:actor},error:fail?{}:null}),then(resolve){return Promise.resolve({error:fail?{}:null}).then(resolve);}};
+ const q={order:async()=>({data:[{id:1,name:"Neighborhood"}],error:null}),select(){return q;},eq(key,value){calls.push(['eq',key,value]);return q;},update(value){calls.push(['update',value]);return q;},upsert(value){calls.push(['upsert',value]);return Promise.resolve({error:fail?{}:null});},delete(){calls.push(['delete']);return q;},maybeSingle:async()=>({data:fail?null:{id:actor,display_name:"QA Neighbor",neighborhood_id:1,avatar_path:null},error:fail?{}:null}),then(resolve){return Promise.resolve({error:fail?{}:null}).then(resolve);}};
  return q;
 }};
 globalThis.__accountTestDb=db;globalThis.__accountInvalidations=invalidations;
 registerHooks({resolve(specifier,context,next){
  if(specifier==='@/lib/supabase/server')return {url:'data:text/javascript,export const createClient=async()=>globalThis.__accountTestDb',shortCircuit:true};
+ if(specifier==='@/lib/supabase/config')return {url:'data:text/javascript,export const isSupabaseConfigured=()=>true',shortCircuit:true};
+ if(specifier==='next/navigation')return {url:'data:text/javascript,export const redirect=(url)=>{throw Error(url)}',shortCircuit:true};
  if(specifier==='next/cache')return {url:'data:text/javascript,export const revalidatePath=(path)=>globalThis.__accountInvalidations.push(path)',shortCircuit:true};
  if(specifier==='@/features/listings/validation')return next(new URL('../src/features/listings/validation.ts',import.meta.url).href,context);
  return next(specifier,context);
@@ -39,4 +41,15 @@ test('favorite save and removal scope ownership to verified user and expose retr
  assert.ok(calls.some(c=>c[0]==='eq'&&c[1]==='listing_id'&&c[2]===listing));
  assert.ok(invalidations.includes('/account/saved'));
  fail=true;assert.match((await saveFavorite(listing,true)).error,/update saved/);fail=false;
+});
+
+const {getAccountProfile}=await import('../src/features/profile/server/data.ts');
+test('account reader fetches the profile once and returns a minimal verified-user projection',async()=>{
+ calls=[];const result=await getAccountProfile();
+ assert.equal(calls.filter(c=>c[0]==='table'&&c[1]==='profiles').length,1);
+ assert.deepEqual(result.user,{id:actor,email:'qa@example.invalid'});
+ assert.deepEqual(result.profile,{display_name:'QA Neighbor',neighborhood_id:1});
+ assert.equal(result.avatarPath,null);
+ assert.deepEqual(result.neighborhoods,[{id:1,name:'Neighborhood'}]);
+ signed=false;await assert.rejects(getAccountProfile(),/login/);signed=true;
 });

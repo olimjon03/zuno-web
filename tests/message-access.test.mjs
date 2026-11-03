@@ -10,6 +10,7 @@ const db={auth:{getUser:async()=>({data:{user:authenticated?{id:actor}:null},err
  from(table){calls.push(table);const q={select(){return q;},eq(){return q;},lt(){calls.push('older');return q;},gt(){calls.push('newer');return q;},maybeSingle:async()=>({data:conversation,error:null}),order(_field,{ascending}){calls.push(ascending?'asc':'desc');return q;},limit:async()=>({data:[{id:2},{id:1}],error:null})};return q;}};
 globalThis.__messageTestDb=db;
 registerHooks({resolve(specifier,context,next){
+ if(specifier==='@/features/auth/server/user')return next(new URL('../src/features/auth/server/user.ts',import.meta.url).href,context);
  if(specifier==='@/lib/supabase/server')return {url:'data:text/javascript,export const createClient=async()=>globalThis.__messageTestDb',shortCircuit:true};
  if(specifier==='next/navigation')return {url:'data:text/javascript,export const redirect=(url)=>{throw Error(url)}',shortCircuit:true};
  if(specifier==='@/features/listings/validation')return next(new URL('../src/features/listings/validation.ts',import.meta.url).href,context);

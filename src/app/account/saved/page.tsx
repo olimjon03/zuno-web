@@ -19,7 +19,7 @@ async function Saved() {
   return (
     <main className="shell manage-page">
       <header className="detail-header">
-        <Link href="/" className="wordmark">
+        <Link prefetch={true} href="/" className="wordmark">
           <Brand/>
         </Link><BackHomeNav/></header>
       <h1>Saved items</h1>
