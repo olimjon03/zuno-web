@@ -34,3 +34,12 @@ Above-fold copy review: existing navigation, category labels, hero stories, both
 The homepage canvas is solid white (#FFFFFF), following the user's latest request. The previous Soft Mint tint and corner glow are removed. The profile SVG remains a teal circle with a white silhouette, and the homepage menu trigger keeps the same #0D9488 background with white grid lines. Hover colors use #0F766E. No carousel, layout, menu or filtering changes.
 
 Scoped surface styles remain in `src/features/marketplace/soft-mint.css` to avoid unnecessary file/import changes. Existing white header/listing surfaces and the account/messages page colors are preserved. The earlier 320/390/768/1440px layout and menu checks remain applicable; this follow-up only changes the canvas background declarations.
+
+
+## Desktop filter disclosure
+
+On desktop (701px and wider), a sliders icon and localized Filters button sit directly to the left of All items. Price range, sort, availability and reset share one collapsible region below the category strip, closed initially. The button reports aria-expanded/aria-controls and counts active price, availability and non-default sort settings. Closing retains filter values. Category selection stays outside the panel.
+
+The existing mobile filter row and price disclosure stay available. There is one shared set of filter fields across responsive layouts, using the existing URL/feed validation and reset logic. Country-selection guidance now appears with the relevant controls inside the filter region.
+
+Validation: 70 Node tests, ESLint, TypeScript and production build pass. Playwright verifies left-of-All-items placement, initial collapse, keyboard opening, filter URL updates, active badge count, retained values after reopening and full reset. Desktop collapsed/expanded screenshots and mobile layout were visually inspected; responsive checks cover 320/390/768/1440px and existing translations.
