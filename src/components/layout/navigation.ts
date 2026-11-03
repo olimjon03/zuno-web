@@ -3,7 +3,7 @@ export type NavigationItem = { href: string; label: string; icon: IconName };
 export const accountMenuItems: readonly NavigationItem[] = [
   {href:"/account",label:"My ZUNO",icon:"user"},
   {href:"/account/listings",label:"Your listings",icon:"list"},
-  {href:"/account/saved",label:"Saved items",icon:"heart"},
+  {href:"/account/saved",label:"Saved items",icon:"bookmark"},
   {href:"/messages",label:"Messages",icon:"chat"},
   {href:"/sell",label:"Sell an item",icon:"plus"},
   {href:"/account/settings",label:"Profile settings",icon:"settings"},
@@ -13,7 +13,7 @@ export const accountMenuItems: readonly NavigationItem[] = [
 ];
 export const mobileMenuItems: readonly NavigationItem[] = [
   {href:"/",label:"Home",icon:"home"},
-  {href:"/account/saved",label:"Saved",icon:"heart"},
+  {href:"/account/saved",label:"Saved",icon:"bookmark"},
   {href:"/sell",label:"Sell",icon:"plus"},
   {href:"/messages",label:"Chats",icon:"chat"},
   {href:"/account",label:"My ZUNO",icon:"user"},

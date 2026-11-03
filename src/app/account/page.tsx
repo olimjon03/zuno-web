@@ -17,7 +17,7 @@ import { ExploreMenu } from "@/features/account/explore-menu";
 export const metadata: Metadata = { title: "My ZUNO | ZUNO", robots: { index: false, follow: false } };
 const links: { href: string; name: string; icon: IconName; description: string }[] = [
   { href: "/account/listings", name: "Your listings", icon: "list", description: "Manage the items you’re selling." },
-  { href: "/account/saved", name: "Saved items", icon: "heart", description: "View the items you’ve saved for later." },
+  { href: "/account/saved", name: "Saved items", icon: "bookmark", description: "View the items you’ve saved for later." },
   { href: "/messages", name: "Messages", icon: "chat", description: "Check your conversations with neighbors." },
 ];
 async function Account() {
