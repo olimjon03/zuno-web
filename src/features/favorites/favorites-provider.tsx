@@ -13,7 +13,7 @@ import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { useHydrated } from "@/lib/use-hydrated";
 import { isUuid } from "@/features/listings/validation";
-import { saveFavorite } from "./actions";
+import { saveFavorite } from "./server/actions";
 const FavoritesContext = createContext<{
   favorites: string[];
   ready: boolean;
@@ -50,6 +50,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       loadedAt = Date.now();
       const version = ++generation.current;
       if (identityChanged) {
+        pending.current = new Set();
         current.current = [];
         setFavorites(demos.current);
       }
@@ -93,12 +94,21 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       }).catch(() => {});
     };
     retryLoad.current = () => { if (loading.current) return; loadedAt = 0; reconcileSession(); };
+    const refreshVisible = () => {
+      if (document.hidden || pending.current.size || loading.current) return;
+      loadedAt = 0;
+      reconcileSession();
+    };
+    window.addEventListener("focus", refreshVisible);
+    document.addEventListener("visibilitychange", refreshVisible);
     window.addEventListener("zuno:auth-route", reconcileSession);
     return () => {
       alive = false;
       retryLoad.current = () => {};
       subscription.unsubscribe();
       window.removeEventListener("zuno:auth-route", reconcileSession);
+      window.removeEventListener("focus", refreshVisible);
+      document.removeEventListener("visibilitychange", refreshVisible);
     };
   }, []);
   async function toggleFavorite(id: string) {
@@ -116,7 +126,8 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       setNotice("We couldn’t check your saved items. Retry loading them first.");
       return;
     }
-    pending.current.add(id);
+    const pendingItems = pending.current;
+    pendingItems.add(id);
     const version = generation.current;
     const saved = !current.current.includes(id);
     setNotice("Updating saved items…");
@@ -143,7 +154,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       if (version === generation.current)
         setNotice("We couldn’t save your change. Please try again.");
     } finally {
-      pending.current.delete(id);
+      pendingItems.delete(id);
     }
   }
   return (

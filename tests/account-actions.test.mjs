@@ -1,0 +1,42 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { registerHooks } from 'node:module';
+import './helpers/register-runtime.mjs';
+const actor='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+const listing='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+let signed=true, fail=false, calls=[], invalidations=[];
+const db={auth:{getUser:async()=>({data:{user:signed?{id:actor}:null},error:null})},from(table){
+ calls.push(['table',table]);
+ const q={select(){return q;},eq(key,value){calls.push(['eq',key,value]);return q;},update(value){calls.push(['update',value]);return q;},upsert(value){calls.push(['upsert',value]);return Promise.resolve({error:fail?{}:null});},delete(){calls.push(['delete']);return q;},maybeSingle:async()=>({data:fail?null:{id:actor},error:fail?{}:null}),then(resolve){return Promise.resolve({error:fail?{}:null}).then(resolve);}};
+ return q;
+}};
+globalThis.__accountTestDb=db;globalThis.__accountInvalidations=invalidations;
+registerHooks({resolve(specifier,context,next){
+ if(specifier==='@/lib/supabase/server')return {url:'data:text/javascript,export const createClient=async()=>globalThis.__accountTestDb',shortCircuit:true};
+ if(specifier==='next/cache')return {url:'data:text/javascript,export const revalidatePath=(path)=>globalThis.__accountInvalidations.push(path)',shortCircuit:true};
+ if(specifier==='@/features/listings/validation')return next(new URL('../src/features/listings/validation.ts',import.meta.url).href,context);
+ return next(specifier,context);
+}});
+const {updateProfile}=await import('../src/features/profile/server/actions.ts');
+const {saveFavorite}=await import('../src/features/favorites/server/actions.ts');
+function form(){const f=new FormData();f.set('displayName','  QA Neighbor  ');f.set('neighborhoodId','');f.set('id',listing);f.set('email','forged@example.invalid');return f;}
+test('profile update derives identity from Auth, limits fields and returns normalized saved values',async()=>{
+ calls=[];signed=false;assert.match((await updateProfile({},form())).error,/log in/);assert.deepEqual(calls,[]);
+ signed=true;const result=await updateProfile({},form());
+ assert.deepEqual(result.profile,{displayName:'QA Neighbor',neighborhoodId:null});
+ assert.deepEqual(calls.find(c=>c[0]==='update'),['update',{display_name:'QA Neighbor',neighborhood_id:null}]);
+ assert.ok(calls.some(c=>c[0]==='eq'&&c[1]==='id'&&c[2]===actor));
+ assert.ok(invalidations.includes('/account/settings'));
+ fail=true;assert.match((await updateProfile({},form())).error,/save/);fail=false;
+});
+test('favorite save and removal scope ownership to verified user and expose retry failures',async()=>{
+ calls=[];assert.match((await saveFavorite('invalid',true)).error,/valid listing/);assert.deepEqual(calls,[]);
+ signed=false;assert.equal((await saveFavorite(listing,true)).login,true);assert.deepEqual(calls,[]);
+ signed=true;assert.deepEqual(await saveFavorite(listing,true),{userId:actor});
+ assert.deepEqual(calls.find(c=>c[0]==='upsert'),['upsert',{user_id:actor,listing_id:listing}]);
+ calls=[];await saveFavorite(listing,false);
+ assert.ok(calls.some(c=>c[0]==='eq'&&c[1]==='user_id'&&c[2]===actor));
+ assert.ok(calls.some(c=>c[0]==='eq'&&c[1]==='listing_id'&&c[2]===listing));
+ assert.ok(invalidations.includes('/account/saved'));
+ fail=true;assert.match((await saveFavorite(listing,true)).error,/update saved/);fail=false;
+});

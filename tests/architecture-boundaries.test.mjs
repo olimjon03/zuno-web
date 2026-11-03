@@ -26,3 +26,12 @@ test('messages UI uses server action entrypoints and shared contracts',async()=>
  assert.equal(await blocked('import { createClient } from "@/lib/supabase/server"; void createClient;',file),true);
  assert.equal(await blocked('import { createClient } from "@/lib/supabase/client"; void createClient;','src/features/messages/validation.ts'),true);
 });
+
+test('profile and saved UI use action entrypoints while account adapters avoid direct database access',async()=>{
+ for(const file of ['src/features/profile/profile-form.tsx','src/features/favorites/favorites-provider.tsx']) {
+  assert.equal(await blocked('import { updateProfile } from "./server/actions"; void updateProfile;',file),false);
+  assert.equal(await blocked('import { getAccountProfile } from "./server/data"; void getAccountProfile;',file),true);
+ }
+ for(const file of ['src/app/account/page.tsx','src/app/account/settings/page.tsx','src/app/account/saved/page.tsx','src/app/api/profile/avatar/route.ts'])
+  assert.equal(await blocked('import { createClient } from "@/lib/supabase/server"; void createClient;',file),true);
+});
