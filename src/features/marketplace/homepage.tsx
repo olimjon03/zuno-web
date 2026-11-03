@@ -24,9 +24,12 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
   const t = useT();
   const [pricesOpen, setPricesOpen] = useState(true);
   const priceId = useId();
+  const filterPanelId = useId();
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const country=useCountry();
   const {filters,update,items:listings,nextCursor,error,issue,changing,loadingMore,loadMore,retry}=useMarketplaceFeed(initialSearch,initialPage,initialError);
   const {category,query,minPrice,maxPrice,availableOnly}=filters;
+  const activeFilterCount = Number(Boolean(minPrice)) + Number(Boolean(maxPrice)) + Number(availableOnly) + Number(filters.sort !== "newest");
   const location={country:country||filters.country,region:filters.region,district:filters.district};
   const {setSelection}=useLocation();
   useEffect(()=>{if(window.location.pathname==="/"&&country&&filters.country!==country)update({country,region:"",district:undefined,minPrice:"",maxPrice:""},true);},[country,filters.country,update]);
@@ -53,8 +56,11 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
           aria-labelledby="listings-title"
           aria-busy={changing||loadingMore}
         >
-          <CategoryNav selected={category} onChange={category=>update({category})} />
-          <div className="market-price-filters compact-market-filters" data-prices-open={pricesOpen}>
+          <div className="market-category-toolbar">
+            <button type="button" className="desktop-filter-toggle" aria-expanded={filtersOpen} aria-controls={filterPanelId} onClick={()=>setFiltersOpen(value=>!value)}><Icon name="sliders"/><Text>{"Filters"}</Text>{activeFilterCount>0&&<span className="price-filter-count">{activeFilterCount}</span>}</button>
+            <CategoryNav selected={category} onChange={category=>update({category})} />
+          </div>
+          <div id={filterPanelId} role="region" aria-label={t("Filters")} className="market-price-filters compact-market-filters" data-prices-open={pricesOpen} data-desktop-open={filtersOpen}>
             <button type="button" className="price-filter-toggle" aria-expanded={pricesOpen} aria-controls={priceId} onClick={()=>setPricesOpen(value=>!value)}><Icon name="sliders"/><Text>{"Filters"}</Text>{(minPrice||maxPrice)&&<span className="price-filter-count">{Number(Boolean(minPrice))+Number(Boolean(maxPrice))}</span>}</button>
             <div id={priceId} className="compact-price-range">
               <label><span><Text>{"Min price ("}</Text>{location.country ? priceLabel(location.country) : <Text>{"local currency"}</Text>})</span><input type="number" inputMode="numeric" min="0" max="1000000000000" step="1" value={minPrice} onChange={e=>update({minPrice:e.target.value},true)} disabled={!location.country}/></label>
@@ -64,8 +70,8 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
             <label className="remove-confirm"><input type="checkbox" checked={availableOnly} onChange={e=>update({availableOnly:e.target.checked})}/><Text>{"Available only"}</Text></label>
             <label className="feed-sort"><span className="sr-only"><Text>{"Sort by"}</Text></span><select aria-label={t("Sort by")} value={filters.sort} onChange={event=>update({sort:event.target.value as FeedFilters["sort"]})}><option value="newest"><Text>{"Newest first"}</Text></option><option value="price-asc" disabled={!location.country}><Text>{"Price: low to high"}</Text></option><option value="price-desc" disabled={!location.country}><Text>{"Price: high to low"}</Text></option></select></label>
             <button type="button" className="filter-clear" aria-label={t("Clear filters")} title={t("Clear filters")} onClick={resetFilters}><Icon name="close"/><span><Text>{"Clear filters"}</Text></span></button>
+            {!location.country && <p className="auth-hint filter-country-hint"><Text>{"Choose a country to filter and sort prices in its local currency."}</Text></p>}
           </div>
-          {!location.country && <p className="auth-hint"><Text>{"Choose a country to filter and sort prices in its local currency."}</Text></p>}
           {issue && <p className="auth-error" role="alert"><Text>{issue}</Text></p>}
           <div className="section-heading">
             <h2 id="listings-title"><Text>{"Fresh finds nearby"}</Text></h2>
