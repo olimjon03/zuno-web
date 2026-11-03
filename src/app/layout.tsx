@@ -7,6 +7,7 @@ import { MobileNav } from "@/components/layout/mobile-nav";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "@/components/ui/settings-icon.css";
 import { UnreadProvider } from "@/features/messages/unread-provider";
 import { LocationProvider } from "@/features/locations/location-provider";
 import { FavoritesProvider } from "@/features/favorites/favorites-provider";

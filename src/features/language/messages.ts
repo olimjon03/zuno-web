@@ -1,5 +1,7 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "Close": {"uz": "Yopish", "ko": "닫기"},
+  "Filters": {"uz": "Filtrlar", "ko": "필터"},
   "Keep your home address private. Choose a public meeting place and inspect the item together.": {"uz": "Uy manzilingizni oshkor qilmang. Jamoat joyida uchrashing va buyumni birga tekshiring.", "ko": "집 주소는 공개하지 마세요. 공공장소에서 만나 물품을 함께 확인하세요."},
   "Meet safely.": {"uz": "Xavfsiz uchrashing.", "ko": "안전하게 만나요."},
   "Trade thoughtfully.": {"uz": "O‘ylab savdo qiling.", "ko": "신중하게 거래해요."},
