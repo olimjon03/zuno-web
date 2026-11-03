@@ -1,8 +1,44 @@
 "use client";
-import { useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-export function AvatarForm() {
- const router=useRouter();const [pending,setPending]=useState(false);const [message,setMessage]=useState("");const [error,setError]=useState("");
- return <form method="post" encType="multipart/form-data" className="auth-form avatar-form" aria-busy={pending} onSubmit={async event=>{event.preventDefault();const form=event.currentTarget;setError("");setMessage("");setPending(true);try{const response=await fetch("/api/profile/avatar",{method:"POST",body:new FormData(form)});const result=await response.json();if(!response.ok) setError(result.error || "Photo upload failed.");else{setMessage(result.message);form.reset();router.refresh();}}catch{setError("We couldn’t connect. Please try again.");}finally{setPending(false);}}}>
- <h2>Profile photo</h2><p className="auth-hint" id="avatar-help">Your photo is public. Use a still JPG, PNG or WebP image up to 3 MB. Uploading a new photo replaces the current one.</p><label htmlFor="avatar-photo">Choose a profile photo</label><input id="avatar-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" required disabled={pending} aria-describedby="avatar-help"/><button className="button button-primary" disabled={pending}>{pending ? "Uploading…" : "Save photo"}</button>{error&&<p role="alert" className="auth-error">{error}</p>}{message&&<p role="status" className="profile-success">{message}</p>}</form>;
+import { Icon } from "@/components/ui/icon";
+import { Avatar } from "./avatar";
+import "./avatar-form.css";
+export function AvatarForm({ name, path }: { name: string; path?: string | null }) {
+  const router = useRouter();
+  const inputId = useId();
+  const input = useRef<HTMLInputElement>(null);
+  const [chosen, setChosen] = useState<File | null>(null);
+  const locked = useRef(false);
+  const [pending, setPending] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  async function upload(file: File) {
+    if (locked.current) return;
+    setError("");setMessage("");
+    if (!file.size || file.size > 3 * 1024 * 1024 || !["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setChosen(null);setError("Choose a JPG, PNG or WebP photo up to 3 MB.");return;
+    }
+    setChosen(file);locked.current = true;setPending(true);
+    try {
+      const body = new FormData();body.set("photo", file);
+      const response = await fetch("/api/profile/avatar", { method: "POST", body });
+      const result = await response.json();
+      if (!response.ok) setError(result.error || "Photo upload failed. Please retry.");
+      else { setChosen(null);setMessage(result.message || "Profile photo updated.");router.refresh(); }
+    } catch { setError("We couldn’t connect. Your photo has been kept for retry."); }
+    finally { locked.current = false;setPending(false); }
+  }
+  return <div className={"profile-photo-control"} aria-busy={pending}>
+    <div className={"profile-photo-picture"}><Avatar name={name} path={path}/>
+      <button type="button" className={"profile-photo-add"} aria-label="Change profile photo" title="Change profile photo" aria-controls={inputId} aria-describedby={`${inputId}-help`} disabled={pending} onClick={() => input.current?.click()}>{pending ? <span aria-hidden="true">…</span> : <Icon name="plus" width="19" height="19"/>}</button>
+    </div>
+    <input id={inputId} ref={input} type="file" accept="image/jpeg,image/png,image/webp" hidden aria-label="Choose a profile photo" disabled={pending} onChange={event => { const file=event.currentTarget.files?.[0];event.currentTarget.value="";if(file)void upload(file); }}/>
+    <p id={`${inputId}-help`} className="sr-only">Choose a public profile photo. JPG, PNG or WebP, up to 3 MB. It uploads after selection.</p>
+    {(pending || error || message) && <div className={"profile-photo-feedback"}>
+      <p role={error ? "alert" : "status"}>{pending ? "Uploading profile photo…" : error || message}</p>
+      {!pending && error && chosen && <button type="button" onClick={() => {if(chosen)void upload(chosen);}}>Retry</button>}
+      {!pending && <button type="button" aria-label="Dismiss photo notification" onClick={()=>{setError("");setMessage("");}}><Icon name="close" width="16" height="16"/></button>}
+    </div>}
+  </div>;
 }
