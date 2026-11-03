@@ -1,6 +1,6 @@
 import { getAccountProfile } from "@/features/profile/server/data";
 import { SectionLoading } from "@/components/layout/section-loading";
-import { Avatar } from "@/features/profile/avatar";
+import { AvatarForm } from "@/features/profile/avatar-form";
 import Link from "next/link";
 import { Brand } from "@/components/ui/brand";
 import { BackHomeNav } from "@/components/layout/back-home-nav";
@@ -24,7 +24,7 @@ async function Account() {
       <header className="shell detail-header settings-header"><Link prefetch={true} href="/" className="wordmark" aria-label="ZUNO home"><Brand/></Link><BackHomeNav/></header>
       <main className="settings-main settings-soft"><h1>Profile settings</h1><p className="settings-intro">Your place in the ZUNO neighborhood.</p>
       <section className="settings-profile" aria-label="Your profile">
-      <div className="settings-identity"><Avatar name={profile.display_name} path={avatarPath}/><div><h2>{profile.display_name}</h2><p>{neighborhoods.find(area=>area.id===Number(profile.neighborhood_id))?.name || "Neighborhood not selected"}</p><Link prefetch={true} href={`/neighbors/${user.id}`}>View public profile</Link></div></div>
+      <div className="settings-identity"><AvatarForm name={profile.display_name} path={avatarPath}/><div><h2>{profile.display_name}</h2><p>{neighborhoods.find(area=>area.id===Number(profile.neighborhood_id))?.name || "Neighborhood not selected"}</p><Link prefetch={true} href={`/neighbors/${user.id}`}>View public profile</Link></div></div>
       </section>
       <ProfileForm
         displayName={profile.display_name}

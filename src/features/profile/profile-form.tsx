@@ -5,7 +5,6 @@ import { NeighborhoodFields } from "./neighborhood-fields";
 import { profileAreaCountry } from "./location";
 import type { ProfileNeighborhood, ProfileState } from "./types";
 import type { CountryCode } from "@/features/locations/catalog";
-import { AvatarForm } from "./avatar-form";
 import { EmailForm } from "./email-form";
 import { updateDisplayName, updateNeighborhood } from "./server/actions";
 export function ProfileForm({
@@ -71,7 +70,6 @@ export function ProfileForm({
         <div className="sell-field"><label htmlFor="profile-name">Display name</label><input ref={nameInput} id="profile-name" name="displayName" value={name} onChange={event=>setName(event.target.value)} required minLength={2} maxLength={80} autoComplete="nickname" disabled={pending}/><p className="auth-hint">Use 2–40 characters. Save profile updates your display name.</p></div>
       </form>
       <EmailForm email={email}/>
-      <AvatarForm/>
       <div className="sell-field"><p><strong>Neighborhood</strong></p><p>{areaName}</p><button type="button" className="button button-outline" disabled={pending} onClick={()=>openNeighborhood(true)}>Change neighborhood</button></div>
       <div className="settings-edit-actions"><button type="button" className="button button-outline" disabled={pending} onClick={()=>{setMode(null);setShowResult(false);}}>Cancel</button><button form="profile-name-form" className="button button-primary" disabled={pending}>{pending ? "Saving…" : "Save profile"}</button></div>
     </div>
