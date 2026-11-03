@@ -2,6 +2,7 @@
 import { Text, useT } from "@/features/language/provider";
 import { LanguageSelector } from "@/features/language/language-selector";
 import { ExploreLauncher } from "@/features/account/explore-launcher";
+import "./header-icons.css";
 import { Brand } from "@/components/ui/brand";
 import Link from "next/link";
 import { AccountLink } from "@/features/auth/account-link";
@@ -26,9 +27,12 @@ export function Header({
   const t = useT();
   return (
     <header className="site-header shell">
+      <div className="header-brand-group">
+      <ExploreLauncher align="start"/>
       <Link prefetch={true} className="wordmark" href="/" aria-label={t("ZUNO home")}>
         <Brand/>
       </Link>
+      </div>
       <LocationSelector location={location} onRegionChange={onRegionChange} onDistrictChange={onDistrictChange}/>
       <form
         className="search"
@@ -61,7 +65,6 @@ export function Header({
       <LanguageSelector/>
       <Link prefetch={true} className="button button-primary header-sell" href="/sell"><Text>{"Sell"}</Text></Link>
       <AccountLink />
-      <ExploreLauncher/>
     </header>
   );
 }
