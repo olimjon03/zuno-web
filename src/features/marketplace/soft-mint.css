@@ -1,0 +1,5 @@
+/* Soft Mint changes only the homepage palette, preserving existing layout. */
+.zuno-homepage{min-height:100dvh;background-color:#f4faf8;background-image:radial-gradient(ellipse 640px 360px at 0 0,rgba(13,148,136,.055),transparent 72%)}
+.zuno-homepage .hero-band{background:transparent}
+.zuno-homepage .site-header{background:#fff}
+.zuno-homepage .listing-card{background:#fff;border-radius:16px}

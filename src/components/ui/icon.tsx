@@ -2,7 +2,7 @@ import type { SVGProps } from "react";
 
 export type IconName = "user-circle" | "sliders" | "grid" | "eye" | "bookmark" | "pencil" | "trash" | "clock" | "bag-check" | "check-circle" | "image" | "mail" | "heart" | "search" | "pin" | "arrow" | "plus" | "close" | "home" | "user" | "chat" | "settings" | "list" | "help" | "chevron" | "calendar" | "briefcase" | "bell" | "shield" | "book" | "store" | "chart" | "people";
 const paths: Record<IconName, React.ReactNode> = {
-  "user-circle": <><circle cx="12" cy="12" r="10"/><circle cx="12" cy="8.5" r="3.5" fill="currentColor" stroke="none"/><path d="M4.3 18.3a7.8 7.8 0 0 1 15.4 0A10 10 0 0 1 4.3 18.3Z" fill="currentColor" stroke="none"/></>,
+  "user-circle": <><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><circle cx="12" cy="8.5" r="3" fill="#fff" stroke="none"/><path d="M6 18a6 6 0 0 1 12 0v.5H6Z" fill="#fff" stroke="none"/></>,
   sliders: <><path d="M3 6h4m4 0h10M3 12h10m4 0h4M3 18h4m4 0h10"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="9" cy="18" r="2"/></>,
   grid: <><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></>,
   eye: <><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></>,

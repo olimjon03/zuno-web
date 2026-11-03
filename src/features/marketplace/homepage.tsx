@@ -9,6 +9,7 @@ import type { FeedFilters } from "@/features/search/types";
 import { parseFeedFilters } from "@/features/search/validation";
 import { Brand } from "@/components/ui/brand";
 import "./compact-marketplace.css";
+import "./soft-mint.css";
 import { HeroCarousel } from "./hero-carousel";
 import Link from "next/link";
 import { useLocation } from "@/features/locations/location-provider";
@@ -33,7 +34,7 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
   const {favorites,toggleFavorite}=useFavorites();
   function resetFilters(){update({...parseFeedFilters(new URLSearchParams()),country:country||filters.country});}
   return (
-    <>
+    <div className="zuno-homepage">
       <a className="skip-link" href="#marketplace">
         <Text>{"Skip to listings"}</Text></a>
       <div className="utility-bar"><div className="shell"><span><Text>{"Buy · Sell · Connect Locally"}</Text></span><span>{location.region ? t(findRegion(location.region)?.regionName ?? "") : location.country ? t(countries.find(country=>country.code===location.country)?.name ?? "") : <Text>{"Choose your local area"}</Text>}</span></div></div>
@@ -110,6 +111,6 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
       <Link className="button button-primary mobile-sell" href="/sell">
         <Icon name="plus" />
         <Text>{"Sell an Item"}</Text></Link>
-    </>
+    </div>
   );
 }
