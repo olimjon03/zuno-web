@@ -1,22 +1,27 @@
 "use client";
-import { useId } from "react";
+import { useEffect, type KeyboardEvent } from "react";
+import { Icon } from "@/components/ui/icon";
+import { useIconPopover } from "@/components/ui/use-icon-popover";
 import { useCountry } from "@/features/locations/country-provider";
-import { languages, isLanguage, countryLanguages } from "./catalog";
+import { languages, countryLanguages } from "./catalog";
 import { useLanguage, useT } from "./provider";
 import "./language-selector.css";
 export function LanguageSelector({welcome=false}:{welcome?:boolean}) {
-  const country=useCountry();
-  const available=countryLanguages(country,welcome);
-  const { language, setLanguage } = useLanguage();
-  const t = useT();
-  const id = useId();
-  return <div className="zuno-language-selector">
-    <label className="sr-only" htmlFor={id}>{t("Language")}</label>
-    <span className="zuno-language-flag" aria-hidden="true">{languages.find(item => item.code === language)?.flag}</span>
-    <select id={id} value={language} onChange={event => { if (isLanguage(event.target.value)) setLanguage(event.target.value); }} aria-label={t("Language")}>
-      {available.map(code=>languages.find(item=>item.code===code)!).map(item => <option key={item.code} value={item.code} lang={item.code}>{item.flag} {item.name}</option>)}
-    </select>
-    <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="m4 6 4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
-    <span className="sr-only" role="status" aria-live="polite">{t("Language selected: {language}", { language: languages.find(item => item.code === language)!.name })}</span>
-  </div>;
+ const country=useCountry(),available=countryLanguages(country,welcome);
+ const {language,setLanguage}=useLanguage();const t=useT();
+ const {root,trigger,panel,open,position,toggle,close,id}=useIconPopover(200,available.length*44+18);
+ useEffect(()=>{if(open)panel.current?.querySelector<HTMLButtonElement>('[aria-checked="true"]')?.focus();},[open,panel]);
+ function navigate(event:KeyboardEvent<HTMLDivElement>){
+  const buttons=Array.from(panel.current?.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"]')??[]);
+  const current=buttons.indexOf(document.activeElement as HTMLButtonElement);let next=current;
+  if(event.key==="ArrowDown")next=(current+1)%buttons.length;else if(event.key==="ArrowUp")next=(current-1+buttons.length)%buttons.length;else if(event.key==="Home")next=0;else if(event.key==="End")next=buttons.length-1;else return;
+  event.preventDefault();buttons[next]?.focus();
+ }
+ return <div ref={root} className="zuno-language-selector">
+  <button ref={trigger} className="header-icon-button language-trigger" type="button" aria-label={t("Language")} title={t("Language")} aria-expanded={open} aria-haspopup="menu" aria-controls={id} onClick={toggle}><Icon name="globe"/></button>
+  {open&&<div ref={panel} id={id} style={position} className="language-menu icon-popover" role="menu" aria-label={t("Language")} onKeyDown={navigate}>
+   {available.map(code=>languages.find(item=>item.code===code)!).map(item=><button key={item.code} type="button" role="menuitemradio" aria-checked={language===item.code} tabIndex={language===item.code?0:-1} lang={item.code} onClick={()=>{setLanguage(item.code);close(true);}}><span aria-hidden="true">{item.flag}</span><span>{item.name}</span>{language===item.code&&<Icon name="check-circle"/>}</button>)}
+  </div>}
+  <span className="sr-only" role="status" aria-live="polite">{t("Language selected: {language}",{language:languages.find(item=>item.code===language)!.name})}</span>
+ </div>;
 }

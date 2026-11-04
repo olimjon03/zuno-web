@@ -1,6 +1,6 @@
 "use client";
 import { Text, useT } from "@/features/language/provider";
-import { LanguageSelector } from "@/features/language/language-selector";
+import { HeaderTools } from "./header-tools";
 import { ExploreLauncher } from "@/features/account/explore-launcher";
 import "./header-icons.css";
 import { Brand } from "@/components/ui/brand";
@@ -62,7 +62,7 @@ export function Header({
       </form>
       <Link prefetch={true} className="header-saved" href="/account/saved"><Icon name="bookmark"/><Text>{"Saved"}</Text></Link>
       <Link prefetch={true} className="header-saved" href="/messages"><Icon name="chat"/><Text>{"Messages"}</Text></Link>
-      <LanguageSelector/>
+      <HeaderTools/>
       <Link prefetch={true} className="button button-primary header-sell" href="/sell"><Text>{"Sell"}</Text></Link>
       <AccountLink />
     </header>

@@ -1,0 +1,2 @@
+.header-tools{display:inline-flex;align-items:center;gap:8px;flex:none}
+@media(max-width:700px){.site-header:has(>.header-tools){grid-template-columns:minmax(0,1fr) auto auto;gap:10px}.site-header>.header-tools{grid-column:2;grid-row:1}.site-header>.account-icon-link{grid-column:3;grid-row:1}}
