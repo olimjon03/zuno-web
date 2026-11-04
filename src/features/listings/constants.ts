@@ -1,12 +1,5 @@
-export const categories = [
-  "All items",
-  "Electronics",
-  "Home & Living",
-  "Fashion",
-  "Sports",
-  "Books",
-  "Other",
-] as const;
+import { categoryCatalog } from "../categories/catalog";
+export const categories = categoryCatalog.map(category => category.name);
 export const MAX_PHOTOS = 10;
 export const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 export const MAX_TOTAL_PHOTO_BYTES = 3.5 * 1024 * 1024;
