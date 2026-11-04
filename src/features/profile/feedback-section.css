@@ -23,7 +23,7 @@
 .feedback-negative { color: #b42318; }
 .neighbor-feedback .button { justify-self: start; }
 
-.neighbor-summary .neighbor-address-level { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.neighbor-summary .neighbor-address-level, .profile-summary .neighbor-address-level { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .profile-level-badge {
   display: inline-flex;
   align-items: center;

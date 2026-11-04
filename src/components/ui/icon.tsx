@@ -1,7 +1,8 @@
 import type { SVGProps } from "react";
 
-export type IconName = "globe" | "user-circle" | "sliders" | "grid" | "eye" | "bookmark" | "pencil" | "trash" | "clock" | "bag-check" | "check-circle" | "image" | "mail" | "heart" | "search" | "pin" | "arrow" | "plus" | "close" | "home" | "user" | "chat" | "settings" | "list" | "help" | "chevron" | "calendar" | "briefcase" | "bell" | "shield" | "book" | "store" | "chart" | "people";
+export type IconName = "medal" | "globe" | "user-circle" | "sliders" | "grid" | "eye" | "bookmark" | "pencil" | "trash" | "clock" | "bag-check" | "check-circle" | "image" | "mail" | "heart" | "search" | "pin" | "arrow" | "plus" | "close" | "home" | "user" | "chat" | "settings" | "list" | "help" | "chevron" | "calendar" | "briefcase" | "bell" | "shield" | "book" | "store" | "chart" | "people";
 const paths: Record<IconName, React.ReactNode> = {
+  medal: <><path d="m5 3 4 8m10-8-4 8M5 3h4l3 6 3-6h4"/><circle cx="12" cy="16" r="5"/><path d="M12 14v4"/></>,
   globe: <><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></>,
   "user-circle": <><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><circle cx="12" cy="8.5" r="3" fill="#fff" stroke="none"/><path d="M6 18a6 6 0 0 1 12 0v.5H6Z" fill="#fff" stroke="none"/></>,
   sliders: <><path d="M3 6h4m4 0h10M3 12h10m4 0h4M3 18h4m4 0h10"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="9" cy="18" r="2"/></>,
