@@ -3,7 +3,7 @@ export type NotificationSnapshot={items:SiteNotification[];unread_count:number};
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export function notificationHref(value:unknown):string {
  if(typeof value!=="string")return "/account";
- const plain=/^\/(?:account(?:\/(?:listings|safety|settings|saved))?|help(?:#[\w-]+)?)$/;
+ const plain=/^\/(?:account(?:\/(?:listings|safety|settings|saved))?|explore\/purchase-history|help(?:#[\w-]+)?)$/;
  const detail=/^\/(?:messages|listings)\/([0-9a-f-]+)$/i;
  const match=value.match(detail);
  return plain.test(value)||(match&&uuid.test(match[1]))?value:"/account";

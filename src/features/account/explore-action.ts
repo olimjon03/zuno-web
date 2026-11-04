@@ -59,8 +59,15 @@ export async function saveExploreChange(_: State, form: FormData): Promise<State
   } else if (slug === "promote-listing" && isUuid(id)) {
     if (action === "save") result = await db.from("explore_promotions").insert({ listing_id: id });
     if (action === "remove") result = await db.from("explore_promotions").delete().eq("listing_id", id).eq("user_id", user.id);
-  } else if (slug === "purchase-history" && action === "save" && isUuid(id)) {
-    result = await db.from("explore_trade_confirmations").insert({ conversation_id: id });
+  } else if (slug === "purchase-history" && isUuid(id)) {
+    if (action === "save") result = await db.from("explore_trade_confirmations").insert({ conversation_id: id });
+    if (action === "review" && ["positive", "negative"].includes(value("sentiment"))) {
+      result = await db.rpc("submit_trade_feedback", {
+        p_conversation_id: id,
+        p_positive: value("sentiment") === "positive",
+        p_reason: value("reason"),
+      });
+    }
   } else if (slug === "location-verification") {
     if (action === "save" && profile.neighborhood_id && value("body").length >= 10 && value("body").length <= 500) {
       result = await db.from("explore_location_requests").insert({ neighborhood_id: profile.neighborhood_id, note: value("body") });

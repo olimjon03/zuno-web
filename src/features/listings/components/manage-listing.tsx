@@ -10,6 +10,7 @@ import type { CountryCode } from "@/features/locations/catalog";
 import { priceLabel } from "../currency";
 import { EditListingPhotos, type PhotoEditorHandle } from "./edit-listing-photos";
 import { ListingLocationFields, optionCountry } from "./listing-location-fields";
+import { BuyerStatusActions } from "./buyer-status-actions";
 import { manageListing } from "../server/actions";
 import type { ManageResult,OwnedListing } from "../types";
 import { conditions, conditionLabels } from "../constants";
@@ -64,10 +65,10 @@ export function ManageListing({item,categories,neighborhoods}:{item:OwnedListing
    <Link href={`/listings/${item.id}`} className="owned-cover-link" aria-label={`View ${item.title}`}><CoverPhoto key={orderedPhotos[0]?.id ?? "missing"} photoId={orderedPhotos[0]?.id} title={item.title}/></Link>
   </div>
   <Link className="owned-statistics-link" href={`/account/listings/${item.id}/statistics`}><Icon name="chart"/><Text>{"View statistics"}</Text></Link>
-  <form className="owned-status-actions" onSubmit={submit} aria-label={`Change status of ${item.title}`}>
-   <button type="submit" name="intent" value="reserved" disabled={pending||item.status==="reserved"}><Icon name="clock"/><span><Text>{"Mark reserved"}</Text></span></button>
-   <button type="submit" name="intent" value="sold" disabled={pending||item.status==="sold"}><Icon name="bag-check"/><span><Text>{"Mark sold"}</Text></span></button>
-  </form>
+  <BuyerStatusActions id={item.id} title={item.title} status={item.status} disabled={pending} />
+  {item.status === "reserved" && <form onSubmit={submit}>
+    <button type="submit" name="intent" value="active" className="button button-outline" disabled={pending}><Text>{"Mark available"}</Text></button>
+  </form>}
   <details className="owned-edit-panel">
    <summary><Icon name="pencil"/><span><Text>{"Edit item details"}</Text></span><Icon name="chevron" className="owned-disclosure-arrow"/></summary>
    <form className="sell-form owned-edit-form" onSubmit={submit}>
@@ -80,7 +81,6 @@ export function ManageListing({item,categories,neighborhoods}:{item:OwnedListing
       <div className="sell-field"><label htmlFor={`${item.id}-category`}><Text>{"Category"}</Text></label><select id={`${item.id}-category`} name="categoryId" value={draft.category_id} onChange={e=>update("category_id",Number(e.target.value))}>{categories.map(c=><option key={c.id} value={c.id}><Text>{c.name}</Text></option>)}</select></div>
      </div>
      <ListingLocationFields id={item.id} country={country} neighborhoodId={draft.neighborhood_id ? String(draft.neighborhood_id) : ""} options={neighborhoods} onNeighborhood={value=>update("neighborhood_id",value ? Number(value) : 0)}/>
-     <div className="sell-field"><label htmlFor={`${item.id}-status`}><Text>{"Availability"}</Text></label><select key={item.status} id={`${item.id}-status`} name="status" defaultValue={item.status}><option value="active"><Text>{"Available"}</Text></option><option value="reserved"><Text>{"Reserved"}</Text></option><option value="sold"><Text>{"Sold"}</Text></option></select></div>
      <div className="sell-field"><label htmlFor={`${item.id}-description`}><Text>{"Description"}</Text></label><textarea id={`${item.id}-description`} name="description" required minLength={10} maxLength={5000} rows={4} value={draft.description} onChange={e=>update("description",e.target.value)}/></div>
      <p className="auth-hint"><Text>{"Changing country changes the price currency. Enter the appropriate amount; prices are not converted."}</Text></p>
      <button className="button button-primary owned-save-button" name="intent" value="edit">{pending ? <Text>{"Saving changes…"}</Text> : <Text>{"Save changes"}</Text>}</button>

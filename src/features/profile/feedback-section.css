@@ -1,0 +1,24 @@
+.neighbor-feedback {
+  display: grid;
+  gap: 12px;
+  margin: 24px 0;
+  padding: 18px;
+  border: 1px solid #dbe8e4;
+  border-radius: 18px;
+  background: #fff;
+}
+.neighbor-feedback h2 { font-size: 1.25rem; font-weight: 750; }
+.neighbor-feedback-level, .neighbor-feedback-counts, .neighbor-feedback-filters { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.neighbor-feedback-level svg { color: #0f766e; }
+.neighbor-feedback-list { display: grid; gap: 8px; }
+.neighbor-feedback-list li {
+  display: grid;
+  gap: 3px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+}
+.neighbor-feedback-list small { color: #52606a; }
+.feedback-positive { color: #087443; }
+.feedback-negative { color: #b42318; }
+.neighbor-feedback .button { justify-self: start; }

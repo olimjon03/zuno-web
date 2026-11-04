@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { Brand } from "@/components/ui/brand";
+import { FeedbackSection } from "@/features/profile/server/feedback-section";
 import { Avatar } from "@/features/profile/avatar";
 import { SafetyControls } from "@/features/moderation/safety-controls";
 import { ProfileListings } from "@/features/profile/profile-listings";
@@ -20,6 +21,6 @@ async function Neighbor({params}:{params:Promise<{id:string}>}) {
  if(error)throw new Error("This profile is temporarily unavailable.");
  const profile=data?.[0];if(!profile)notFound();
  const listings=await getSellerListings(id);
- return <main className="shell neighbor-page"><header className="detail-header"><Link className="wordmark" href="/"><Brand/></Link><BackHomeNav/></header><section className="neighbor-summary"><Avatar name={profile.display_name} path={profile.avatar_path}/><div><h1>{profile.display_name}</h1><p>{profile.neighborhood || <Text>{"Neighborhood not shared"}</Text>}</p></div></section><h2><Text>{"Active listings"}</Text></h2><ProfileListings listings={listings}/><SafetyControls userId={id} name={profile.display_name}/></main>;
+ return <main className="shell neighbor-page"><header className="detail-header"><Link className="wordmark" href="/"><Brand/></Link><BackHomeNav/></header><section className="neighbor-summary"><Avatar name={profile.display_name} path={profile.avatar_path}/><div><h1>{profile.display_name}</h1><p>{profile.neighborhood || <Text>{"Neighborhood not shared"}</Text>}</p></div></section><h2><Text>{"Active listings"}</Text></h2><ProfileListings listings={listings}/><SafetyControls userId={id} name={profile.display_name}/><FeedbackSection id={id}/></main>;
 }
 export default function Page({params}:{params:Promise<{id:string}>}) {return <Suspense fallback={<SectionLoading message="Loading neighbor…"/>}><Neighbor params={params}/></Suspense>;}
