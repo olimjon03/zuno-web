@@ -10,7 +10,7 @@
 .explore-content { white-space: pre-wrap; overflow-wrap: anywhere; }
 .explore-form { display: grid; gap: 10px; }
 .explore-form label { display: grid; gap: 6px; font-weight: 600; }
-.explore-form textarea, .explore-form input:not([type="hidden"], [type="checkbox"]) {
+.explore-form textarea, .explore-form select, .explore-form input:not([type="hidden"], [type="checkbox"]) {
   width: 100%;
   min-height: 44px;
   border: 1px solid #b4c8c2;

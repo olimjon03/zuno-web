@@ -3,7 +3,7 @@ import "server-only";
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { isUuid, parseListingInput, parseAvailability } from "../validation";
+import { isUuid, parseListingInput } from "../validation";
 
 import type { ManageResult } from "../types";
 export async function manageListing(
@@ -22,7 +22,6 @@ export async function manageListing(
   if (intent === "edit") {
     try {
       const input = parseListingInput(form);
-      const status = parseAvailability(form.get("status"));
       changes = {
         title: input.title,
         description: input.description,
@@ -30,7 +29,6 @@ export async function manageListing(
         condition: input.condition,
         category_id: input.categoryId,
         neighborhood_id: input.neighborhoodId,
-        ...(status ? { status } : {}),
       };
     } catch (error) {
       return {
@@ -47,22 +45,33 @@ export async function manageListing(
     } = await db.auth.getUser();
     if (authError || !user)
       return { error: "Please log in again to manage your listings." };
-    // Both the owner filter and database RLS authorize every mutation.
-    const { data, error } = await db
-      .from("listings")
-      .update(changes)
-      .eq("id", id)
-      .eq("seller_id", user.id)
-      .neq("status", "removed")
-      .select("id")
-      .maybeSingle();
-    if (error)
-      return { error: "We couldn’t save your changes. Please try again." };
-    if (!data)
-      return {
-        error:
-          "This item is unavailable or you don’t own it. Reload your listings.",
-      };
+    if (intent === "reserved" || intent === "sold") {
+      const conversation = form.get("conversation");
+      if (typeof conversation !== "string" || !isUuid(conversation)) return { error: "Choose a buyer first." };
+      const { error } = await db.rpc("set_listing_buyer_status", {
+        p_listing_id: id,
+        p_conversation_id: conversation,
+        p_status: intent,
+      });
+      if (error) return { error: "We couldn’t save your changes. Please try again." };
+    } else {
+      // Both the owner filter and database RLS authorize every mutation.
+      const { data, error } = await db
+        .from("listings")
+        .update(changes)
+        .eq("id", id)
+        .eq("seller_id", user.id)
+        .neq("status", "removed")
+        .select("id")
+        .maybeSingle();
+      if (error)
+        return { error: "We couldn’t save your changes. Please try again." };
+      if (!data)
+        return {
+          error:
+            "This item is unavailable or you don’t own it. Reload your listings.",
+        };
+    }
   } catch {
     return { error: "We couldn’t connect. Please try again." };
   }
@@ -70,10 +79,23 @@ export async function manageListing(
   revalidatePath(`/listings/${id}`);
   revalidatePath("/account/listings");
   revalidatePath("/account/saved");
+  revalidatePath("/explore/purchase-history");
   return {
     message:
       intent === "remove"
         ? "Item removed from the marketplace."
         : "Changes saved.",
   };
+}
+
+export async function getListingBuyerChoices(id: string) {
+  if (!isUuid(id)) return { error: "Invalid listing. Reload and try again." };
+  try {
+    const db = await createClient();
+    const { data, error } = await db.rpc("get_listing_buyer_choices", { p_listing_id: id });
+    if (error) return { error: "Buyer choices could not be loaded." };
+    return { buyers: (data ?? []) as { id: string; buyer_id: string; buyer_name: string; avatar_path: string | null; last_message: string; reserved_buyer: boolean }[] };
+  } catch {
+    return { error: "Buyer choices could not be loaded." };
+  }
 }
