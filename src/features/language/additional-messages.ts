@@ -3,7 +3,7 @@ export const additionalMessages:Record<string,{ru:string;vi:string}> = {
   "ZUNO Assistant": {"ru": "Помощник ZUNO", "vi": "Trợ lý ZUNO"},
   "Get help with using ZUNO.": {"ru": "Получите помощь по использованию ZUNO.", "vi": "Nhận trợ giúp sử dụng ZUNO."},
   "Ask about ZUNO": {"ru": "Спросите о ZUNO", "vi": "Hỏi về ZUNO"},
-  "Your question is processed by OpenAI. Avoid sharing passwords or private details.": {"ru": "Вопрос обрабатывается OpenAI. Не вводите пароли и личные данные.", "vi": "Câu hỏi được OpenAI xử lý. Đừng nhập mật khẩu hoặc thông tin riêng tư."},
+  "Your question is processed by Google Gemini. Avoid sharing passwords or private details.": {"ru": "Вопрос обрабатывается Google Gemini. Не вводите пароли и личные данные.", "vi": "Câu hỏi được Google Gemini xử lý. Đừng nhập mật khẩu hoặc thông tin riêng tư."},
   "Finding help\u2026": {"ru": "Ищем ответ…", "vi": "Đang tìm trợ giúp…"},
   "Ask ZUNO": {"ru": "Спросить ZUNO", "vi": "Hỏi ZUNO"},
   "Open in ZUNO": {"ru": "Открыть в ZUNO", "vi": "Mở trong ZUNO"},

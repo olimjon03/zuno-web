@@ -3,7 +3,7 @@ export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi
   "ZUNO Assistant": {"uz": "ZUNO yordamchisi", "ko": "ZUNO 도우미"},
   "Get help with using ZUNO.": {"uz": "ZUNO’dan foydalanish bo‘yicha yordam oling.", "ko": "ZUNO 사용법을 알아보세요."},
   "Ask about ZUNO": {"uz": "ZUNO haqida so‘rang", "ko": "ZUNO에 대해 질문하기"},
-  "Your question is processed by OpenAI. Avoid sharing passwords or private details.": {"uz": "Savolingizni OpenAI qayta ishlaydi. Parol yoki shaxsiy ma’lumot yozmang.", "ko": "질문은 OpenAI에서 처리됩니다. 비밀번호나 개인정보를 입력하지 마세요."},
+  "Your question is processed by Google Gemini. Avoid sharing passwords or private details.": {"uz": "Savolingizni Google Gemini qayta ishlaydi. Parol yoki shaxsiy ma’lumot yozmang.", "ko": "질문은 Google Gemini에서 처리됩니다. 비밀번호나 개인정보를 입력하지 마세요."},
   "Finding help\u2026": {"uz": "Javob qidirilmoqda…", "ko": "도움말을 찾는 중…"},
   "Ask ZUNO": {"uz": "ZUNO’dan so‘rash", "ko": "ZUNO에 질문"},
   "Open in ZUNO": {"uz": "ZUNO’da ochish", "ko": "ZUNO에서 열기"},
