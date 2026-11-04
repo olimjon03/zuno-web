@@ -1,0 +1,22 @@
+.zuno-assistant {
+  display: grid;
+  gap: 14px;
+  margin: 24px 0;
+  padding: clamp(16px, 4vw, 26px);
+  border: 1px solid #bfe5dc;
+  border-radius: 18px;
+  background: #f3fbf9;
+  scroll-margin-top: 24px;
+}
+.zuno-assistant header, .zuno-assistant-answer a { display: flex; align-items: center; gap: 8px; }
+.zuno-assistant header svg { color: #0f766e; }
+.zuno-assistant h2 { font-size: 1.35rem; font-weight: 750; }
+.zuno-assistant form { display: grid; gap: 8px; }
+.zuno-assistant label, .zuno-assistant h3 { font-weight: 650; }
+.zuno-assistant textarea { width: 100%; padding: 10px; border: 1px solid #b4c8c2; border-radius: 10px; background: white; }
+.zuno-assistant small { color: #52606a; }
+.zuno-assistant form button { justify-self: start; }
+.zuno-assistant-answer { display: grid; gap: 8px; padding: 14px; border-radius: 12px; background: white; }
+.zuno-assistant-answer a { color: #0f766e; }
+.zuno-assistant-topics { display: flex; flex-wrap: wrap; gap: 8px; }
+.zuno-assistant-topics [aria-pressed="true"] { background: #d8f3eb; border-color: #0f766e; }

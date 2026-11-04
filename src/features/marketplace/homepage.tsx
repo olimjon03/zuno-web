@@ -114,6 +114,7 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
         <p><Text>{"A little closer. A little more connected."}</Text></p>
         <span>
           <Text>{"Your neighborhood marketplace"}</Text></span>
+        <Link href="/help#zuno-assistant"><Text>{"ZUNO Assistant"}</Text></Link>
       </footer>
       <FloatingSellButton/>
       <Link className="button button-primary mobile-sell" href="/sell">
