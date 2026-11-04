@@ -1,5 +1,12 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Choose a valid buyer.": {"ru": "Выберите подходящего покупателя.", "vi": "Hãy chọn người mua hợp lệ."},
+  "Choose a buyer (optional)": {"ru": "Выберите покупателя (необязательно)", "vi": "Chọn người mua (không bắt buộc)"},
+  "Continue without a buyer": {"ru": "Продолжить без покупателя", "vi": "Tiếp tục mà không chọn người mua"},
+  "This item was reserved for you.": {"ru": "Этот товар зарезервирован для вас.", "vi": "Món hàng này đã được giữ cho bạn."},
+  "Item marked sold. Confirm receipt in this conversation.": {"ru": "Товар отмечен как проданный. Подтвердите получение в этом чате.", "vi": "Món hàng đã được đánh dấu là đã bán. Hãy xác nhận đã nhận trong cuộc trò chuyện này."},
+  "Buyer confirmed receipt. Feedback is now available.": {"ru": "Покупатель подтвердил получение. Теперь можно оставить отзыв.", "vi": "Người mua đã xác nhận nhận hàng. Giờ bạn có thể để lại đánh giá."},
+  "Choose the buyer when marking the listing sold. Confirm receipt and leave feedback in Messages.": {"ru": "При отметке о продаже можно выбрать покупателя. Подтверждайте получение и оставляйте отзывы в переписке.", "vi": "Bạn có thể chọn người mua khi đánh dấu đã bán. Hãy xác nhận nhận hàng và để lại đánh giá trong Tin nhắn."},
   "Choose a buyer": {"ru": "Выберите покупателя", "vi": "Chọn người mua"},
   "Choose a buyer first.": {"ru": "Сначала выберите покупателя.", "vi": "Hãy chọn người mua trước."},
   "Buyer choices could not be loaded.": {"ru": "Не удалось загрузить список покупателей.", "vi": "Không thể tải danh sách người mua."},

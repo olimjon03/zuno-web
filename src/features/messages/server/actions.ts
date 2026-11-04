@@ -94,14 +94,19 @@ export async function readMessages(id: string, cursor?: number, older = false) {
       .maybeSingle();
     if (accessError || !conversation || (conversation.buyer_id !== user.id && conversation.seller_id !== user.id))
       return { error: "This conversation is unavailable." };
-    let query = db
-      .from("messages")
-      .select("id,sender_id,body,created_at")
-      .eq("conversation_id", id);
-    if (cursor !== undefined)
-      query = older ? query.lt("id", cursor) : query.gt("id", cursor);
     const ascending = cursor !== undefined && !older;
-    const { data, error } = await query.order("id", { ascending }).limit(50);
+    function load(includeTrade: boolean) {
+      const table = db.from("messages");
+      let query = (includeTrade
+        ? table.select("id,sender_id,body,created_at,trade_status")
+        : table.select("id,sender_id,body,created_at")).eq("conversation_id", id);
+      if (cursor !== undefined) query = older ? query.lt("id", cursor) : query.gt("id", cursor);
+      return query.order("id", { ascending }).limit(50);
+    }
+    let { data, error } = await load(true);
+    if (error && ["42703", "PGRST204"].includes(error.code)) {
+      ({ data, error } = await load(false));
+    }
     if (error)
       return { error: "Messages could not be loaded. Please try again." };
     const { data: attachments, error: mediaError } = await db.from("message_attachments")

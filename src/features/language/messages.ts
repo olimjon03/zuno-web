@@ -1,5 +1,12 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "Choose a valid buyer.": {"uz": "Ro‘yxatdan mos xaridorni tanlang.", "ko": "유효한 구매자를 선택하세요."},
+  "Choose a buyer (optional)": {"uz": "Xaridorni tanlang (ixtiyoriy)", "ko": "구매자 선택 (선택 사항)"},
+  "Continue without a buyer": {"uz": "Xaridorsiz davom etish", "ko": "구매자 없이 진행"},
+  "This item was reserved for you.": {"uz": "Bu buyum siz uchun band qilindi.", "ko": "이 상품은 고객님을 위해 예약되었습니다."},
+  "Item marked sold. Confirm receipt in this conversation.": {"uz": "Buyum sotildi deb belgilandi. Buyumni olganingizni shu suhbatda tasdiqlang.", "ko": "판매 완료로 표시되었습니다. 이 대화에서 수령을 확인하세요."},
+  "Buyer confirmed receipt. Feedback is now available.": {"uz": "Xaridor buyumni olganini tasdiqladi. Endi fikr qoldirish mumkin.", "ko": "구매자가 수령을 확인했습니다. 이제 후기를 남길 수 있습니다."},
+  "Choose the buyer when marking the listing sold. Confirm receipt and leave feedback in Messages.": {"uz": "Sotildi deb belgilashda xaridorni tanlashingiz mumkin. Buyumni olganingizni tasdiqlash va fikr qoldirish suhbatda amalga oshiriladi.", "ko": "판매 완료로 표시할 때 구매자를 선택할 수 있습니다. 메시지에서 수령을 확인하고 후기를 남기세요."},
   "Choose a buyer": {"uz": "Xaridorni tanlang", "ko": "구매자 선택"},
   "Choose a buyer first.": {"uz": "Avval xaridorni tanlang.", "ko": "먼저 구매자를 선택하세요."},
   "Buyer choices could not be loaded.": {"uz": "Xaridorlar ro‘yxati yuklanmadi.", "ko": "구매자 목록을 불러오지 못했습니다."},

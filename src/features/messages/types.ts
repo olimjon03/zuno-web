@@ -4,6 +4,7 @@ export type Message = {
   id: number;
   sender_id: string;
   body: string;
+  trade_status?: "reserved" | "sold" | "received" | null;
   created_at: string;
 };
 
