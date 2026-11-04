@@ -1,3 +1,5 @@
+import { ExploreAppearance } from "@/features/account/explore-appearance";
+import "@/features/account/explore-appearance.css";
 import { NotificationsProvider } from "@/features/notifications/provider";
 import { CountryProvider } from "@/features/locations/country-provider";
 import { LikesProvider } from "@/features/likes/provider";
@@ -36,7 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <CountryProvider><LanguageProvider><LocationProvider><FavoritesProvider>
-          <LikesProvider><UnreadProvider><NotificationsProvider>{children}<Suspense fallback={null}><AuthRouteSync/><MobileNav/></Suspense></NotificationsProvider></UnreadProvider></LikesProvider>
+          <LikesProvider><UnreadProvider><NotificationsProvider><ExploreAppearance/>{children}<Suspense fallback={null}><AuthRouteSync/><MobileNav/></Suspense></NotificationsProvider></UnreadProvider></LikesProvider>
         </FavoritesProvider></LocationProvider></LanguageProvider></CountryProvider>
       </body>
     </html>

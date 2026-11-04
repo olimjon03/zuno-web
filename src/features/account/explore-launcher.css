@@ -26,3 +26,23 @@
 @media(max-width:700px){.explore-launcher{display:none}.account-explore-inline{display:block}}
 
 .explore-launcher-start .explore-popover{inset:100px auto auto max(20px,calc((100vw - 1280px)/2))}
+
+.explore-popover a.feature-row:focus-visible {
+  outline: 3px solid #0d9488;
+  outline-offset: -3px;
+}
+
+@media (max-width: 700px) {
+  .site-header .explore-launcher { display: inline-flex; }
+  .site-header .header-brand-group .explore-trigger { width: 34px; height: 36px; }
+  .site-header .explore-popover {
+    inset: 60px 12px auto;
+    width: auto;
+    max-height: calc(100dvh - 76px);
+  }
+}
+
+@media (max-width: 360px) {
+  .site-header .header-brand-group { gap: 6px; }
+  .site-header .header-brand-group .wordmark { font-size: 24px; }
+}
