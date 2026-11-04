@@ -51,19 +51,19 @@ export function BuyerStatusActions({ id, title, status, disabled }: {
 
   async function confirm(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!choice || locked.current) return;
+    if (locked.current || loading) return;
     locked.current = true;
     setPending(true);
     setError("");
     const form = new FormData();
     form.set("id", id);
     form.set("intent", mode);
-    form.set("conversation", choice);
+    if (choice) form.set("conversation", choice);
     try {
       const result = await manageListing({}, form);
       if (result.error) setError(result.error);
       else {
-        setMessage("Buyer notified.");
+        setMessage(choice ? "Buyer notified." : "Changes saved.");
         dialog.current?.close();
       }
     } catch {
@@ -92,11 +92,15 @@ export function BuyerStatusActions({ id, title, status, disabled }: {
       <p>{title}</p>
       <form onSubmit={confirm}>
         <fieldset disabled={pending}>
-          <legend><Text>{"Choose a buyer"}</Text></legend>
+          <legend><Text>{"Choose a buyer (optional)"}</Text></legend>
+          <label className="buyer-status-option">
+            <input type="radio" name="buyer" value="" checked={!choice} onChange={() => setChoice("")} />
+            <Text>{"Continue without a buyer"}</Text>
+          </label>
           {loading && <p role="status"><Text>{"Loading…"}</Text></p>}
           {!loading && !error && buyers.length === 0 && <p><Text>{"No buyers have messaged about this listing yet."}</Text></p>}
           {buyers.map(buyer => <label className="buyer-status-option" key={buyer.id}>
-            <input type="radio" name="buyer" value={buyer.id} checked={choice === buyer.id} onChange={() => setChoice(buyer.id)} required />
+            <input type="radio" name="buyer" value={buyer.id} checked={choice === buyer.id} onChange={() => setChoice(buyer.id)} />
             <Avatar name={buyer.buyer_name} path={buyer.avatar_path} />
             <span><strong>{buyer.buyer_name}{buyer.reserved_buyer && <> · <Text>{"Reserved buyer"}</Text></>}</strong><small>{buyer.last_message}</small></span>
           </label>)}
@@ -104,7 +108,7 @@ export function BuyerStatusActions({ id, title, status, disabled }: {
         {error && <p className="auth-error" role="alert"><Text>{error}</Text></p>}
         <div className="buyer-status-buttons">
           <button type="button" className="button button-outline" disabled={pending} onClick={() => dialog.current?.close()}><Text>{"Cancel"}</Text></button>
-          <button type="submit" className="button button-primary" disabled={!choice || loading || pending}>
+          <button type="submit" className="button button-primary" disabled={loading || pending}>
             <Text>{pending ? "Saving changes…" : label}</Text>
           </button>
         </div>

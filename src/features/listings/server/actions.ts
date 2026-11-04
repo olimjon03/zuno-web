@@ -47,13 +47,15 @@ export async function manageListing(
       return { error: "Please log in again to manage your listings." };
     if (intent === "reserved" || intent === "sold") {
       const conversation = form.get("conversation");
-      if (typeof conversation !== "string" || !isUuid(conversation)) return { error: "Choose a buyer first." };
+      if (conversation !== null && (typeof conversation !== "string" || !isUuid(conversation)))
+        return { error: "Choose a valid buyer." };
       const { error } = await db.rpc("set_listing_buyer_status", {
         p_listing_id: id,
         p_conversation_id: conversation,
         p_status: intent,
       });
       if (error) return { error: "We couldn’t save your changes. Please try again." };
+      if (conversation) revalidatePath(`/messages/${conversation}`);
     } else {
       // Both the owner filter and database RLS authorize every mutation.
       const { data, error } = await db

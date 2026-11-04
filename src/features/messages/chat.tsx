@@ -2,6 +2,7 @@
 import { Text, useT } from "@/features/language/provider";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Icon } from "@/components/ui/icon";
 import { PersonAvatar } from "./person-avatar";
 import { MessageIcon } from "./message-icon";
@@ -32,8 +33,17 @@ export function Chat({
   self: { name: string; avatarPath: string | null };
 }) {
   const t = useT();
+  const router = useRouter();
   const { realtime } = useUnread();
   const [messages, setMessages] = useState(initialMessages);
+  const latestTrade = messages.reduce<number | undefined>((id, message) => message.trade_status ? message.id : id, undefined);
+  const seenTrade = useRef(latestTrade);
+  useEffect(() => {
+    if (latestTrade !== undefined && (seenTrade.current === undefined || latestTrade > seenTrade.current)) {
+      seenTrade.current = latestTrade;
+      router.refresh();
+    }
+  }, [latestTrade, router]);
   const [draft, setDraft] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [attachmentMenu, setAttachmentMenu] = useState(false);
@@ -264,7 +274,11 @@ export function Chat({
             return <li key={message.id} className={`message-row ${own ? "own" : ""}`}>
               <PersonAvatar name={author.name} path={author.avatarPath}/>
               <div className="message-content"><span className="sr-only">{own ? <Text>{"You"}</Text> : author.name}</span>
-                {!autoBody && message.body && <p className="message-bubble">{message.body}</p>}
+                {!autoBody && message.body && <p className={`message-bubble${message.trade_status ? " message-trade-update" : ""}`}>{message.trade_status ? <Text>{
+                  message.trade_status === "reserved" ? "This item was reserved for you."
+                    : message.trade_status === "sold" ? "Item marked sold. Confirm receipt in this conversation."
+                    : "Buyer confirmed receipt. Feedback is now available."
+                }</Text> : message.body}</p>}
                 {attachments.some(file => file.mime === "image/webp") && <div className="message-photos">{attachments.filter(file => file.mime === "image/webp").map(file => <a key={file.id} href={`/api/messages/attachments/${file.id}`} target="_blank" rel="noopener noreferrer" aria-label={`Open photo ${file.name}`}><Image src={`/api/messages/attachments/${file.id}`} alt={file.name} width={400} height={300} unoptimized/></a>)}</div>}
                 {attachments.filter(file => file.mime !== "image/webp").map(file => <a key={file.id} className="message-file" href={`/api/messages/attachments/${file.id}?download=1`} download={file.name} aria-label={t("Download {name}", { name: file.name })}><span className="message-file-icon"><MessageIcon name="file"/></span><span><strong>{file.name}</strong><small>{file.name.split(".").at(-1)?.toUpperCase()} · {formatFileSize(file.size)}</small></span><span className="message-file-download"><MessageIcon name="download"/></span></a>)}
                 <div className="message-time"><time dateTime={message.created_at}>{new Date(message.created_at).toLocaleTimeString("en-GB", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit" })}</time>{own && <span aria-label={t("Sent")}><Icon name="check-circle" width="14" height="14"/></span>}</div>

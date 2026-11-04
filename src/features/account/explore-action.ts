@@ -80,5 +80,6 @@ export async function saveExploreChange(_: State, form: FormData): Promise<State
 
   if (!result || result.error) return { error: failure };
   revalidatePath(`/explore/${slug}`);
+  if (slug === "purchase-history" && isUuid(id)) revalidatePath(`/messages/${id}`);
   return { message: "Changes saved." };
 }

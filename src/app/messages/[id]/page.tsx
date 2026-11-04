@@ -14,6 +14,7 @@ import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { isUuid } from "@/features/listings/validation";
 import { SafetyControls } from "@/features/moderation/safety-controls";
+import { ConversationTradePanel } from "@/features/messages/server/trade-panel";
 import { Chat } from "@/features/messages/chat";
 export const metadata: Metadata = {
   title: "Conversation | ZUNO",
@@ -34,6 +35,9 @@ async function Conversation({ id }: { id: string }) {
       <span><strong>{data.c.listing_title}</strong>{data.listing ? <b>{formatMoney(data.listing.price, data.listing.countryCode)}</b> : <small><Text>{"This item may no longer be available."}</Text></small>}</span>
       {data.listing && <Link href={`/listings/${data.listing.id}`} prefetch><Text>{"View item"}</Text><Icon name="chevron"/></Link>}
     </div>
+    <Suspense fallback={null}>
+      <ConversationTradePanel conversation={id} account={data.userId} seller={data.c.seller_id === data.userId} />
+    </Suspense>
     <Chat key={`${id}-${data.userId}`} conversationId={id} userId={data.userId} initialMessages={data.messages} canMessage={data.canMessage} mediaReady={data.mediaReady} person={data.person} self={data.self}/>
   </MessagesWorkspace>;
 }

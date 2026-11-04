@@ -10,3 +10,21 @@
 /* Match the accepted chat's readable density and attachment proportions. */
 @media(min-width:1001px){.messages-columns{grid-template-columns:34% minmax(0,1fr)}.messages-sidebar{padding:24px 18px 14px}.messages-sidebar h1{font-size:30px}.messages-sidebar .inbox-name strong{font-size:16px}.messages-sidebar .inbox-snippet{font-size:14px}.messages-sidebar .inbox-meta{font-size:11px}.messages-sidebar .inbox-card{gap:13px;min-height:120px}.messages-sidebar .message-person-avatar{width:48px;height:48px;flex-basis:48px}.messages-sidebar .inbox-item-image{width:60px;height:60px;flex-basis:60px}.message-bubble{font-size:15px}.message-time{font-size:11px}.message-file{width:350px}.message-file strong{font-size:14px}.message-file small{font-size:12px}.message-photos{width:400px}.message-photos img{height:220px}}
 @media(max-width:900px){.messages-workspace.has-conversation{position:fixed;inset:0;z-index:30;overflow:hidden}}
+
+.conversation-trade-panel {
+  display: grid;
+  gap: 8px;
+  margin: 8px 12px;
+  padding: 10px 14px;
+  max-height: min(280px, 38dvh);
+  overflow: auto;
+  border: 1px solid #cae7e0;
+  border-radius: 12px;
+  background: #f0fdfa;
+  color: #134e4a;
+}
+.conversation-trade-panel .button { justify-self: start; }
+.conversation-trade-panel .explore-form { display: grid; gap: 8px; }
+.conversation-trade-panel label { display: grid; gap: 4px; }
+.conversation-trade-panel select { padding: 8px; border: 1px solid #b4c8c2; border-radius: 8px; background: #fff; }
+.message-bubble.message-trade-update { border: 1px solid #88cbbb; background: #e5f8f3; color: #134e4a; }

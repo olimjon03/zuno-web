@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Text } from "@/features/language/provider";
 import { LanguageSelector } from "@/features/language/language-selector";
 import { parseNotificationSnapshot } from "@/features/notifications/model";
-import { TradeFeedbackForm } from "../trade-feedback-form";
 import { ExploreForm } from "../explore-form";
 import { LocalPostFields } from "../explore-fields";
 import { localPostKinds } from "../explore-catalog";
@@ -117,17 +116,15 @@ async function Purchases({ session }: { session: Session }) {
       .order("last_message_at", { ascending: false }).limit(80),
   );
   if (chats.length === 0) return <Empty />;
-  const [soldResult, confirmationResult, feedbackResult] = await Promise.all([
+  const [soldResult, confirmationResult] = await Promise.all([
     db.from("listings").select("id").in("id", chats.map(chat => chat.listing_id)).eq("status", "sold"),
     db.from("explore_trade_confirmations").select("conversation_id,user_id,seller_confirmation").in("conversation_id", chats.map(chat => chat.id)),
-    db.from("trade_feedback").select("conversation_id").eq("reviewer_id", user.id).in("conversation_id", chats.map(chat => chat.id)),
   ]);
   const sold = new Set(rows<{ id: string }>(soldResult).map(item => item.id));
   const confirmations = rows<{ conversation_id: string; user_id: string; seller_confirmation: boolean }>(confirmationResult);
-  const reviewed = new Set(rows<{ conversation_id: string }>(feedbackResult).map(item => item.conversation_id));
   const relevant = chats.filter(chat => sold.has(chat.listing_id) || confirmations.some(row => row.conversation_id === chat.id));
   return <>
-    <p><Text>{"Choose the buyer when marking the listing sold. The buyer confirms receipt here."}</Text></p>
+    <p><Text>{"Choose the buyer when marking the listing sold. Confirm receipt and leave feedback in Messages."}</Text></p>
     {relevant.length === 0 ? <Empty /> : relevant.map(chat => {
       const confirmed = confirmations.filter(row => row.conversation_id === chat.id);
       const sellerConfirmed = confirmed.some(row => row.seller_confirmation);
@@ -135,16 +132,14 @@ async function Purchases({ session }: { session: Session }) {
       const seller = chat.seller_id === user.id;
       const selectedAnother = seller && relevant.some(other => other.listing_id === chat.listing_id && other.id !== chat.id &&
         confirmations.some(row => row.conversation_id === other.id && row.seller_confirmation));
-      const canConfirm = sold.has(chat.listing_id) && !mine && !selectedAnother && (seller || sellerConfirmed);
+      const canConfirm = sold.has(chat.listing_id) && !mine && !selectedAnother && seller;
       return <article className="explore-card" key={chat.id}>
         <h2>{chat.listing_title}</h2>
         <Link href={`/messages/${chat.id}`}><Text>{"Open conversation"}</Text></Link>
         <p><Text>{confirmed.length === 2 ? "Trade confirmed" : selectedAnother ? "Another buyer was confirmed" : sellerConfirmed ? "Waiting for buyer confirmation" : "Waiting for seller confirmation"}</Text></p>
         {canConfirm && <ExploreForm feature="purchase-history" account={user.id} id={chat.id}
-          label={seller ? "Confirm this buyer" : "Confirm receipt"} />}
-        {confirmed.length === 2 && (reviewed.has(chat.id)
-          ? <p><Text>{"Feedback sent"}</Text></p>
-          : <TradeFeedbackForm account={user.id} conversation={chat.id} seller={seller} />)}
+          label="Confirm this buyer" />}
+
       </article>;
     })}
   </>;
