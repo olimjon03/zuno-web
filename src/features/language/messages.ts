@@ -1,5 +1,16 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "Phones & Tablets": {"uz": "Telefonlar va planshetlar", "ko": "휴대폰·태블릿"},
+  "Computers": {"uz": "Kompyuterlar", "ko": "컴퓨터"},
+  "Furniture": {"uz": "Mebel", "ko": "가구"},
+  "Appliances": {"uz": "Maishiy texnika", "ko": "가전제품"},
+  "Baby & Kids": {"uz": "Bolalar buyumlari", "ko": "유아·아동용품"},
+  "Beauty & Care": {"uz": "Go‘zallik va parvarish", "ko": "뷰티·미용"},
+  "Pet Supplies": {"uz": "Hayvonlar uchun buyumlar", "ko": "반려동물용품"},
+  "Outdoor & Camping": {"uz": "Sayohat va kemping", "ko": "캠핑·아웃도어"},
+  "Tools & DIY": {"uz": "Asboblar va ta’mirlash", "ko": "공구·DIY"},
+  "Games & Hobbies": {"uz": "O‘yinlar va hobbi", "ko": "게임·취미"},
+  "Musical Instruments": {"uz": "Musiqa asboblari", "ko": "악기"},
   "Close": {"uz": "Yopish", "ko": "닫기"},
   "Filters": {"uz": "Filtrlar", "ko": "필터"},
   "Keep your home address private. Choose a public meeting place and inspect the item together.": {"uz": "Uy manzilingizni oshkor qilmang. Jamoat joyida uchrashing va buyumni birga tekshiring.", "ko": "집 주소는 공개하지 마세요. 공공장소에서 만나 물품을 함께 확인하세요."},

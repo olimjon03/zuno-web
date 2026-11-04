@@ -1,5 +1,16 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Phones & Tablets": {"ru": "Телефоны и планшеты", "vi": "Điện thoại & máy tính bảng"},
+  "Computers": {"ru": "Компьютеры", "vi": "Máy tính"},
+  "Furniture": {"ru": "Мебель", "vi": "Nội thất"},
+  "Appliances": {"ru": "Бытовая техника", "vi": "Đồ gia dụng"},
+  "Baby & Kids": {"ru": "Детские товары", "vi": "Đồ cho mẹ & bé"},
+  "Beauty & Care": {"ru": "Красота и уход", "vi": "Làm đẹp & chăm sóc"},
+  "Pet Supplies": {"ru": "Товары для животных", "vi": "Đồ cho thú cưng"},
+  "Outdoor & Camping": {"ru": "Туризм и кемпинг", "vi": "Dã ngoại & cắm trại"},
+  "Tools & DIY": {"ru": "Инструменты и ремонт", "vi": "Dụng cụ & DIY"},
+  "Games & Hobbies": {"ru": "Игры и хобби", "vi": "Trò chơi & sở thích"},
+  "Musical Instruments": {"ru": "Музыкальные инструменты", "vi": "Nhạc cụ"},
   "Close": {"ru": "Закрыть", "vi": "Đóng"},
   "Filters": {"ru": "Фильтры", "vi": "Bộ lọc"},
   "Keep your home address private. Choose a public meeting place and inspect the item together.": {"ru": "Не раскрывайте домашний адрес. Встречайтесь в общественном месте и проверяйте товар вместе.", "vi": "Giữ kín địa chỉ nhà. Hẹn ở nơi công cộng và cùng kiểm tra món đồ."},

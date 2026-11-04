@@ -1,0 +1,21 @@
+/** Product-only marketplace taxonomy; sprite coordinates are zero-based. */
+export const categoryCatalog = [
+  {"name": "All items", "slug": null, "atlas": "essentials", "column": 0, "row": 0},
+  {"name": "Electronics", "slug": "electronics", "atlas": "essentials", "column": 1, "row": 0},
+  {"name": "Home & Living", "slug": "home-living", "atlas": "essentials", "column": 2, "row": 0},
+  {"name": "Fashion", "slug": "fashion", "atlas": "essentials", "column": 0, "row": 1},
+  {"name": "Sports", "slug": "sports", "atlas": "essentials", "column": 1, "row": 1},
+  {"name": "Books", "slug": "books", "atlas": "essentials", "column": 2, "row": 1},
+  {"name": "Phones & Tablets", "slug": "phones-tablets", "atlas": "devices-home", "column": 0, "row": 0},
+  {"name": "Computers", "slug": "computers", "atlas": "devices-home", "column": 1, "row": 0},
+  {"name": "Furniture", "slug": "furniture", "atlas": "devices-home", "column": 2, "row": 0},
+  {"name": "Appliances", "slug": "appliances", "atlas": "devices-home", "column": 0, "row": 1},
+  {"name": "Baby & Kids", "slug": "baby-kids", "atlas": "devices-home", "column": 1, "row": 1},
+  {"name": "Beauty & Care", "slug": "beauty-care", "atlas": "devices-home", "column": 2, "row": 1},
+  {"name": "Pet Supplies", "slug": "pet-supplies", "atlas": "hobbies-more", "column": 0, "row": 0},
+  {"name": "Outdoor & Camping", "slug": "outdoor-camping", "atlas": "hobbies-more", "column": 1, "row": 0},
+  {"name": "Tools & DIY", "slug": "tools-diy", "atlas": "hobbies-more", "column": 2, "row": 0},
+  {"name": "Games & Hobbies", "slug": "games-hobbies", "atlas": "hobbies-more", "column": 0, "row": 1},
+  {"name": "Musical Instruments", "slug": "musical-instruments", "atlas": "hobbies-more", "column": 1, "row": 1},
+  {"name": "Other", "slug": "other", "atlas": "hobbies-more", "column": 2, "row": 1},
+] as const;

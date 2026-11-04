@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import sharp from "sharp";
-import { MAX_BODY_BYTES, MAX_PHOTO_BYTES } from "../src/features/listings/constants.ts";
 import './helpers/register-runtime.mjs';
+const {MAX_BODY_BYTES,MAX_PHOTO_BYTES}=await import('../src/features/listings/constants.ts');
 const {parseListingInput,parseAvailability,validatePhotos}=await import('../src/features/listings/validation.ts');
 const {readBoundedForm,BodyTooLargeError}=await import('../src/features/listings/server/request-body.ts');
 const {processPhoto}=await import('../src/features/listings/server/process-photo.ts');
