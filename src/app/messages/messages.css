@@ -28,3 +28,7 @@
 .conversation-trade-panel label { display: grid; gap: 4px; }
 .conversation-trade-panel select { padding: 8px; border: 1px solid #b4c8c2; border-radius: 8px; background: #fff; }
 .message-bubble.message-trade-update { border: 1px solid #88cbbb; background: #e5f8f3; color: #134e4a; }
+
+.conversation-trade-menu { display: grid; gap: 8px; padding: 0 0 12px; border-bottom: 1px solid #e4edeb; margin-bottom: 12px; }
+.conversation-trade-menu .button { width: 100%; justify-content: flex-start; gap: 8px; }
+.conversation-trade-menu svg { width: 18px; height: 18px; }

@@ -6,7 +6,8 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { Brand } from "@/components/ui/brand";
-import { FeedbackSection } from "@/features/profile/server/feedback-section";
+import { getNeighborFeedback } from "@/features/profile/server/feedback-data";
+import { FeedbackSection, ProfileLevelBadge } from "@/features/profile/server/feedback-section";
 import { Avatar } from "@/features/profile/avatar";
 import { SafetyControls } from "@/features/moderation/safety-controls";
 import { ProfileListings } from "@/features/profile/profile-listings";
@@ -20,7 +21,7 @@ async function Neighbor({params}:{params:Promise<{id:string}>}) {
  const {data,error}=await createPublicClient().rpc("get_public_profile",{profile_id:id});
  if(error)throw new Error("This profile is temporarily unavailable.");
  const profile=data?.[0];if(!profile)notFound();
- const listings=await getSellerListings(id);
- return <main className="shell neighbor-page"><header className="detail-header"><Link className="wordmark" href="/"><Brand/></Link><BackHomeNav/></header><section className="neighbor-summary"><Avatar name={profile.display_name} path={profile.avatar_path}/><div><h1>{profile.display_name}</h1><p>{profile.neighborhood || <Text>{"Neighborhood not shared"}</Text>}</p></div></section><h2><Text>{"Active listings"}</Text></h2><ProfileListings listings={listings}/><SafetyControls userId={id} name={profile.display_name}/><FeedbackSection id={id}/></main>;
+ const [listings, feedback] = await Promise.all([getSellerListings(id), getNeighborFeedback(id)]);
+ return <main className="shell neighbor-page"><header className="detail-header"><Link className="wordmark" href="/"><Brand/></Link><BackHomeNav/></header><section className="neighbor-summary"><Avatar name={profile.display_name} path={profile.avatar_path}/><div><h1>{profile.display_name}</h1><p className="neighbor-address-level"><span>{profile.neighborhood || <Text>{"Neighborhood not shared"}</Text>}</span><ProfileLevelBadge feedback={feedback}/></p></div></section><h2><Text>{"Active listings"}</Text></h2><ProfileListings listings={listings}/><SafetyControls userId={id} name={profile.display_name}/><FeedbackSection id={id} feedback={feedback}/></main>;
 }
 export default function Page({params}:{params:Promise<{id:string}>}) {return <Suspense fallback={<SectionLoading message="Loading neighbor…"/>}><Neighbor params={params}/></Suspense>;}

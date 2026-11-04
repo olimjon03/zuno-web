@@ -1,5 +1,7 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Mark this item sold to {buyer}?": {"ru": "Отметить товар как проданный покупателю {buyer}?", "vi": "Đánh dấu món hàng đã bán cho {buyer}?"},
+  "Reserve this item for {buyer}?": {"ru": "Зарезервировать товар для покупателя {buyer}?", "vi": "Giữ món hàng này cho {buyer}?"},
   "Choose a valid buyer.": {"ru": "Выберите подходящего покупателя.", "vi": "Hãy chọn người mua hợp lệ."},
   "Choose a buyer (optional)": {"ru": "Выберите покупателя (необязательно)", "vi": "Chọn người mua (không bắt buộc)"},
   "Continue without a buyer": {"ru": "Продолжить без покупателя", "vi": "Tiếp tục mà không chọn người mua"},

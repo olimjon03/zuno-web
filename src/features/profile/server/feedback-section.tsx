@@ -18,13 +18,22 @@ export function FeedbackItems({ items }: { items: Feedback[] }) {
   </ul>;
 }
 
-export async function FeedbackSection({ id }: { id: string }) {
-  const feedback = await getNeighborFeedback(id);
-  if (!feedback) return <p><Text>{"Feedback could not be loaded."}</Text></p>;
+type FeedbackSummary = Awaited<ReturnType<typeof getNeighborFeedback>>;
+
+export function ProfileLevelBadge({ feedback }: { feedback: FeedbackSummary }) {
+  if (!feedback) return null;
   const level = feedbackLevel(feedback.positive, feedback.negative);
+  const icons = { 1: "pin", 2: "shield", 3: "check-circle" } as const;
+  return <span className={`profile-level-badge profile-level-${level.number}`}>
+    <Icon name={icons[level.number]} />
+    <span><Text values={{ level: level.number }}>{"Level {level}"}</Text><span className="sr-only"> · <Text>{level.name}</Text></span></span>
+  </span>;
+}
+
+export function FeedbackSection({ id, feedback }: { id: string; feedback: FeedbackSummary }) {
+  if (!feedback) return <p><Text>{"Feedback could not be loaded."}</Text></p>;
   return <section className="neighbor-feedback" aria-label="Feedback">
     <h2><Text>{"Feedback"}</Text></h2>
-    <p className="neighbor-feedback-level"><Icon name="shield" /><strong><Text values={{ level: level.number }}>{"Level {level}"}</Text> · <Text>{level.name}</Text></strong></p>
     <p className="neighbor-feedback-counts">
       <span className="feedback-positive">+{feedback.positive} <Text>{"Positive"}</Text></span>
       <span className="feedback-negative">−{feedback.negative} <Text>{"Negative"}</Text></span>

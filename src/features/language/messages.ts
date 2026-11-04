@@ -1,5 +1,7 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "Mark this item sold to {buyer}?": {"uz": "Bu buyumni {buyer}ga sotildi deb belgilaysizmi?", "ko": "{buyer}님에게 판매 완료로 표시할까요?"},
+  "Reserve this item for {buyer}?": {"uz": "Bu buyumni {buyer} uchun band qilasizmi?", "ko": "{buyer}님을 위해 상품을 예약할까요?"},
   "Choose a valid buyer.": {"uz": "Ro‘yxatdan mos xaridorni tanlang.", "ko": "유효한 구매자를 선택하세요."},
   "Choose a buyer (optional)": {"uz": "Xaridorni tanlang (ixtiyoriy)", "ko": "구매자 선택 (선택 사항)"},
   "Continue without a buyer": {"uz": "Xaridorsiz davom etish", "ko": "구매자 없이 진행"},
