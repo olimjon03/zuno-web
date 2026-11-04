@@ -14,7 +14,7 @@ import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { isUuid } from "@/features/listings/validation";
 import { SafetyControls } from "@/features/moderation/safety-controls";
-import { ConversationTradePanel } from "@/features/messages/server/trade-panel";
+import { ConversationTradeMenu, ConversationTradePanel } from "@/features/messages/server/trade-panel";
 import { Chat } from "@/features/messages/chat";
 export const metadata: Metadata = {
   title: "Conversation | ZUNO",
@@ -28,7 +28,12 @@ async function Conversation({ id }: { id: string }) {
       <Link href="/messages" className="conversation-back message-icon-button" aria-label="Back to messages"><Icon name="arrow"/></Link>
       <Link href={`/neighbors/${data.person.id}`} className="conversation-person"><PersonAvatar name={data.person.name} path={data.person.avatarPath}/><span><h2>{data.person.name}</h2><small><Icon name="pin"/>{data.person.neighborhood || <Text>{"Your ZUNO neighbor"}</Text>}</small></span></Link>
       <Link href="/" prefetch className="conversation-home message-icon-button" aria-label="Go to homepage"><Icon name="home"/></Link>
-      <details className="conversation-options"><summary aria-label="Conversation options"><MessageIcon name="more"/></summary><div><SafetyControls userId={data.otherId} name={data.person.name} listingId={data.c.listing_id ?? undefined}/></div></details>
+      <details className="conversation-options"><summary aria-label="Conversation options"><MessageIcon name="more"/></summary><div>
+        <Suspense fallback={null}><ConversationTradeMenu conversation={id} account={data.userId}
+          seller={data.c.seller_id === data.userId} listing={data.c.listing_id} status={data.listing?.status}
+          buyerId={data.c.buyer_id} buyerName={data.person.name} canMessage={data.canMessage} /></Suspense>
+        <SafetyControls userId={data.otherId} name={data.person.name} listingId={data.c.listing_id ?? undefined}/>
+      </div></details>
     </header>
     <div className="conversation-item">
       <span className="conversation-thumbnail">{data.listing ? <Image src={data.listing.image} alt={data.c.listing_title} width={56} height={56} unoptimized/> : <Icon name="image"/>}</span>

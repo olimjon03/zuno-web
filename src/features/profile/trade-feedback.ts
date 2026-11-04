@@ -9,7 +9,7 @@ export const feedbackReasons = {
   "not-as-described": "Item not as described",
 } as const;
 
-export function feedbackLevel(positive: number, negative: number) {
+export function feedbackLevel(positive: number, negative: number): { number: 1 | 2 | 3; name: string } {
   const score = positive - negative;
   if (score >= 15) return { number: 3, name: "Experienced neighbor" };
   if (score >= 5) return { number: 2, name: "Active neighbor" };

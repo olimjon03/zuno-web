@@ -22,3 +22,20 @@
 .feedback-positive { color: #087443; }
 .feedback-negative { color: #b42318; }
 .neighbor-feedback .button { justify-self: start; }
+
+.neighbor-summary .neighbor-address-level { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.profile-level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.profile-level-badge svg { width: 15px; height: 15px; }
+.profile-level-1 { background: #edf4f8; color: #3c586a; }
+.profile-level-2 { background: #e0f7f0; color: #087368; }
+.profile-level-3 { background: #fff4d5; color: #855400; }
