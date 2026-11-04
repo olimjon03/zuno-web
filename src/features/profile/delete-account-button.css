@@ -1,0 +1,37 @@
+.delete-account { margin-top: 8px; text-align: center; }
+.delete-account .delete-account-trigger {
+  color: #b42318;
+  background: transparent;
+}
+.delete-account .delete-account-trigger:hover { background: #fff1f0; }
+.delete-account-trigger svg { width: 18px; height: 18px; }
+.delete-account-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(440px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  background: white;
+  color: #1f2328;
+  text-align: start;
+  box-shadow: 0 20px 60px #11182733;
+}
+.delete-account-dialog::backdrop { background: #11182780; }
+.delete-account-dialog h2 { font-size: 22px; font-weight: 750; }
+.delete-account-dialog > p { margin: 8px 0 18px; color: #4b5563; }
+.delete-account-dialog form { display: grid; gap: 8px; }
+.delete-account-dialog label { font-weight: 600; }
+.delete-account-dialog input:not([type=hidden]) {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #9ca3af;
+  border-radius: 10px;
+}
+.delete-account-actions { display: flex; flex-wrap: wrap; justify-content: end; gap: 8px; margin-top: 10px; }
+.delete-account-actions .delete-account-confirm { background: #b42318; color: white; }
+.delete-account-actions .delete-account-confirm:hover:not(:disabled) { background: #912018; }
+.delete-account-actions .button:disabled { opacity: .55; cursor: default; }

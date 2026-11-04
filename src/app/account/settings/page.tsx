@@ -9,6 +9,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { cacheLife } from "next/cache";
 import { ProfileForm } from "@/features/profile/profile-form";
+import { DeleteAccountButton } from "@/features/profile/delete-account-button";
 import { LogoutButton } from "@/features/auth/logout-button";
 export const metadata: Metadata = {
   title: "Profile settings | ZUNO",
@@ -38,6 +39,7 @@ async function Account() {
         neighborhoods={neighborhoods}
       />
       <div className="settings-logout"><LogoutButton/></div>
+      <DeleteAccountButton accountId={user.id} />
       <p className="auth-tagline"><Text>{"Buy · Sell · Connect Locally"}</Text></p>
       </main>
     </div>
