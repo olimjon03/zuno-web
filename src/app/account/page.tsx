@@ -1,4 +1,4 @@
-import { LanguageSelector } from "@/features/language/language-selector";
+import { HeaderTools } from "@/components/layout/header-tools";
 import { Text } from "@/features/language/provider";
 import { getAccountProfile } from "@/features/profile/server/data";
 import { SectionLoading } from "@/components/layout/section-loading";
@@ -28,7 +28,7 @@ async function Account() {
   const {user, profile, neighborhoods, avatarPath} = await getAccountProfile();
   const area = neighborhoods.find(item => item.id === profile.neighborhood_id)?.name ?? "Choose your neighborhood";
   return <div className="account-dashboard">
-    <header className="dashboard-header"><Link prefetch={true} href="/" className="wordmark"><Brand/></Link><nav aria-label="Marketplace"><Link prefetch={true} href="/account/saved"><Text>{"Saved"}</Text></Link><Link prefetch={true} href="/messages"><Text>{"Messages"}</Text><UnreadBadge/></Link><LanguageSelector/><Link prefetch={true} className="button button-primary" href="/sell"><Text>{"Sell"}</Text></Link></nav><Link prefetch={true} href="/account/settings" aria-label="Profile settings"><Icon name="settings"/></Link><ExploreLauncher/><BackHomeNav/></header>
+    <header className="dashboard-header"><Link prefetch={true} href="/" className="wordmark"><Brand/></Link><nav aria-label="Marketplace"><Link prefetch={true} href="/account/saved"><Text>{"Saved"}</Text></Link><Link prefetch={true} href="/messages"><Text>{"Messages"}</Text><UnreadBadge/></Link><HeaderTools/><Link prefetch={true} className="button button-primary" href="/sell"><Text>{"Sell"}</Text></Link></nav><Link prefetch={true} href="/account/settings" aria-label="Profile settings"><Icon name="settings"/></Link><ExploreLauncher/><BackHomeNav/></header>
     <div className="dashboard-layout"><AccountMenu current="/account"/>
     <main className="dashboard-content"><h1><Text>{"My ZUNO"}</Text></h1><p className="dashboard-subtitle"><Text>{"Your neighborhood, your little corner."}</Text></p>
       <section className="account-card profile-summary" aria-label="Your profile"><Avatar name={profile.display_name} path={avatarPath}/><div><h2><Link prefetch={true} href={`/neighbors/${user.id}`}>{profile.display_name}</Link></h2><p><Icon name="pin"/>{area}</p></div><Link prefetch={true} className="button button-outline" href="/account/settings"><Text>{"Edit profile"}</Text></Link></section>
