@@ -13,8 +13,11 @@ export async function askZunoAssistant(_: AssistantState, form: FormData): Promi
     return { message: "Enter a question of up to 400 characters." };
   }
 
-  const key = process.env.OPENAI_API_KEY;
-  if (!key) return { message: unavailable };
+  const key = process.env.OPENAI_API_KEY?.trim();
+  if (!key) {
+    console.warn("[zuno-assistant] OpenAI key missing at runtime");
+    return { message: unavailable };
+  }
 
   try {
     const { data: { user }, error } = await getVerifiedUser();
@@ -22,7 +25,10 @@ export async function askZunoAssistant(_: AssistantState, form: FormData): Promi
 
     const db = await createClient();
     const quota = await db.rpc("take_zuno_assistant_quota");
-    if (quota.error) return { message: unavailable };
+    if (quota.error) {
+      console.warn("[zuno-assistant] Supabase quota check failed", { code: quota.error.code });
+      return { message: unavailable };
+    }
     if (quota.data !== true) return { message: "You reached today’s assistant limit. Help topics are still available." };
 
     const catalog = Object.entries(helpTopics).map(([id, item]) => `${id}: ${item.answer}`).join("\n");
@@ -52,14 +58,29 @@ export async function askZunoAssistant(_: AssistantState, form: FormData): Promi
         },
       }),
     });
-    if (!result.ok) return { message: unavailable };
+    if (!result.ok) {
+      const payload = await result.json().catch(() => null);
+      const code = payload?.error?.code;
+      const knownCodes = ["invalid_api_key", "insufficient_quota", "rate_limit_exceeded", "model_not_found", "unsupported_value"];
+      console.warn("[zuno-assistant] OpenAI request failed", {
+        status: result.status,
+        code: knownCodes.includes(code) ? code : undefined,
+      });
+      return { message: unavailable };
+    }
     const response: { status?: string; output?: { type: string; content?: { type: string; text?: string }[] }[] } = await result.json();
-    if (response.status !== "completed") return { message: unavailable };
+    if (response.status !== "completed") {
+      console.warn("[zuno-assistant] OpenAI did not complete the response");
+      return { message: unavailable };
+    }
     const output = response.output?.find(item => item.type === "message")?.content?.find(item => item.type === "output_text")?.text;
     const topic: unknown = output ? JSON.parse(output).topic : null;
     if (isHelpTopic(topic)) return { topic };
     return { message: "I can only answer supported questions about using ZUNO. Choose a help topic below." };
-  } catch {
+  } catch (error) {
+    console.warn("[zuno-assistant] Request could not be completed", {
+      timedOut: error instanceof Error && error.name === "TimeoutError",
+    });
     return { message: unavailable };
   }
 }
