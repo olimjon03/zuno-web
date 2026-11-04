@@ -10,6 +10,7 @@ import { parseFeedFilters } from "@/features/search/validation";
 import { Brand } from "@/components/ui/brand";
 import "./compact-marketplace.css";
 import "./soft-mint.css";
+import { FloatingSellButton } from "./floating-sell-button";
 import { HeroCarousel } from "./hero-carousel";
 import Link from "next/link";
 import { useLocation } from "@/features/locations/location-provider";
@@ -114,6 +115,7 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
         <span>
           <Text>{"Your neighborhood marketplace"}</Text></span>
       </footer>
+      <FloatingSellButton/>
       <Link className="button button-primary mobile-sell" href="/sell">
         <Icon name="plus" />
         <Text>{"Sell an Item"}</Text></Link>
