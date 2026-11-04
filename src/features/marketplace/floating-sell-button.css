@@ -1,6 +1,6 @@
 .desktop-floating-sell{display:none}
 @media(min-width:701px){
- .desktop-floating-sell{position:fixed;right:max(24px,env(safe-area-inset-right));bottom:max(24px,env(safe-area-inset-bottom));z-index:35;display:grid;place-items:center;width:64px;height:64px;border:1px solid #ffffff45;border-radius:50%;background:#0d9488;color:#fff;box-shadow:0 8px 24px #0f766e38;transition:background .18s,box-shadow .18s}
+ .desktop-floating-sell{position:fixed;right:max(clamp(40px,5vw,88px),env(safe-area-inset-right));bottom:max(56px,env(safe-area-inset-bottom));z-index:35;display:grid;place-items:center;width:64px;height:64px;border:1px solid #ffffff45;border-radius:50%;background:#0d9488;color:#fff;box-shadow:0 8px 24px #0f766e38;transition:background .18s,box-shadow .18s}
  .desktop-floating-sell>svg{width:32px;height:32px;stroke-width:2.2}
  .desktop-floating-sell:hover{background:#0f766e;box-shadow:0 10px 28px #0f766e4d}
  .desktop-floating-sell:focus-visible{outline:3px solid #0f766e;outline-offset:5px}
