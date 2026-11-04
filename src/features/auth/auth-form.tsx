@@ -82,7 +82,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           </p>
         )}
         <button className="button button-primary" disabled={pending}>
-          {pending ? <Text>{"Please wait…"}</Text> : registering ? <Text>{"Create account"}</Text> : <Text>{"Log in"}</Text>}
+          {pending ? <Text>{"Please wait…"}</Text> : registering ? <Text>{"Create account"}</Text> : <Text>{"Sign in"}</Text>}
         </button>
         <p className="auth-switch">
           {registering ? <Text>{"Already a neighbor?"}</Text> : <Text>{"New to ZUNO?"}</Text>}{" "}

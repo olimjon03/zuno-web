@@ -1,7 +1,9 @@
-import { Text } from "@/features/language/provider";
+import { EnglishLocale, Text } from "@/features/language/provider";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { AuthShell } from "@/features/auth/auth-shell";
+import { Brand } from "@/components/ui/brand";
+import Link from "next/link";
+import "./login.css";
 import { AuthForm } from "@/features/auth/auth-form";
 export const metadata: Metadata = { title: "Log in | ZUNO" };
 async function LoginNotice({
@@ -27,14 +29,28 @@ export default function LoginPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   return (
-    <AuthShell
-      title="Welcome back"
-      description="Log in to your ZUNO neighborhood."
-    >
-      <Suspense fallback={null}>
-        <LoginNotice searchParams={searchParams} />
-      </Suspense>
-      <AuthForm mode="login" />
-    </AuthShell>
+    <EnglishLocale>
+      <main className="motion-login" lang="en">
+        <div className="motion-login-background" aria-hidden="true" />
+        <div className="motion-login-layout">
+          <div className="motion-login-story">
+            <Link href="/" className="wordmark" aria-label="ZUNO home"><Brand /></Link>
+            <p className="motion-login-tagline">Buy · Sell · Connect Locally</p>
+            <p className="motion-login-headline">Good things.<br />Closer to home.</p>
+            <p className="motion-login-description">
+              Find something you love, pass on what you don’t need, and meet the neighbors in between.
+            </p>
+          </div>
+          <section className="auth-panel motion-login-card" aria-labelledby="login-title">
+            <h1 id="login-title">Welcome back</h1>
+            <p className="auth-intro">Sign in to your ZUNO neighborhood.</p>
+            <Suspense fallback={null}>
+              <LoginNotice searchParams={searchParams} />
+            </Suspense>
+            <AuthForm mode="login" />
+          </section>
+        </div>
+      </main>
+    </EnglishLocale>
   );
 }

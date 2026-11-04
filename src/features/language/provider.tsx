@@ -33,6 +33,12 @@ export function LanguageProvider({ children, welcome=false }: { children: ReactN
   useEffect(() => { document.documentElement.lang = language; return ()=>{if(welcome)document.documentElement.lang=countryLanguages(country).includes(storedLanguage)?storedLanguage:"en";}; }, [language,welcome,country,storedLanguage]);
   return <LanguageContext.Provider value={{ language, setLanguage }}>{children}</LanguageContext.Provider>;
 }
+const englishLocale = { language: "en" as const, setLanguage: () => {} };
+
+export function EnglishLocale({ children }: { children: ReactNode }) {
+  return <LanguageContext.Provider value={englishLocale}>{children}</LanguageContext.Provider>;
+}
+
 export function useLanguage() { return useContext(LanguageContext); }
 export function useT() {
   const { language } = useLanguage();
