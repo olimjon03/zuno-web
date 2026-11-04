@@ -23,7 +23,7 @@ export function ZunoAssistant({ enabled }: { enabled: boolean }) {
     {enabled && userId ? <form action={ask} onSubmit={() => setSelected(null)} aria-busy={pending}>
       <label htmlFor="zuno-question"><Text>{"Ask about ZUNO"}</Text></label>
       <textarea id="zuno-question" name="question" placeholder={t("How do I sell an item?")} required maxLength={400} rows={2} aria-describedby="zuno-assistant-note" />
-      <small id="zuno-assistant-note"><Text>{"Your question is processed by OpenAI. Avoid sharing passwords or private details."}</Text></small>
+      <small id="zuno-assistant-note"><Text>{"Your question is processed by Google Gemini. Avoid sharing passwords or private details."}</Text></small>
       <button className="button button-primary" disabled={pending}><Text>{pending ? "Finding help…" : "Ask ZUNO"}</Text></button>
     </form> : enabled && ready ? <Link href="/login"><Text>{"Sign in to ask the ZUNO assistant."}</Text></Link> : null}
     <div role="status" aria-live="polite">

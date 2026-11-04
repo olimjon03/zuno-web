@@ -23,23 +23,24 @@ registerHooks({
 const { askZunoAssistant } = await import("../src/features/support/zuno-assistant-action.ts");
 
 test("assistant only returns approved topics and does not call the model without access or quota", async t => {
-  const priorKey = process.env.OPENAI_API_KEY;
-  process.env.OPENAI_API_KEY = "fixture-key";
+  const priorKey = process.env.GEMINI_API_KEY;
+  process.env.GEMINI_API_KEY = "fixture-key";
   t.after(() => {
-    if (priorKey === undefined) delete process.env.OPENAI_API_KEY;
-    else process.env.OPENAI_API_KEY = priorKey;
+    if (priorKey === undefined) delete process.env.GEMINI_API_KEY;
+    else process.env.GEMINI_API_KEY = priorKey;
   });
   let calls = 0;
   let modelOutput = { topic: "sell", answer: "Untrusted free-form answer" };
-  t.mock.method(globalThis, "fetch", async (_url, options) => {
+  t.mock.method(globalThis, "fetch", async (url, options) => {
     calls++;
     const request = JSON.parse(options.body);
-    assert.equal(request.store, false);
+    assert.equal(url, "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent");
+    assert.equal(options.headers["x-goog-api-key"], "fixture-key");
     assert.equal(request.tools, undefined);
-    assert.equal(request.text.format.strict, true);
+    assert.equal(request.generationConfig.responseMimeType, "application/json");
+    assert.equal(request.generationConfig.responseJsonSchema.additionalProperties, false);
     return Response.json({
-      status: "completed",
-      output: [{ type: "message", content: [{ type: "output_text", text: JSON.stringify(modelOutput) }] }],
+      candidates: [{ finishReason: "STOP", content: { parts: [{ text: JSON.stringify(modelOutput) }] } }],
     });
   });
   const form = new FormData();
@@ -55,4 +56,45 @@ test("assistant only returns approved topics and does not call the model without
   allowed = false;
   assert.match((await askZunoAssistant({}, form)).message, /limit/);
   assert.equal(calls, 3);
+});
+
+test("Gemini failures stay private and missing configuration never calls the provider", async t => {
+  const priorKey = process.env.GEMINI_API_KEY;
+  t.after(() => {
+    if (priorKey === undefined) delete process.env.GEMINI_API_KEY;
+    else process.env.GEMINI_API_KEY = priorKey;
+  });
+  signedIn = true;
+  allowed = true;
+  const form = new FormData();
+  form.set("question", "How do I sell on ZUNO?");
+  let response;
+  let calls = 0;
+  const logs = [];
+  t.mock.method(console, "warn", (...args) => logs.push(args));
+  t.mock.method(globalThis, "fetch", async () => {
+    calls++;
+    if (response instanceof Error) throw response;
+    return response;
+  });
+  process.env.GEMINI_API_KEY = "  ";
+  assert.match((await askZunoAssistant({}, form)).message, /unavailable/);
+  assert.equal(calls, 0);
+  process.env.GEMINI_API_KEY = "fixture-secret";
+  for (const status of [400, 403, 429, 503]) {
+    response = Response.json({ error: { status: "RESOURCE_EXHAUSTED", message: "fixture-secret private question" } }, { status });
+    assert.match((await askZunoAssistant({}, form)).message, /unavailable/);
+  }
+  for (const payload of [
+    {},
+    { candidates: [{ finishReason: "MAX_TOKENS", content: { parts: [{ text: '{"topic":"sell"}' }] } }] },
+    { candidates: [{ finishReason: "SAFETY" }] },
+    { candidates: [{ finishReason: "STOP", content: { parts: [{ text: "invalid JSON" }] } }] },
+  ]) {
+    response = Response.json(payload);
+    assert.match((await askZunoAssistant({}, form)).message, /unavailable/);
+  }
+  response = new DOMException("fixture-secret private question", "TimeoutError");
+  assert.match((await askZunoAssistant({}, form)).message, /unavailable/);
+  assert.doesNotMatch(JSON.stringify(logs), /fixture-secret|private question/);
 });
