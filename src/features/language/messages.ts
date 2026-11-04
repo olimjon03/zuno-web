@@ -1,5 +1,12 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "Delete account": {"uz": "Hisobni o‘chirish", "ko": "계정 삭제"},
+  "Your profile, listings, conversations and uploaded files will be permanently deleted.": {"uz": "Profilingiz, e’lonlaringiz, suhbatlaringiz va yuklagan fayllaringiz butunlay o‘chiriladi.", "ko": "프로필, 판매 글, 대화 및 업로드한 파일이 영구적으로 삭제됩니다."},
+  "Type DELETE to confirm.": {"uz": "Tasdiqlash uchun DELETE deb yozing.", "ko": "확인하려면 DELETE를 입력하세요."},
+  "Deleting account…": {"uz": "Hisob o‘chirilmoqda…", "ko": "계정을 삭제하는 중…"},
+  "Account deletion is temporarily unavailable.": {"uz": "Hisobni o‘chirish vaqtincha mavjud emas.", "ko": "현재 계정을 삭제할 수 없습니다."},
+  "Please log in again to delete your account.": {"uz": "Hisobingizni o‘chirish uchun qayta kiring.", "ko": "계정을 삭제하려면 다시 로그인하세요."},
+  "We couldn’t finish deleting your account. Please try again.": {"uz": "Hisobni o‘chirish yakunlanmadi. Qayta urinib ko‘ring.", "ko": "계정 삭제를 완료하지 못했습니다. 다시 시도해 주세요."},
   "Notifications, {count} unread": {"uz": "Bildirishnomalar, {count} ta o‘qilmagan", "ko": "알림, 읽지 않음 {count}개"},
   "Notifications are temporarily unavailable.": {"uz": "Bildirishnomalar vaqtincha mavjud emas.", "ko": "알림을 일시적으로 사용할 수 없습니다."},
   "Loading notifications\u2026": {"uz": "Bildirishnomalar yuklanmoqda…", "ko": "알림을 불러오는 중…"},

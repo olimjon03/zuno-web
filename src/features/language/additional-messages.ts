@@ -1,5 +1,12 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Delete account": {"ru": "Удалить аккаунт", "vi": "Xóa tài khoản"},
+  "Your profile, listings, conversations and uploaded files will be permanently deleted.": {"ru": "Ваш профиль, объявления, переписки и загруженные файлы будут удалены навсегда.", "vi": "Hồ sơ, tin đăng, cuộc trò chuyện và tệp bạn tải lên sẽ bị xóa vĩnh viễn."},
+  "Type DELETE to confirm.": {"ru": "Для подтверждения введите DELETE.", "vi": "Nhập DELETE để xác nhận."},
+  "Deleting account…": {"ru": "Удаление аккаунта…", "vi": "Đang xóa tài khoản…"},
+  "Account deletion is temporarily unavailable.": {"ru": "Удаление аккаунта временно недоступно.", "vi": "Tạm thời không thể xóa tài khoản."},
+  "Please log in again to delete your account.": {"ru": "Чтобы удалить аккаунт, войдите снова.", "vi": "Vui lòng đăng nhập lại để xóa tài khoản."},
+  "We couldn’t finish deleting your account. Please try again.": {"ru": "Не удалось завершить удаление аккаунта. Повторите попытку.", "vi": "Không thể hoàn tất việc xóa tài khoản. Vui lòng thử lại."},
   "Notifications, {count} unread": {"ru": "Уведомления, {count} непрочитанных", "vi": "Thông báo, {count} chưa đọc"},
   "Notifications are temporarily unavailable.": {"ru": "Уведомления временно недоступны.", "vi": "Thông báo tạm thời không khả dụng."},
   "Loading notifications\u2026": {"ru": "Загрузка уведомлений…", "vi": "Đang tải thông báo…"},
