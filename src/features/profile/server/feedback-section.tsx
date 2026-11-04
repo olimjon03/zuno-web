@@ -23,7 +23,7 @@ type FeedbackSummary = Awaited<ReturnType<typeof getNeighborFeedback>>;
 export function ProfileLevelBadge({ feedback }: { feedback: FeedbackSummary }) {
   if (!feedback) return null;
   const level = feedbackLevel(feedback.positive, feedback.negative);
-  const icons = { 1: "pin", 2: "shield", 3: "check-circle" } as const;
+  const icons = { 1: "medal", 2: "shield", 3: "check-circle" } as const;
   return <span className={`profile-level-badge profile-level-${level.number}`}>
     <Icon name={icons[level.number]} />
     <span><Text values={{ level: level.number }}>{"Level {level}"}</Text><span className="sr-only"> · <Text>{level.name}</Text></span></span>
