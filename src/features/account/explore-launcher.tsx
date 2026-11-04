@@ -26,7 +26,7 @@ export function ExploreLauncher({align="end"}:{align?:"start"|"end"}) {
     <dialog ref={dialog} id={id} className="explore-popover" aria-label={`${t("Explore")} ZUNO`} onClose={event => { if(event.target!==event.currentTarget)return; setOpen(false); trigger.current?.focus(); }} onClick={event => { if(event.target===event.currentTarget)close(); }}>
       {open && <div className="explore-popover-content">
         <div className="explore-popover-brand"><Brand/><button autoFocus type="button" aria-label={t("Close")} onClick={close}><Icon name="close"/></button></div>
-        <ExploreMenu/>
+        <ExploreMenu onNavigate={close}/>
       </div>}
     </dialog>
   </div>;
