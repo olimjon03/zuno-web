@@ -39,3 +39,10 @@
 .profile-level-1 { background: #edf4f8; color: #3c586a; }
 .profile-level-2 { background: #e0f7f0; color: #087368; }
 .profile-level-3 { background: #fff4d5; color: #855400; }
+
+.profile-member-number {
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
