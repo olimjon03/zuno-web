@@ -28,6 +28,11 @@ export async function deleteAccount(_: DeleteState, form: FormData): Promise<Del
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     });
 
+    // Persist this state before any destructive Storage operations. Retrying resumes
+    // cleanup while database triggers prevent fresh uploads and messages.
+    const { error: beginError } = await admin.rpc("begin_account_deletion", { p_user_id: user.id });
+    if (beginError) throw new Error("Could not begin account deletion");
+
     let previousBatch = "";
     while (true) {
       const { data, error } = await admin.rpc("get_account_storage_batch", { p_user_id: user.id });
