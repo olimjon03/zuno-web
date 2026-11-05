@@ -8,6 +8,10 @@ import { getSiteUrl, isSupabaseConfigured } from "@/lib/supabase/config";
 import { readAuthFields, validateCredentials } from "./validation";
 
 export type AuthState = { error?: string; message?: string };
+function readCaptcha(data: FormData): string | undefined {
+  const token = data.get("captchaToken");
+  return typeof token === "string" && token.length <= 2048 ? token.trim() || undefined : undefined;
+}
 const unavailable = "We couldn’t connect right now. Please try again shortly.";
 
 export async function login(
@@ -17,12 +21,16 @@ export async function login(
   const fields = readAuthFields(data);
   const validation = validateCredentials(fields);
   if (validation) return { error: validation };
+  const captchaToken = readCaptcha(data);
+  if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() && !captchaToken)
+    return { error: "Complete the security verification and try again." };
   if (!isSupabaseConfigured()) return { error: unavailable };
   try {
     const supabase = await createClient();
     const { error } = await supabase.auth.signInWithPassword({
       email: fields.email,
       password: fields.password,
+      options: { captchaToken },
     });
     if (error)
       return {
@@ -48,6 +56,9 @@ export async function signup(
   const fields = readAuthFields(data);
   const validation = validateCredentials(fields, true);
   if (validation) return { error: validation };
+  const captchaToken = readCaptcha(data);
+  if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() && !captchaToken)
+    return { error: "Complete the security verification and try again." };
   if (!isSupabaseConfigured()) return { error: unavailable };
   let signedIn = false;
   try {
@@ -56,6 +67,7 @@ export async function signup(
       email: fields.email,
       password: fields.password,
       options: {
+        captchaToken,
         data: { display_name: fields.displayName },
         emailRedirectTo: `${getSiteUrl()}/auth/callback`,
       },

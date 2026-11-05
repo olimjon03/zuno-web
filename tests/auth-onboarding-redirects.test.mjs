@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { registerHooks } from 'node:module';
 import './helpers/register-runtime.mjs';
-let cleared=0,fail=false;
-globalThis.__authCountryDb={auth:{signInWithPassword:async()=>({error:fail?{code:'invalid_credentials'}:null}),signUp:async()=>({data:{session:{}},error:null}),exchangeCodeForSession:async()=>({error:fail?{}:null})}};
+let cleared=0,fail=false, captured;
+globalThis.__authCountryDb={auth:{signInWithPassword:async(input)=>(captured=input,{error:fail?{code:'invalid_credentials'}:null}),signUp:async(input)=>(captured=input,{data:{session:{}},error:null}),exchangeCodeForSession:async()=>({error:fail?{}:null})}};
 globalThis.__clearCountry=()=>{cleared++;};
 registerHooks({resolve(specifier,context,next){
  if(specifier==='@/lib/supabase/server')return {url:'data:text/javascript,export const createClient=async()=>globalThis.__authCountryDb',shortCircuit:true};
@@ -29,4 +29,23 @@ test('successful OAuth callback clears country confirmation and uses the fixed w
  assert.equal(ok.headers.get('location'),'https://zuno.example/welcome');assert.equal(cleared,before+1);
  fail=true;const bad=await GET(new NextRequest('https://zuno.example/auth/callback?code=qa-code'));
  assert.equal(bad.headers.get('location'),'https://zuno.example/login?notice=signin');assert.equal(cleared,before+1);fail=false;
+});
+
+
+test('CAPTCHA is required when configured and forwarded to both email auth calls',async t=>{
+ const previous=process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+ process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY='test-site-key';
+ t.after(()=>{if(previous===undefined)delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;else process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY=previous;});
+ captured=undefined;
+ assert.match((await login({},form())).error,/verification/);
+ assert.match((await signup({},form())).error,/verification/);
+ assert.equal(captured,undefined);
+ const input=form();input.set('captchaToken','test-token');
+ fail=false;
+ await assert.rejects(login({},input),/REDIRECT/);
+ assert.equal(captured.options.captchaToken,'test-token');
+ await assert.rejects(signup({},input),/REDIRECT/);
+ assert.equal(captured.options.captchaToken,'test-token');
+ input.set('captchaToken','x'.repeat(2049));
+ assert.match((await login({},input)).error,/verification/);
 });

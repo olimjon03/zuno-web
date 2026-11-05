@@ -2,6 +2,7 @@
 import { Text, useT } from "@/features/language/provider";
 
 
+import { Turnstile } from "./turnstile";
 import Link from "next/link";
 import { GoogleButton } from "./google-button";
 import { useActionState, useState } from "react";
@@ -9,11 +10,21 @@ import { login, signup, type AuthState } from "./actions";
 
 export function AuthForm({ mode }: { mode: "login" | "signup" }) {
  const t = useT();
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaAttempt, setCaptchaAttempt] = useState(0);
   const registering = mode === "signup";
   const [email, setEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [state, action, pending] = useActionState<AuthState, FormData>(
-    registering ? signup : login,
+    async (previous, data) => {
+      try {
+        return await (registering ? signup : login)(previous, data);
+      } finally {
+        setCaptchaToken("");
+        setCaptchaAttempt(value => value + 1);
+      }
+    },
     {},
   );
   return (
@@ -71,6 +82,10 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
               <Text>{"Use at least 8 characters."}</Text></p>
           )}
         </div>
+        {siteKey && <>
+          <Turnstile key={captchaAttempt} siteKey={siteKey} onToken={setCaptchaToken} />
+          <input type="hidden" name="captchaToken" value={captchaToken} />
+        </>}
         {state.error && (
           <p role="alert" className="auth-error">
             <Text>{state.error}</Text>
@@ -81,7 +96,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
             <Text>{state.message}</Text>
           </p>
         )}
-        <button className="button button-primary" disabled={pending}>
+        <button className="button button-primary" disabled={pending || Boolean(siteKey && !captchaToken)}>
           {pending ? <Text>{"Please wait…"}</Text> : registering ? <Text>{"Create account"}</Text> : <Text>{"Sign in"}</Text>}
         </button>
         <p className="auth-switch">
