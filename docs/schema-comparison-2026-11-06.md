@@ -49,3 +49,20 @@ separately and rerun the index check after deployment.
 
 Validation: complete isolated migration replay and existing SQL regression suite
 passed while collecting this inventory. No production user records were read.
+
+## Reader role follow-up
+
+Read-only catalog inspection found these explicit column-level SELECT grants:
+
+- profiles: id, display_name, created_at
+- listings: id, title, status
+- listing_reports: id, listing_id, status
+
+No explicit table-level grants were returned. Only postgres was listed as a
+member of the reader role. The role is neither superuser nor CREATEROLE/CREATEDB,
+and does not bypass RLS. There were zero active connections at inspection time;
+this does not establish that the role is unused.
+
+Repository search found no consumer of this role outside this audit document.
+The actual service/credential owner cannot be inferred from catalog privileges.
+Confirm that owner before documenting provisioning or revoking access.
