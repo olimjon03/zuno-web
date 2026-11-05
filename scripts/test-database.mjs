@@ -112,4 +112,7 @@ await db.exec(readFileSync(root+'/supabase/migrations/202611050027_chat_storage_
 await db.exec(readFileSync(root+'/supabase/tests/chat-storage-participant-rls.sql','utf8'));
 await db.exec(readFileSync(root+'/supabase/tests/message-attachments.sql','utf8'));
 console.log('PASS: chat storage participant-only access, staged uploads, stranger/anonymous denial, and existing attachment regressions.');
+await db.exec(readFileSync(root+'/supabase/migrations/20261105222105_foreign_key_indexes.sql','utf8'));
+await db.exec(readFileSync(root+'/supabase/tests/foreign-key-indexes.sql','utf8'));
+console.log('PASS: every public foreign key has a valid covering index');
 await db.close();
