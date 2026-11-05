@@ -1,5 +1,6 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "For a stronger password, combine uppercase and lowercase letters, numbers, and symbols. Avoid your name and simple sequences.": {"ru": "Для надёжного пароля используйте заглавные и строчные буквы, цифры и символы. Избегайте имени и простых последовательностей.", "vi": "Kết hợp chữ hoa, chữ thường, số và ký tự đặc biệt. Tránh tên và chuỗi đơn giản."},
   "ZUNO Assistant": {"ru": "Помощник ZUNO", "vi": "Trợ lý ZUNO"},
   "Get help with using ZUNO.": {"ru": "Получите помощь по использованию ZUNO.", "vi": "Nhận trợ giúp sử dụng ZUNO."},
   "Ask about ZUNO": {"ru": "Спросите о ZUNO", "vi": "Hỏi về ZUNO"},

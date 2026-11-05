@@ -1,5 +1,6 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "For a stronger password, combine uppercase and lowercase letters, numbers, and symbols. Avoid your name and simple sequences.": {"uz": "Kuchli parol uchun katta-kichik harflar, raqamlar va maxsus belgilarni birlashtiring. Ismingiz va oddiy ketma-ketliklardan foydalanmang.", "ko": "대소문자, 숫자, 특수문자를 조합하세요. 이름이나 단순한 연속 문자는 피하세요."},
   "ZUNO Assistant": {"uz": "ZUNO yordamchisi", "ko": "ZUNO 도우미"},
   "Get help with using ZUNO.": {"uz": "ZUNO’dan foydalanish bo‘yicha yordam oling.", "ko": "ZUNO 사용법을 알아보세요."},
   "Ask about ZUNO": {"uz": "ZUNO haqida so‘rang", "ko": "ZUNO에 대해 질문하기"},

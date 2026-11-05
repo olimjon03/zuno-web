@@ -79,7 +79,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           />
           {registering && (
             <p id="password-hint" className="auth-hint">
-              <Text>{"Use at least 8 characters."}</Text></p>
+              <Text>{"Use at least 8 characters."}</Text>{" "}<Text>{"For a stronger password, combine uppercase and lowercase letters, numbers, and symbols. Avoid your name and simple sequences."}</Text></p>
           )}
         </div>
         {siteKey && <>
