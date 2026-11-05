@@ -112,4 +112,7 @@ await db.exec(readFileSync(root+'/supabase/migrations/202611050027_chat_storage_
 await db.exec(readFileSync(root+'/supabase/tests/chat-storage-participant-rls.sql','utf8'));
 await db.exec(readFileSync(root+'/supabase/tests/message-attachments.sql','utf8'));
 console.log('PASS: chat storage participant-only access, staged uploads, stranger/anonymous denial, and existing attachment regressions.');
+await db.exec(readFileSync(root+'/supabase/migrations/20261105223414_remove_unused_admin_reader.sql','utf8'));
+await db.exec(readFileSync(root+'/supabase/migrations/20261105223414_remove_unused_admin_reader.sql','utf8'));
+console.log('PASS: unused reader removal safely replays when role is absent');
 await db.close();
