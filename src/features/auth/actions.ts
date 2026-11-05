@@ -72,13 +72,23 @@ export async function signup(
         emailRedirectTo: `${getSiteUrl()}/auth/callback`,
       },
     });
-    if (error)
+    if (error) {
+      const knownCodes = ["captcha_failed", "weak_password", "signup_disabled", "email_provider_disabled", "over_email_send_rate_limit", "over_request_rate_limit", "unexpected_failure", "email_address_invalid", "email_address_not_authorized"];
+      console.warn("[zuno-auth] Signup failed", {
+        status: error.status,
+        code: knownCodes.includes(error.code ?? "") ? error.code : "other",
+      });
+      if (error.code === "captcha_failed")
+        return { error: "Security verification failed. Retry verification and submit again." };
+      if (error.code === "weak_password")
+        return { error: "Choose a stronger password with at least 8 characters." };
       return {
         error:
           error.status === 429
             ? "Please wait a little before trying again."
             : "We couldn’t complete registration. Try again later, or log in if you already have an account.",
       };
+    }
     signedIn = Boolean(result.session);
   } catch {
     return { error: unavailable };
