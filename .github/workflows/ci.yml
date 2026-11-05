@@ -1,0 +1,31 @@
+name: ZUNO checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  application:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+  database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --prefix "$RUNNER_TEMP/zuno-db-tests" --no-save --ignore-scripts @electric-sql/pglite@0.5.14
+      - run: PGLITE_MODULE="$RUNNER_TEMP/zuno-db-tests/node_modules/@electric-sql/pglite/dist/index.js" node scripts/test-database.mjs
