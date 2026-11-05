@@ -1,3 +1,4 @@
+import { checkUploadQuota } from "@/features/security/server/upload-quota";
 import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
@@ -14,6 +15,8 @@ export async function uploadAvatar(request: NextRequest) {
     const db = await createClient();
     const {data:{user},error:authError} = await db.auth.getUser();
     if (authError || !user) return reply("Please log in again.",401);
+  const quotaFailure = await checkUploadQuota(db);
+  if (quotaFailure) return reply(quotaFailure.message, quotaFailure.status);
     const form = await readBoundedForm(request, 3 * 1024 * 1024 + 16384);
     const file = form.get("photo");
     if (!(file instanceof File) || file.size === 0 || file.size > 3 * 1024 * 1024 || !["image/jpeg","image/png","image/webp"].includes(file.type)) return reply("Choose a JPG, PNG or WebP photo up to 3 MB.",400);

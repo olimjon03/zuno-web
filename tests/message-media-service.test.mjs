@@ -10,7 +10,7 @@ const db={auth:{getUser:async()=>({data:{user:signed?{id:user}:null},error:null}
  maybeSingle:async()=>({data:table==='conversations'?{buyer_id:user,seller_id:client}:table==='messages'?(committed?{id:7}:null):linked.find(file=>file.id===filters.id)||null,error:null}),
  then(resolve){cleanupLookups++;const data=linked.filter(file=>!filters.storage_path||filters.storage_path.includes(file.storage_path));return Promise.resolve({data,error:null}).then(resolve);}};return q;},
  storage:{from(){return {upload:async(path,bytes)=>{uploads++;stored.set(path,bytes);return {error:null};},remove:async(paths)=>{removed.push(...paths);for(const path of paths)stored.delete(path);return {error:null};},download:async(path)=>({data:stored.has(path)?new Blob([stored.get(path)]):null,error:null})};}},
- rpc:async(_name,input)=>{rpcCalls++;if(blocked)return {error:{code:'P0002'}};committed=true;linked=input.p_attachments.map(file=>({...file,message_id:7}));return lost?{error:{code:'FETCH_ERROR'}}:{data:7,error:null};}
+ rpc:async(_name,input)=>{if(_name==='take_upload_request_quota')return {data:true,error:null};rpcCalls++;if(blocked)return {error:{code:'P0002'}};committed=true;linked=input.p_attachments.map(file=>({...file,message_id:7}));return lost?{error:{code:'FETCH_ERROR'}}:{data:7,error:null};}
 };
 globalThis.__mediaDb=db;
 registerHooks({resolve(specifier,context,next){

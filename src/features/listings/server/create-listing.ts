@@ -1,3 +1,4 @@
+import { checkUploadQuota } from "@/features/security/server/upload-quota";
 import "server-only";
 import { MAX_BODY_BYTES,MAX_PHOTO_BYTES } from "../constants";
 import { NextRequest, NextResponse } from "next/server";
@@ -31,6 +32,8 @@ export async function createListing(request: NextRequest) {
   } = await supabase.auth.getUser();
   if (authError || !user)
     return reply("Please log in before posting an item.", 401);
+  const quotaFailure = await checkUploadQuota(supabase);
+  if (quotaFailure) return reply(quotaFailure.message, quotaFailure.status);
   let form: FormData;
   try {
     form = await readBoundedForm(request, MAX_BODY_BYTES);

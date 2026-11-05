@@ -1,3 +1,4 @@
+import { checkUploadQuota } from "@/features/security/server/upload-quota";
 import "server-only";
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
@@ -14,6 +15,8 @@ export async function sendAttachments(request: Request) {
   const db = await createClient();
   const { data: { user }, error: authError } = await db.auth.getUser();
   if (authError || !user) return reply("Please log in again.", 401);
+  const quotaFailure = await checkUploadQuota(db);
+  if (quotaFailure) return reply(quotaFailure.message, quotaFailure.status);
   const uploaded: string[] = [];
   let commitUncertain = false;
   // Never remove a file committed by an RPC whose response was lost.

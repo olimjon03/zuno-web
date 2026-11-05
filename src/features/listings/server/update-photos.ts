@@ -1,3 +1,4 @@
+import { checkUploadQuota } from "@/features/security/server/upload-quota";
 import "server-only";
 import { MAX_BODY_BYTES,MAX_PHOTO_BYTES } from "../constants";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,6 +16,8 @@ export async function updateListingPhotos(request:NextRequest,{params}:{params:P
  const {id}=await params;if(!isUuid(id))return reply("Invalid item.",400);
  const db=await createClient();const {data:{user},error:authError}=await db.auth.getUser();
  if(authError || !user)return reply("Please log in again.",401);
+  const quotaFailure = await checkUploadQuota(db);
+  if (quotaFailure) return reply(quotaFailure.message, quotaFailure.status);
  const {data:listing,error:lookupError}=await db.from("listings").select("id").eq("id",id).eq("seller_id",user.id).neq("status","removed").maybeSingle();
  if(lookupError)return reply("Your item is temporarily unavailable.",503);
  if(!listing)return reply("Item unavailable or not owned by you.",404);
