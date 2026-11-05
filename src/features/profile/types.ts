@@ -5,6 +5,7 @@ export type AccountProfile = {
   user: { id: string; email: string };
   profile: { display_name: string; neighborhood_id: number | null };
   neighborhoods: ProfileNeighborhood[];
+  memberNumber: string | null;
   avatarPath: string | null;
 };
 
