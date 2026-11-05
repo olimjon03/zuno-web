@@ -108,4 +108,8 @@ await db.exec(readFileSync(root+'/supabase/migrations/202611050025_account_safet
 await db.exec(readFileSync(root+'/supabase/tests/account-safety.sql','utf8'));
 await db.exec(readFileSync(root+'/supabase/migrations/202611050026_upload_request_quota.sql','utf8'));
 console.log('PASS: migrations 001–026 and account safety regression tests');
+await db.exec(readFileSync(root+'/supabase/migrations/202611050027_chat_storage_participant_rls.sql','utf8'));
+await db.exec(readFileSync(root+'/supabase/tests/chat-storage-participant-rls.sql','utf8'));
+await db.exec(readFileSync(root+'/supabase/tests/message-attachments.sql','utf8'));
+console.log('PASS: chat storage participant-only access, staged uploads, stranger/anonymous denial, and existing attachment regressions.');
 await db.close();
