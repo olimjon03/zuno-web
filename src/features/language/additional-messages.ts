@@ -1108,9 +1108,9 @@ export const additionalMessages:Record<string,{ru:string;vi:string}> = {
     "ru": "Добавить фото",
     "vi": "Thêm ảnh"
   },
-  "Add 1–10 JPG, PNG or WebP photos, up to 10 MB each. Photos are optimized before upload. The first photo is the cover.": {
-    "ru": "Добавьте 1–10 фото JPG, PNG или WebP до 10 МБ каждое. Фото оптимизируются перед загрузкой. Первое фото — обложка.",
-    "vi": "Thêm 1–10 ảnh JPG, PNG hoặc WebP, mỗi ảnh tối đa 10 MB. Ảnh được tối ưu trước khi tải. Ảnh đầu là ảnh bìa."
+  "Add 1–10 JPG, PNG or WebP photos, up to 3.5 MB each. Photos are optimized before upload. The first photo is the cover.": {
+    "ru": "Добавьте 1–10 фото JPG, PNG или WebP до 3,5 МБ каждое. Фото оптимизируются перед загрузкой. Первое фото — обложка.",
+    "vi": "Thêm 1–10 ảnh JPG, PNG hoặc WebP, mỗi ảnh tối đa 3.5 MB. Ảnh được tối ưu trước khi tải. Ảnh đầu là ảnh bìa."
   },
   "Make cover": {
     "ru": "Сделать обложкой",
@@ -2512,9 +2512,9 @@ export const additionalMessages:Record<string,{ru:string;vi:string}> = {
     "ru": "Выберите не более 10 фото.",
     "vi": "Chọn tổng cộng tối đa 10 ảnh."
   },
-  "Use JPG, PNG or WebP photos up to 10 MB each.": {
-    "ru": "Используйте JPG, PNG или WebP до 10 МБ каждое.",
-    "vi": "Dùng ảnh JPG, PNG hoặc WebP tối đa 10 MB mỗi ảnh."
+  "Use JPG, PNG or WebP photos up to 3.5 MB each.": {
+    "ru": "Используйте JPG, PNG или WebP до 3,5 МБ каждое.",
+    "vi": "Dùng ảnh JPG, PNG hoặc WebP tối đa 3.5 MB mỗi ảnh."
   },
   "Use still JPG, PNG or WebP photos.": {
     "ru": "Используйте неподвижные JPG, PNG или WebP.",
