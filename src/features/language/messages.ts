@@ -1,5 +1,14 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "Meeting location": {"uz": "Uchrashuv joyi", "ko": "만남 장소"},
+  "Meeting location on map (optional)": {"uz": "Xaritada uchrashuv joyi (ixtiyoriy)", "ko": "지도에서 만남 장소 선택 (선택)"},
+  "Zoom in and select a public meeting place. This pin will be visible to everyone.": {"uz": "Xaritani yaqinlashtirib, jamoat joyini belgilang. Bu nuqta hammaga ko‘rinadi.", "ko": "지도를 확대하고 공공장소를 선택하세요. 이 위치는 모두에게 공개됩니다."},
+  "Use current location": {"uz": "Joriy joylashuvdan foydalanish", "ko": "현재 위치 사용"},
+  "Latitude": {"uz": "Kenglik", "ko": "위도"},
+  "Longitude": {"uz": "Uzunlik", "ko": "경도"},
+  "Remove map pin": {"uz": "Xarita nuqtasini olib tashlash", "ko": "지도 위치 삭제"},
+  "Open map": {"uz": "Xaritani ochish", "ko": "지도 열기"},
+  "The seller has not selected a map pin. This map shows the listed area.": {"uz": "Sotuvchi xaritada nuqta belgilamagan. Xaritada e’lon hududi ko‘rsatilgan.", "ko": "판매자가 위치를 지정하지 않았습니다. 등록된 지역을 표시합니다."},
   "For a stronger password, combine uppercase and lowercase letters, numbers, and symbols. Avoid your name and simple sequences.": {"uz": "Kuchli parol uchun katta-kichik harflar, raqamlar va maxsus belgilarni birlashtiring. Ismingiz va oddiy ketma-ketliklardan foydalanmang.", "ko": "대소문자, 숫자, 특수문자를 조합하세요. 이름이나 단순한 연속 문자는 피하세요."},
   "ZUNO Assistant": {"uz": "ZUNO yordamchisi", "ko": "ZUNO 도우미"},
   "Get help with using ZUNO.": {"uz": "ZUNO’dan foydalanish bo‘yicha yordam oling.", "ko": "ZUNO 사용법을 알아보세요."},

@@ -1,5 +1,14 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Meeting location": {"ru": "Место встречи", "vi": "Địa điểm gặp"},
+  "Meeting location on map (optional)": {"ru": "Место встречи на карте (необязательно)", "vi": "Chọn điểm gặp trên bản đồ (tùy chọn)"},
+  "Zoom in and select a public meeting place. This pin will be visible to everyone.": {"ru": "Приблизьте карту и выберите общественное место. Точка будет видна всем.", "vi": "Phóng to và chọn nơi công cộng. Điểm này sẽ hiển thị cho mọi người."},
+  "Use current location": {"ru": "Использовать текущее местоположение", "vi": "Dùng vị trí hiện tại"},
+  "Latitude": {"ru": "Широта", "vi": "Vĩ độ"},
+  "Longitude": {"ru": "Долгота", "vi": "Kinh độ"},
+  "Remove map pin": {"ru": "Убрать точку", "vi": "Xóa điểm"},
+  "Open map": {"ru": "Открыть карту", "vi": "Mở bản đồ"},
+  "The seller has not selected a map pin. This map shows the listed area.": {"ru": "Продавец не указал точку. На карте показан район объявления.", "vi": "Người bán chưa chọn điểm. Bản đồ hiển thị khu vực tin đăng."},
   "For a stronger password, combine uppercase and lowercase letters, numbers, and symbols. Avoid your name and simple sequences.": {"ru": "Для надёжного пароля используйте заглавные и строчные буквы, цифры и символы. Избегайте имени и простых последовательностей.", "vi": "Kết hợp chữ hoa, chữ thường, số và ký tự đặc biệt. Tránh tên và chuỗi đơn giản."},
   "ZUNO Assistant": {"ru": "Помощник ZUNO", "vi": "Trợ lý ZUNO"},
   "Get help with using ZUNO.": {"ru": "Получите помощь по использованию ZUNO.", "vi": "Nhận trợ giúp sử dụng ZUNO."},

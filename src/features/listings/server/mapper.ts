@@ -12,6 +12,7 @@ export function mapRow(row: ListingRow): { listing: Listing; details: ListingDet
     }));
   return {
     listing: {
+      meetingPoint: row.meeting_lat != null && row.meeting_lng != null ? { lat: Number(row.meeting_lat), lng: Number(row.meeting_lng) } : undefined,
       id: row.id,
       title: row.title,
       price: Number(row.price),

@@ -54,6 +54,13 @@ export async function createListing(request: NextRequest) {
       400,
     );
   }
+  const rawLat = form.get("meetingLat"), rawLng = form.get("meetingLng");
+  const meetingLat = rawLat == null || rawLat === "" ? null : typeof rawLat === "string" ? Number(rawLat) : NaN;
+  const meetingLng = rawLng == null || rawLng === "" ? null : typeof rawLng === "string" ? Number(rawLng) : NaN;
+  if ((meetingLat === null) !== (meetingLng === null) ||
+      (meetingLat !== null && (!Number.isFinite(meetingLat) || Math.abs(meetingLat) > 90)) ||
+      (meetingLng !== null && (!Number.isFinite(meetingLng) || Math.abs(meetingLng) > 180)))
+    return reply("Choose a valid meeting location.", 400);
   const entries = form.getAll("photos");
   const files = entries.filter((entry): entry is File => entry instanceof File);
   const photoError = validatePhotos(files, true);
@@ -110,7 +117,9 @@ export async function createListing(request: NextRequest) {
       if (error) throw new Error("Upload failed");
     }
     const name = profile.display_name;
-    const { error } = await supabase.rpc("publish_listing", {
+    const { error } = await supabase.rpc("publish_listing_with_location", {
+      p_meeting_lat: meetingLat,
+      p_meeting_lng: meetingLng,
       p_id: input.id,
       p_title: input.title,
       p_description: input.description,

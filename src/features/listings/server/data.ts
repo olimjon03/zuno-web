@@ -12,7 +12,7 @@ export const getLiveListing = cache(async (id: string) => {
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("listings")
-    .select(LISTING_COLUMNS)
+    .select(`${LISTING_COLUMNS},meeting_lat,meeting_lng`)
     .eq("id", id)
     .in("status", ["active", "reserved", "sold"])
     .maybeSingle<ListingRow>();

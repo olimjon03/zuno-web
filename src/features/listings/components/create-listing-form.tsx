@@ -1,6 +1,7 @@
 "use client";
 import { Text, useT } from "@/features/language/provider";
 
+import { MeetingPointPicker, type MeetingPoint } from "./meeting-point-picker";
 import Link from "next/link";
 import { useLocation } from "@/features/locations/location-provider";
 import { useCountry } from "@/features/locations/country-provider";
@@ -9,7 +10,7 @@ import { priceLabel } from "../currency";
 import { preparePhotos } from "../client/prepare-photos";
 import { PhotoPicker, type PhotoChoice } from "./photo-picker";
 import { ListingLocationFields } from "./listing-location-fields";
-import { useRef, useState, type FormEvent } from "react";
+import { useRef, useState, useCallback, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { conditionLabels, conditions } from "../constants";
 import { isUuid, validatePhotos } from "../validation";
@@ -29,6 +30,9 @@ export function CreateListingForm({
   const {location}=useLocation();
   const selectedCountry=useCountry();
   const country:CountryCode|""=selectedCountry || location.country;
+  const [meetingSelection, setMeetingSelection] = useState<{country:string;point:MeetingPoint|null}>({country:"",point:null});
+  const meetingPoint = meetingSelection.country === country ? meetingSelection.point : null;
+  const setMeetingPoint = useCallback((point:MeetingPoint|null) => setMeetingSelection({country,point}), [country]);
   const [neighborhoodId,setNeighborhoodId]=useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -162,7 +166,8 @@ export function CreateListingForm({
             </select>
           </div>
         </div>
-        <ListingLocationFields id="create" country={country} neighborhoodId={neighborhoodId} options={neighborhoods} onNeighborhood={setNeighborhoodId}/>
+        <ListingLocationFields id="create" country={country} neighborhoodId={neighborhoodId} options={neighborhoods} onNeighborhood={value => { setNeighborhoodId(value); setMeetingPoint(null); }}/>
+        <MeetingPointPicker key={`${country}-${neighborhoodId}`} country={country} value={meetingPoint} onChange={setMeetingPoint}/>
         <div className="sell-field">
           <label htmlFor="listing-description"><Text>{"Description"}</Text></label>
           <textarea
