@@ -61,7 +61,7 @@ export function validatePhotos(
         file.size > MAX_PHOTO_BYTES,
     )
   )
-    return "Use JPG, PNG or WebP photos up to 10 MB each.";
+    return "Use JPG, PNG or WebP photos up to 3.5 MB each.";
   if (uploaded && files.reduce((sum, file) => sum + file.size, 0) > MAX_TOTAL_PHOTO_BYTES)
     return "Keep the combined photo size below 3.5 MB.";
   return null;

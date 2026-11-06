@@ -25,7 +25,7 @@ export function PhotoPicker({id,photos,onChange,onError,disabled=false,compact=f
  const t = useT();
  return <div className={`sell-field ${compact ? "compact-photo-picker" : ""}`}>
   <label htmlFor={id}>{t(compact ? "Item photos · {count}/{max}" : "Photos ({count}/{max})", { count: photos.length, max: MAX_PHOTOS })}</label>
-  <p id={`${id}-help`} className="auth-hint"><Text>{"Add 1–10 JPG, PNG or WebP photos, up to 10 MB each. Photos are optimized before upload. The first photo is the cover."}</Text></p>
+  <p id={`${id}-help`} className="auth-hint"><Text>{"Add 1–10 JPG, PNG or WebP photos, up to 3.5 MB each. Photos are optimized before upload. The first photo is the cover."}</Text></p>
   <input id={id} type="file" accept="image/jpeg,image/png,image/webp" multiple disabled={disabled}
    className={compact ? "sr-only" : undefined} aria-label={compact ? t("Add item photos") : undefined}
    aria-describedby={`${id}-help`} onChange={event=>{

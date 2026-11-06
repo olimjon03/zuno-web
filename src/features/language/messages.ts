@@ -1012,9 +1012,9 @@ export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi
     "uz": "Rasm qo‘shish",
     "ko": "사진 추가"
   },
-  "Add 1–10 JPG, PNG or WebP photos, up to 10 MB each. Photos are optimized before upload. The first photo is the cover.": {
-    "uz": "1–10 ta JPG, PNG yoki WebP rasm qo‘shing, har biri 10 MB gacha. Rasmlar yuklashdan oldin optimallashtiriladi. Birinchi rasm muqova bo‘ladi.",
-    "ko": "JPG, PNG, WebP 사진 1~10장, 장당 최대 10MB. 업로드 전에 최적화돼요. 첫 사진이 대표 사진이에요."
+  "Add 1–10 JPG, PNG or WebP photos, up to 3.5 MB each. Photos are optimized before upload. The first photo is the cover.": {
+    "uz": "1–10 ta JPG, PNG yoki WebP rasm qo‘shing, har biri 3.5 MB gacha. Rasmlar yuklashdan oldin optimallashtiriladi. Birinchi rasm muqova bo‘ladi.",
+    "ko": "JPG, PNG, WebP 사진 1~10장, 장당 최대 3.5MB. 업로드 전에 최적화돼요. 첫 사진이 대표 사진이에요."
   },
   "Make cover": {
     "uz": "Muqova qilish",
@@ -2416,9 +2416,9 @@ export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi
     "uz": "Jami 10 tagacha rasm tanlang.",
     "ko": "사진을 총 10장까지 선택하세요."
   },
-  "Use JPG, PNG or WebP photos up to 10 MB each.": {
-    "uz": "Har biri 10 MB gacha JPG, PNG yoki WebP rasm tanlang.",
-    "ko": "장당 최대 10MB의 JPG, PNG, WebP 사진을 사용하세요."
+  "Use JPG, PNG or WebP photos up to 3.5 MB each.": {
+    "uz": "Har biri 3.5 MB gacha JPG, PNG yoki WebP rasm tanlang.",
+    "ko": "장당 최대 3.5MB의 JPG, PNG, WebP 사진을 사용하세요."
   },
   "Use still JPG, PNG or WebP photos.": {
     "uz": "Harakatsiz JPG, PNG yoki WebP rasmlar tanlang.",
