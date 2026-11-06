@@ -1,0 +1,32 @@
+/* Shared decorative canvas: only page/popup backgrounds, never card contents. */
+:root {
+  --zuno-sky-color: #eaf7fc;
+  --zuno-sky-image:
+    url("/backgrounds/sky-clouds.svg"),
+    url("/backgrounds/sky-city.svg"),
+    radial-gradient(ellipse at 100% 100%, #9ccdd14d, transparent 65%),
+    linear-gradient(180deg, #d7edf2 0%, #eaf7fc 25%, #f7fcfe 55%, #d7edf2 100%);
+  --zuno-sky-position: center top, center bottom, center, center;
+  --zuno-sky-size: max(100%, 900px) auto, max(100%, 1000px) auto, cover, cover;
+}
+
+/* Dedicated login, welcome and dark account themes keep their existing design. */
+body:not(:has(.zuno-homepage, .motion-login, .auth-page, .welcome-page, .account-dashboard)) {
+  background-color: var(--zuno-sky-color);
+  background-image: var(--zuno-sky-image);
+  background-repeat: no-repeat;
+  background-position: var(--zuno-sky-position);
+  background-size: var(--zuno-sky-size);
+}
+
+/* This full-page white wrapper previously hid the shared canvas. */
+body .profile-settings-page { background: transparent; }
+
+body .explore-popover,
+body .icon-popover {
+  background-color: var(--zuno-sky-color);
+  background-image: var(--zuno-sky-image);
+  background-repeat: no-repeat;
+  background-position: var(--zuno-sky-position);
+  background-size: var(--zuno-sky-size);
+}

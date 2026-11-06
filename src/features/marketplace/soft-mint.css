@@ -1,15 +1,11 @@
 /* Homepage surface colors, preserving the existing layout and icon palette. */
 .zuno-homepage {
   min-height: 100dvh;
-  background-color: #eaf7fc;
-  background-image:
-    url("/backgrounds/sky-clouds.svg"),
-    url("/backgrounds/sky-city.svg"),
-    radial-gradient(ellipse at 100% 100%, #9ccdd14d, transparent 65%),
-    linear-gradient(180deg, #d7edf2 0%, #eaf7fc 25%, #f7fcfe 55%, #d7edf2 100%);
+  background-color: var(--zuno-sky-color);
+  background-image: var(--zuno-sky-image);
   background-repeat: no-repeat;
-  background-position: center top, center bottom, center, center;
-  background-size: max(100%, 900px) auto, max(100%, 1000px) auto, cover, cover;
+  background-position: var(--zuno-sky-position);
+  background-size: var(--zuno-sky-size);
 }
 .zuno-homepage .hero-band{background:transparent}
 .zuno-homepage .site-header{background:transparent}
