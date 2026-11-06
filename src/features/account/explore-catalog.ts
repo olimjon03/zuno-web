@@ -5,7 +5,7 @@ export type ExploreFeature = { slug: string; title: string; description: string;
 export const exploreGroups: { title: string; entries: ExploreFeature[] }[] = [
   { title: "Community", entries: [
     { slug: "neighborhood-posts", title: "Neighborhood posts", description: "See what’s happening nearby.", icon: "chat" },
-    { slug: "local-events", title: "Local events", description: "Find events in your area.", icon: "calendar" },
+    { slug: "local-events", title: "Local events", description: "Read neighborhood posts from your district.", icon: "calendar" },
     { slug: "meetups", title: "Meetups", description: "Connect with neighbors.", icon: "people" },
   ] },
   { title: "Local services", entries: [

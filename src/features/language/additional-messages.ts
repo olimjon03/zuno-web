@@ -1,5 +1,8 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Read-only district channel. Neighborhood posts appear here automatically.": {"ru": "Канал района только для чтения. Посты района появляются автоматически.", "vi": "Kênh khu vực chỉ đọc. Bài đăng khu phố tự động hiển thị tại đây."},
+  "Read neighborhood posts from your district.": {"ru": "Читайте посты своего района.", "vi": "Đọc bài đăng khu phố trong khu vực của bạn."},
+  "This district channel is read-only.": {"ru": "Этот канал доступен только для чтения.", "vi": "Kênh khu vực này chỉ cho phép đọc."},
   "Meeting location": {"ru": "Место встречи", "vi": "Địa điểm gặp"},
   "Meeting location on map (optional)": {"ru": "Место встречи на карте (необязательно)", "vi": "Chọn điểm gặp trên bản đồ (tùy chọn)"},
   "Zoom in and select a public meeting place. This pin will be visible to everyone.": {"ru": "Приблизьте карту и выберите общественное место. Точка будет видна всем.", "vi": "Phóng to và chọn nơi công cộng. Điểm này sẽ hiển thị cho mọi người."},
