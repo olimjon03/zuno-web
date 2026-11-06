@@ -9,7 +9,7 @@ export async function loginWithTelegram(): Promise<AuthState> {
   return { error: result.error };
 }
 export async function loginWithKakao(): Promise<AuthState> {
-  const result = await startSocialOAuth("kakao");
+  const result = await startSocialOAuth("custom:kakao");
   if (result.destination) redirect(result.destination);
   return { error: result.error };
 }
