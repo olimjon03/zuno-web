@@ -1,5 +1,11 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "Continue with Telegram": {"uz": "Telegram orqali davom etish", "ko": "Telegram으로 계속하기"},
+  "Continue with Kakao": {"uz": "Kakao orqali davom etish", "ko": "카카오로 계속하기"},
+  "Connecting to Telegram…": {"uz": "Telegram’ga ulanmoqda…", "ko": "Telegram에 연결 중…"},
+  "Connecting to Kakao…": {"uz": "Kakao’ga ulanmoqda…", "ko": "카카오에 연결 중…"},
+  "We couldn’t start sign-in. Please try again or use email.": {"uz": "Kirishni boshlay olmadik. Qayta urinib ko‘ring yoki emaildan foydalaning.", "ko": "로그인을 시작하지 못했습니다. 다시 시도하거나 이메일을 사용하세요."},
+
   "Loading map…": {"uz": "Xarita yuklanmoqda…", "ko": "지도를 불러오는 중…"},
   "The shaded area is the listing’s district, not an exact meeting point.": {"uz": "Rangli maydon e’lon tumanini ko‘rsatadi, aniq uchrashuv nuqtasini emas.", "ko": "음영 영역은 게시글의 지역이며 정확한 만남 장소가 아닙니다."},
   "District boundary unavailable. The shaded area shows the wider region, not an exact meeting point.": {"uz": "Tuman chegarasi mavjud emas. Rangli maydon viloyatni ko‘rsatadi, aniq uchrashuv nuqtasini emas.", "ko": "구역 경계가 없어 더 넓은 지역을 표시합니다. 정확한 만남 장소가 아닙니다."},

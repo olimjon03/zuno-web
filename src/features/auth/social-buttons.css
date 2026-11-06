@@ -1,0 +1,11 @@
+.social-signin { margin-top: 12px; }
+.social-signin .social-auth-button {
+  width: 100%; min-height: 46px; border-radius: 12px; gap: 12px; font-weight: 500;
+}
+.social-telegram .social-auth-button { background: #087eaf; border-color: #087eaf; color: #fff; }
+.social-telegram .social-auth-button:hover { background: #06678f; border-color: #06678f; }
+.social-kakao .social-auth-button { background: #fee500; border-color: #fee500; color: #191919; }
+.social-kakao .social-auth-button:hover { background: #f0d900; border-color: #f0d900; }
+.social-signin .social-auth-button:disabled { opacity: .65; cursor: wait; }
+.social-auth-button svg { flex-shrink: 0; }
+.social-signin .auth-error { margin-top: 12px; }

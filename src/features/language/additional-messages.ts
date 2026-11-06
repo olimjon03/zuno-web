@@ -1,5 +1,11 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Continue with Telegram": {"ru": "Продолжить с Telegram", "vi": "Tiếp tục với Telegram"},
+  "Continue with Kakao": {"ru": "Продолжить с Kakao", "vi": "Tiếp tục với Kakao"},
+  "Connecting to Telegram…": {"ru": "Подключение к Telegram…", "vi": "Đang kết nối với Telegram…"},
+  "Connecting to Kakao…": {"ru": "Подключение к Kakao…", "vi": "Đang kết nối với Kakao…"},
+  "We couldn’t start sign-in. Please try again or use email.": {"ru": "Не удалось начать вход. Повторите попытку или используйте email.", "vi": "Không thể bắt đầu đăng nhập. Thử lại hoặc dùng email."},
+
   "Loading map…": {"ru": "Загрузка карты…", "vi": "Đang tải bản đồ…"},
   "The shaded area is the listing’s district, not an exact meeting point.": {"ru": "Выделена территория района объявления, а не точное место встречи.", "vi": "Vùng tô màu là quận của tin đăng, không phải điểm gặp cụ thể."},
   "District boundary unavailable. The shaded area shows the wider region, not an exact meeting point.": {"ru": "Граница района недоступна. Выделен более широкий регион, а не точное место встречи.", "vi": "Chưa có ranh giới quận. Vùng tô màu là khu vực rộng hơn, không phải điểm gặp cụ thể."},
