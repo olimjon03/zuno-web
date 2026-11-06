@@ -1,3 +1,5 @@
+import { CommunityHeader } from "@/features/account/community-layout";
+import "@/features/account/community.css";
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
@@ -15,6 +17,10 @@ async function Feature({ params }: { params: Promise<{ feature: string }> }) {
   const { feature } = await params;
   const entry = getExploreFeature(feature);
   if (!entry) notFound();
+  if (feature === "local-events" || feature === "neighborhood-posts") return <div className="shell community-page">
+    <CommunityHeader/>
+    <Suspense fallback={<SectionLoading message="Loading…"/>}><ExploreFeatureContent feature={feature}/></Suspense>
+  </div>;
   return <main className="shell explore-page">
     <header className="detail-header">
       <Link href="/" className="wordmark" aria-label="ZUNO home"><Brand /></Link>

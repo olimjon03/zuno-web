@@ -121,4 +121,7 @@ console.log('PASS: meeting pin persistence, invalid coordinates, retry and auth'
 await db.exec(readFileSync(root+'/supabase/migrations/20261106104422_local_events_channel.sql','utf8'));
 await db.exec(readFileSync(root+'/supabase/tests/local-events-channel.sql','utf8'));
 console.log('PASS: district-only neighborhood feed and forbidden direct event creation');
+await db.exec(readFileSync(root+'/supabase/migrations/20261106110644_community_author_profiles.sql','utf8'));
+await db.exec(readFileSync(root+'/supabase/tests/community-authors.sql','utf8'));
+console.log('PASS: community author batch scopes, district isolation and anonymous denial');
 await db.close();
