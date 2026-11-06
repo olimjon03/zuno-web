@@ -4,6 +4,7 @@ import { Text, useT } from "@/features/language/provider";
 
 import { Turnstile } from "./turnstile";
 import Link from "next/link";
+import { SocialButtons } from "./social-buttons";
 import { GoogleButton } from "./google-button";
 import { useActionState, useState } from "react";
 import { login, signup, type AuthState } from "./actions";
@@ -30,6 +31,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   return (
     <>
       <GoogleButton />
+      <SocialButtons />
       <div className="auth-divider">
         <span><Text>{"or continue with email"}</Text></span>
       </div>
