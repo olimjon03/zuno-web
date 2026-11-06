@@ -1,5 +1,11 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Deleted account": {"ru": "Удалённый аккаунт", "vi": "Tài khoản đã xóa"},
+  "This account has been deleted.": {"ru": "Этот аккаунт удалён.", "vi": "Tài khoản này đã bị xóa."},
+  "Your profile and listings will be permanently deleted. Messages and shared chat files remain available to the other participant under Deleted account.": {"ru": "Профиль и объявления будут удалены. Переписка и общие файлы останутся у собеседника под именем «Удалённый аккаунт».", "vi": "Hồ sơ và tin đăng sẽ bị xóa. Tin nhắn và tệp trò chuyện vẫn còn với người kia dưới tên Tài khoản đã xóa."},
+  "Admin accounts must have their admin membership removed before account deletion.": {"ru": "Перед удалением аккаунта необходимо удалить его членство в администраторах.", "vi": "Cần gỡ tư cách quản trị viên trước khi xóa tài khoản."},
+  "Account deletion is in progress. Try again to continue cleanup.": {"ru": "Удаление продолжается. Повторите попытку, чтобы продолжить очистку.", "vi": "Đang xóa tài khoản. Thử lại để tiếp tục dọn dữ liệu."},
+
   "Continue with Telegram": {"ru": "Продолжить с Telegram", "vi": "Tiếp tục với Telegram"},
   "Continue with Kakao": {"ru": "Продолжить с Kakao", "vi": "Tiếp tục với Kakao"},
   "Connecting to Telegram…": {"ru": "Подключение к Telegram…", "vi": "Đang kết nối với Telegram…"},

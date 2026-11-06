@@ -133,4 +133,7 @@ await db.exec(readFileSync(root+'/supabase/migrations/20261106160720_provider_pr
 await db.exec(readFileSync(root+'/supabase/migrations/20261106160720_provider_profile_names.sql','utf8'));
 await db.exec(readFileSync(root+'/supabase/tests/provider-profile-names.sql','utf8'));
 console.log('PASS: provider names, Unicode bounds, explicit-name preservation and ZUNO ID fallback');
+await db.exec(readFileSync(root+'/supabase/migrations/20261106170442_preserve_deleted_account_chats.sql','utf8'));
+await db.exec(readFileSync(root+'/supabase/tests/deleted-account-chats.sql','utf8'));
+console.log('PASS: account chat retention, anonymization, file staging, read-only/participant privacy and admin preflight');
 await db.close();

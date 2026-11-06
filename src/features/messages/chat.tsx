@@ -295,7 +295,7 @@ export function Chat({
         <div className="message-compose-row">
           <div className="message-attach-control">
             <button type="button" className="message-icon-button" aria-label={t("Attach photos or files")} aria-expanded={attachmentMenu} disabled={pending || !canMessage || !mediaReady} onClick={() => setAttachmentMenu(!attachmentMenu)}><MessageIcon name="attach"/></button>
-            {attachmentMenu && <div className="message-attach-menu"><button type="button" onClick={() => photoInput.current?.click()}><Icon name="image"/><Text>{"Photo"}</Text></button><button type="button" onClick={() => fileInput.current?.click()}><MessageIcon name="file"/><Text>{"File"}</Text></button></div>}
+            {attachmentMenu && canMessage && <div className="message-attach-menu"><button type="button" onClick={() => photoInput.current?.click()}><Icon name="image"/><Text>{"Photo"}</Text></button><button type="button" onClick={() => fileInput.current?.click()}><MessageIcon name="file"/><Text>{"File"}</Text></button></div>}
           </div>
           <button type="button" className="message-icon-button message-gallery" aria-label={t("Choose photos")} disabled={pending || !canMessage || !mediaReady} onClick={() => photoInput.current?.click()}><Icon name="image"/></button>
           <input className="sr-only" ref={photoInput} type="file" multiple disabled={pending || !canMessage || !mediaReady} accept="image/jpeg,image/png,image/webp" aria-label={t("Choose chat photos")} tabIndex={-1} onChange={event => selectFiles(event.target.files)}/>
@@ -304,7 +304,7 @@ export function Chat({
           <textarea id="message-body" value={draft} onChange={event => setDraft(event.target.value)} placeholder={t("Write a message…")} maxLength={2000} disabled={pending || !canMessage} rows={1} onKeyDown={event => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing && !pending && canMessage && (draft.trim() || files.length)) { event.preventDefault(); event.currentTarget.form?.requestSubmit(); } }}/>
           <button className="message-send" aria-label={t(pending ? "Sending message" : "Send message")} disabled={pending || !canMessage || (!draft.trim() && !files.length)}><MessageIcon name="send"/></button>
         </div>
-        <p className="message-compose-hint">{pending ? <Text>{"Sending your message…"}</Text> : files.length ? <Text>{"Up to 4 attachments · 3 MB total after photo preparation"}</Text> : !mediaReady ? <Text>{"Photo and file sharing is being prepared. Text messages still work."}</Text> : <Text>{"Photos up to 10 MB · Files up to 3 MB"}</Text>}<span>{Array.from(draft).length}/2,000</span></p>
+        {canMessage && <p className="message-compose-hint">{pending ? <Text>{"Sending your message…"}</Text> : files.length ? <Text>{"Up to 4 attachments · 3 MB total after photo preparation"}</Text> : !mediaReady ? <Text>{"Photo and file sharing is being prepared. Text messages still work."}</Text> : <Text>{"Photos up to 10 MB · Files up to 3 MB"}</Text>}<span>{Array.from(draft).length}/2,000</span></p>}
         {error && <p role="alert" className="message-feedback message-error"><Text>{error}</Text></p>}
       </form>
     </section>

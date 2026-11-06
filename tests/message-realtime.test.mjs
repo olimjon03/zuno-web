@@ -18,9 +18,11 @@ test('subscriptions use incoming inserts and own read markers; cleanup silences 
  const channel={on(type,filter,callback){bindings.push({type,filter,callback});return this;},subscribe(callback){statusHandler=callback;return this;}};
  const db={channel:()=>channel,removeChannel(c){assert.equal(c,channel);removed++;return Promise.resolve('ok');}};
  const cleanup=subscribeToMessageChanges(db,'user-id',{message:id=>messageIds.push(id),reads:()=>reads++,status:s=>statuses.push(s)});
- assert.deepEqual(bindings.map(b=>[b.filter.event,b.filter.table,b.filter.filter]),[['INSERT','messages',undefined],['INSERT','message_reads','user_id=eq.user-id'],['UPDATE','message_reads','user_id=eq.user-id']]);
+ assert.deepEqual(bindings.map(b=>[b.filter.event,b.filter.table,b.filter.filter]),[['INSERT','messages',undefined],['INSERT','message_reads','user_id=eq.user-id'],['UPDATE','message_reads','user_id=eq.user-id'],['UPDATE','conversations','buyer_id=eq.user-id'],['UPDATE','conversations','seller_id=eq.user-id']]);
  bindings[0].callback({new:{conversation_id:'conversation-id'}});bindings[1].callback();bindings[2].callback();statusHandler('SUBSCRIBED');
- assert.deepEqual(messageIds,['conversation-id']);assert.equal(reads,2);assert.deepEqual(statuses,['SUBSCRIBED']);
+ bindings[3].callback({new:{id:'deleted-account-chat'}});bindings[4].callback({new:{id:'updated-chat'}});
+ assert.deepEqual(messageIds,['conversation-id','deleted-account-chat','updated-chat']);assert.equal(reads,2);assert.deepEqual(statuses,['SUBSCRIBED']);
  cleanup();assert.equal(removed,1);bindings[0].callback({new:{conversation_id:'stale'}});bindings[1].callback();statusHandler('CLOSED');
- assert.deepEqual(messageIds,['conversation-id']);assert.equal(reads,2);assert.deepEqual(statuses,['SUBSCRIBED']);
+ bindings[3].callback({new:{id:'stale-chat'}});
+ assert.deepEqual(messageIds,['conversation-id','deleted-account-chat','updated-chat']);assert.equal(reads,2);assert.deepEqual(statuses,['SUBSCRIBED']);
 });
