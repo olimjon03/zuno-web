@@ -124,4 +124,13 @@ console.log('PASS: district-only neighborhood feed and forbidden direct event cr
 await db.exec(readFileSync(root+'/supabase/migrations/20261106110644_community_author_profiles.sql','utf8'));
 await db.exec(readFileSync(root+'/supabase/tests/community-authors.sql','utf8'));
 console.log('PASS: community author batch scopes, district isolation and anonymous denial');
+await db.exec(`insert into auth.users(id,raw_user_meta_data) values
+ ('a5100000-0000-4000-8000-000000000001','{"full_name":"Legacy Google"}'),
+ ('a5100000-0000-4000-8000-000000000002','{"display_name":"My chosen name","full_name":"Provider name"}');
+ insert into public.conversations(id,listing_title,buyer_id,seller_id,buyer_name,seller_name) values
+ ('a5100000-0000-4000-8000-000000000003','Legacy fixture','a5100000-0000-4000-8000-000000000002','a5100000-0000-4000-8000-000000000001','Neighbor','Neighbor');`);
+await db.exec(readFileSync(root+'/supabase/migrations/20261106160720_provider_profile_names.sql','utf8'));
+await db.exec(readFileSync(root+'/supabase/migrations/20261106160720_provider_profile_names.sql','utf8'));
+await db.exec(readFileSync(root+'/supabase/tests/provider-profile-names.sql','utf8'));
+console.log('PASS: provider names, Unicode bounds, explicit-name preservation and ZUNO ID fallback');
 await db.close();

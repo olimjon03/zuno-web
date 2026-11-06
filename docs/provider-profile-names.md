@@ -1,0 +1,11 @@
+# Provider display names
+
+Run `supabase/migrations/20261106160720_provider_profile_names.sql` on the existing ZUNO Web database after migration 024 (member numbers). This migration changes the existing signup trigger; it does not add a new trigger or expose Auth data publicly. No environment variable or OAuth provider setting is needed.
+
+New profile names use the first valid string from display_name (email signup/user choice), full_name (Google), name (Telegram/OIDC), nickname (Kakao), preferred_username, then given_name + family_name. Names are stripped of control characters, trimmed, limited to 40 characters and must be at least 2 characters. If none is available, assign `ZUNO #<member_number>` from the generated member number in the same transaction. Never expose email or the Auth UUID as a fallback.
+
+The migration repairs existing profiles whose name is exactly `Neighbor`, plus legacy listing seller/conversation participant snapshots still equal to `Neighbor`. Other names stay untouched. A user who deliberately chose the literal name `Neighbor` is indistinguishable from the old placeholder and will receive the same repair; review this predicate before applying if that case matters. Snapshot repair may also replace a legacy Neighbor snapshot for a profile that already has a custom name. User-chosen profile names are not otherwise changed on later provider sign-ins or metadata refreshes. This is profile initialization/placeholder repair, not continuous provider-name synchronization.
+
+Metadata is used only as untrusted display content, never for permissions or identity linking. The helper has no table access, is SECURITY INVOKER with empty search_path and cannot be executed by public/anon/authenticated. The existing SECURITY DEFINER trigger retains its revoked execute permissions and empty search_path. No new permissions or RLS policies are added.
+
+Isolated SQL tests verify signup for Google, Telegram and Kakao metadata, Unicode limits, malformed metadata, member-number fallback, explicit-name preservation, legacy/conversation repairs, replay safety and helper/trigger execution denial. Operator must apply the migration and verify actual provider login/profile/admin display. No production migration was run by the agent.
