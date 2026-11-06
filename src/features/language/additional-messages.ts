@@ -1,5 +1,11 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Continue with Apple": {"ru": "Продолжить с Apple", "vi": "Tiếp tục với Apple"},
+  "Connecting to Apple…": {"ru": "Подключение к Apple…", "vi": "Đang kết nối với Apple…"},
+  "Apple sign-in is unavailable right now. Please try again or use email.": {"ru": "Вход через Apple сейчас недоступен. Повторите попытку или используйте email.", "vi": "Hiện không thể đăng nhập Apple. Thử lại hoặc dùng email."},
+  "We couldn’t start Apple sign-in. Please try again.": {"ru": "Не удалось начать вход через Apple. Повторите попытку.", "vi": "Không thể bắt đầu đăng nhập Apple. Vui lòng thử lại."},
+  "We couldn’t start Apple sign-in. Please try again or use email.": {"ru": "Не удалось начать вход через Apple. Повторите попытку или используйте email.", "vi": "Không thể bắt đầu đăng nhập Apple. Thử lại hoặc dùng email."},
+
   "Loading map…": {"ru": "Загрузка карты…", "vi": "Đang tải bản đồ…"},
   "The shaded area is the listing’s district, not an exact meeting point.": {"ru": "Выделена территория района объявления, а не точное место встречи.", "vi": "Vùng tô màu là quận của tin đăng, không phải điểm gặp cụ thể."},
   "District boundary unavailable. The shaded area shows the wider region, not an exact meeting point.": {"ru": "Граница района недоступна. Выделен более широкий регион, а не точное место встречи.", "vi": "Chưa có ranh giới quận. Vùng tô màu là khu vực rộng hơn, không phải điểm gặp cụ thể."},

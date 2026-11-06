@@ -1,0 +1,9 @@
+.apple-signin { margin-top: 12px; }
+.apple-signin .apple-button {
+  width: 100%; min-height: 46px; border-radius: 12px; gap: 12px;
+  background: #1f2328; border-color: #1f2328; color: #fff; font-weight: 500;
+}
+.apple-signin .apple-button:hover { background: #343a40; border-color: #343a40; }
+.apple-signin .apple-button:disabled { opacity: .65; cursor: wait; }
+.apple-button svg { flex-shrink: 0; }
+.apple-signin .auth-error { margin-top: 12px; }

@@ -1,5 +1,11 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "Continue with Apple": {"uz": "Apple orqali davom etish", "ko": "Apple로 계속하기"},
+  "Connecting to Apple…": {"uz": "Apple’ga ulanmoqda…", "ko": "Apple에 연결 중…"},
+  "Apple sign-in is unavailable right now. Please try again or use email.": {"uz": "Apple orqali kirish hozir mavjud emas. Qayta urinib ko‘ring yoki emaildan foydalaning.", "ko": "지금은 Apple 로그인을 사용할 수 없습니다. 다시 시도하거나 이메일을 사용하세요."},
+  "We couldn’t start Apple sign-in. Please try again.": {"uz": "Apple orqali kirishni boshlay olmadik. Qayta urinib ko‘ring.", "ko": "Apple 로그인을 시작하지 못했습니다. 다시 시도하세요."},
+  "We couldn’t start Apple sign-in. Please try again or use email.": {"uz": "Apple orqali kirishni boshlay olmadik. Qayta urinib ko‘ring yoki emaildan foydalaning.", "ko": "Apple 로그인을 시작하지 못했습니다. 다시 시도하거나 이메일을 사용하세요."},
+
   "Loading map…": {"uz": "Xarita yuklanmoqda…", "ko": "지도를 불러오는 중…"},
   "The shaded area is the listing’s district, not an exact meeting point.": {"uz": "Rangli maydon e’lon tumanini ko‘rsatadi, aniq uchrashuv nuqtasini emas.", "ko": "음영 영역은 게시글의 지역이며 정확한 만남 장소가 아닙니다."},
   "District boundary unavailable. The shaded area shows the wider region, not an exact meeting point.": {"uz": "Tuman chegarasi mavjud emas. Rangli maydon viloyatni ko‘rsatadi, aniq uchrashuv nuqtasini emas.", "ko": "구역 경계가 없어 더 넓은 지역을 표시합니다. 정확한 만남 장소가 아닙니다."},
