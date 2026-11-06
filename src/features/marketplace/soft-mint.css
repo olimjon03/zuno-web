@@ -21,3 +21,39 @@
   border-color: #a9ced3;
   box-shadow: 0 2px 6px #315b6810;
 }
+
+/* Inset card text and give location and counters their own rows. */
+.zuno-homepage .listing-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-bottom: 14px;
+}
+.zuno-homepage .listing-card .listing-image { flex-shrink: 0; }
+.zuno-homepage .listing-card > h3,
+.zuno-homepage .listing-card > .price,
+.zuno-homepage .listing-card > .listing-status {
+  margin-inline: 14px;
+  overflow-wrap: anywhere;
+}
+.zuno-homepage .listing-card > h3 { margin-top: 12px; }
+.zuno-homepage .listing-card > .listing-status { align-self: flex-start; }
+.zuno-homepage .listing-card .listing-bottom {
+  flex-direction: column;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  gap: 10px;
+  margin: auto 14px 0;
+  padding-top: 8px;
+}
+.zuno-homepage .listing-card .listing-bottom .listing-location {
+  flex: none;
+  align-items: flex-start;
+}
+.zuno-homepage .listing-card .listing-engagement {
+  flex: none;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding-top: 8px;
+  border-top: 1px solid #edf2f4;
+}
