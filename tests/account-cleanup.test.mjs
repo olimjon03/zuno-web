@@ -6,7 +6,8 @@ function fixture({adminAccount=false,fail,copyExists=false,moreArchives=false}={
  const events=[];let archived=false,removed=false;
  const file={attachment_id:'file-id',source_path:'old-path',destination_path:'recipient/conversation/retained/file'};
  const bucket={
-  exists:async()=>({data:copyExists,error:null}),
+  info:async()=>fail==='lookup'?{data:null,error:{status:400,statusCode:'400'}}:
+   copyExists?{data:{size:100},error:null}:{data:null,error:{status:400,statusCode:'404',code:'NoSuchKey'}},
   copy:async()=>{events.push('copy');return {error:fail==='copy'?{code:'storage_error'}:null};},
   remove:async paths=>{events.push('remove');if(fail==='remove')return {error:{code:'storage_error'}};assert.deepEqual(paths,['old-path']);removed=true;return {error:null};},
  };
@@ -30,7 +31,7 @@ test('retry reuses a reserved archive copy and skips copying it again',async()=>
  const {client,events}=fixture({copyExists:true});assert.equal(await cleanupAccount(client,'user'),'deleted');assert.ok(!events.includes('copy'));
 });
 test('missing migration, copy, commit and cleanup errors never delete Auth identity',async()=>{
- for(const fail of ['prepare','copy','commit','remove']){
+ for(const fail of ['prepare','lookup','copy','commit','remove']){
   const {client,events}=fixture({fail});await assert.rejects(cleanupAccount(client,'user'),AccountCleanupError);
   assert.ok(!events.includes('delete'));
   if(fail!=='remove')assert.ok(!events.includes('remove'));

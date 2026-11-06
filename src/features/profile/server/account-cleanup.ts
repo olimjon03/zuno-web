@@ -16,9 +16,14 @@ export async function cleanupAccount(admin:SupabaseClient,userId:string):Promise
   for(const file of archives as {attachment_id:string;source_path:string;destination_path:string}[]) {
     // Reserved /retained/ paths cannot be uploaded by ordinary clients. Deterministic
     // paths allow recovery after a copy/commit response is lost without overwriting.
-    const {data:exists,error:existsError}=await bucket.exists(file.destination_path);
-    if(existsError)throw new AccountCleanupError("archive_check",existsError);
-    if(!exists) {
+    // HEAD/exists can lose the structured 404 body and surface as HTTP 400.
+    // GET info preserves NoSuchKey/statusCode so genuine auth/network failures
+    // are never mistaken for an absent archive.
+    const {data:info,error:infoError}=await bucket.info(file.destination_path);
+    const missing=infoError && (("code" in infoError && infoError.code==="NoSuchKey") ||
+      ("statusCode" in infoError && String(infoError.statusCode)==="404"));
+    if(infoError&&!missing)throw new AccountCleanupError("archive_check",infoError);
+    if(!info) {
       const {error}=await bucket.copy(file.source_path,file.destination_path,{copyMetadata:false});
       if(error)throw new AccountCleanupError("archive_copy",error);
     }
