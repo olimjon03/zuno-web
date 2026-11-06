@@ -32,12 +32,18 @@ function AreaLink() {
 
 async function LocalPosts({ session, feature }: { session: Session; feature: string }) {
   const { db, user, profile } = session;
-  const event = feature === "meetups" || feature === "local-events";
-  const posts = rows<Post>(await db.from("explore_posts").select("id,author_id,title,body,starts_at")
-    .eq("kind", feature).order("created_at", { ascending: false }).limit(80));
+  const channel = feature === "local-events";
+  const event = feature === "meetups";
+  let query = db.from("explore_posts").select("id,author_id,title,body,starts_at")
+    .eq("kind", channel ? "neighborhood-posts" : feature);
+  if (channel) query = query.eq("neighborhood_id", profile.neighborhood_id ?? 0);
+  const posts = rows<Post>(await query.order("created_at", { ascending: false }).limit(80));
+  const area = channel && profile.neighborhood_id ? await db.from("neighborhoods").select("name").eq("id", profile.neighborhood_id).maybeSingle() : null;
   const ownsProfile = feature === "business-profile" && posts.some(post => post.author_id === user.id);
   return <>
-    {!profile.neighborhood_id ? <AreaLink /> : !ownsProfile && <section className="explore-card">
+    {channel && area?.data?.name && <h2>{area.data.name}</h2>}
+    {channel && <p><Text>Read-only district channel. Neighborhood posts appear here automatically.</Text></p>}
+    {!profile.neighborhood_id ? <AreaLink /> : !channel && !ownsProfile && <section className="explore-card">
       <h2><Text>{feature === "business-profile" ? "Create business profile" : "Create a post"}</Text></h2>
       <ExploreForm feature={feature} account={user.id} label="Publish">
         <LocalPostFields event={event} />
@@ -48,7 +54,7 @@ async function LocalPosts({ session, feature }: { session: Session; feature: str
       {post.starts_at && <time dateTime={post.starts_at}>{new Date(post.starts_at).toISOString().slice(0, 16).replace("T", " ")} UTC</time>}
       <p className="explore-content">{post.body}</p>
       <Link href={`/neighbors/${post.author_id}`}><Text>{"View public profile"}</Text></Link>
-      {post.author_id === user.id && <details>
+      {!channel && post.author_id === user.id && <details>
         <summary><Text>{"Manage post"}</Text></summary>
         <ExploreForm feature={feature} account={user.id} id={post.id} label="Save changes">
           <LocalPostFields event={event} post={post} />

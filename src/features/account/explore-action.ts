@@ -13,6 +13,7 @@ export async function saveExploreChange(_: State, form: FormData): Promise<State
   const slug = value("feature");
   const action = value("intent");
   const id = value("id");
+  if (slug === "local-events") return { error: "This district channel is read-only." };
   if (!getExploreFeature(slug)) return { error: failure };
   const { db, user, profile } = await getExploreSession();
   if (value("account") !== user.id) return { error: failure };
@@ -80,6 +81,7 @@ export async function saveExploreChange(_: State, form: FormData): Promise<State
 
   if (!result || result.error) return { error: failure };
   revalidatePath(`/explore/${slug}`);
+  if (slug === "neighborhood-posts") revalidatePath("/explore/local-events");
   if (slug === "purchase-history" && isUuid(id)) revalidatePath(`/messages/${id}`);
   return { message: "Changes saved." };
 }

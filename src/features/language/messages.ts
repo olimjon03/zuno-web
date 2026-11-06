@@ -1,5 +1,8 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "Read-only district channel. Neighborhood posts appear here automatically.": {"uz": "Faqat o‘qiladigan tuman kanali. Mahalla postlari bu yerda avtomatik ko‘rinadi.", "ko": "읽기 전용 지역 채널입니다. 동네 게시글이 자동으로 표시됩니다."},
+  "Read neighborhood posts from your district.": {"uz": "Tumaningizdagi mahalla postlarini o‘qing.", "ko": "우리 지역의 동네 게시글을 확인하세요."},
+  "This district channel is read-only.": {"uz": "Bu tuman kanaliga yozib bo‘lmaydi.", "ko": "이 지역 채널은 읽기 전용입니다."},
   "Meeting location": {"uz": "Uchrashuv joyi", "ko": "만남 장소"},
   "Meeting location on map (optional)": {"uz": "Xaritada uchrashuv joyi (ixtiyoriy)", "ko": "지도에서 만남 장소 선택 (선택)"},
   "Zoom in and select a public meeting place. This pin will be visible to everyone.": {"uz": "Xaritani yaqinlashtirib, jamoat joyini belgilang. Bu nuqta hammaga ko‘rinadi.", "ko": "지도를 확대하고 공공장소를 선택하세요. 이 위치는 모두에게 공개됩니다."},
