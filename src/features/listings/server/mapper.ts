@@ -20,6 +20,7 @@ export function mapRow(row: ListingRow): { listing: Listing; details: ListingDet
         ? (row.category!.name_en as Exclude<Category, "All items">)
         : "Other",
       neighborhood: row.neighborhood?.name ?? "Nearby",
+      districtCode: row.neighborhood?.district_code ?? undefined,
       ...resolveLocation(row.neighborhood?.name ?? "",row.neighborhood?.region_code),
       image: photos[0]?.src ?? "/file.svg",
       imageAlt: photos[0]?.alt ?? row.title,

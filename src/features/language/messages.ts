@@ -1,5 +1,10 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "Loading map…": {"uz": "Xarita yuklanmoqda…", "ko": "지도를 불러오는 중…"},
+  "The shaded area is the listing’s district, not an exact meeting point.": {"uz": "Rangli maydon e’lon tumanini ko‘rsatadi, aniq uchrashuv nuqtasini emas.", "ko": "음영 영역은 게시글의 지역이며 정확한 만남 장소가 아닙니다."},
+  "District boundary unavailable. The shaded area shows the wider region, not an exact meeting point.": {"uz": "Tuman chegarasi mavjud emas. Rangli maydon viloyatni ko‘rsatadi, aniq uchrashuv nuqtasini emas.", "ko": "구역 경계가 없어 더 넓은 지역을 표시합니다. 정확한 만남 장소가 아닙니다."},
+  "Map unavailable. Please use the area name or open the map below.": {"uz": "Xarita ochilmadi. Hudud nomidan foydalaning yoki quyidagi xarita havolasini oching.", "ko": "지도를 사용할 수 없습니다. 지역명을 확인하거나 아래 지도 링크를 여세요."},
+
   "Read-only channel": {"uz": "Faqat o‘qish", "ko": "읽기 전용 채널"},
   "Updates from your neighborhood, all in one place.": {"uz": "Mahallangiz yangiliklari — barchasi bir joyda.", "ko": "우리 동네 소식을 한곳에서 확인하세요."},
   "Share a little. Connect a little closer.": {"uz": "Yangilik ulashing. Qo‘shnilar bilan yaqinlashing.", "ko": "소식을 나누고 이웃과 가까워지세요."},

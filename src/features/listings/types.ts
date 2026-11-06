@@ -10,6 +10,7 @@ export type Listing = {
   neighborhood: string;
   countryCode?: CountryCode;
   regionCode?: string;
+  districtCode?: string;
   category: Exclude<Category, "All items">;
   image: string;
   imageAlt: string;

@@ -12,6 +12,6 @@ export type ListingRow = {
   created_at: string;
   status: string;
   category: { name_en: string } | null;
-  neighborhood: { name: string; region_code?: string | null } | null;
+  neighborhood: { name: string; region_code?: string | null; district_code?: string | null } | null;
   photos: { id: string; sort_order: number }[];
 };
