@@ -1,5 +1,10 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Loading map…": {"ru": "Загрузка карты…", "vi": "Đang tải bản đồ…"},
+  "The shaded area is the listing’s district, not an exact meeting point.": {"ru": "Выделена территория района объявления, а не точное место встречи.", "vi": "Vùng tô màu là quận của tin đăng, không phải điểm gặp cụ thể."},
+  "District boundary unavailable. The shaded area shows the wider region, not an exact meeting point.": {"ru": "Граница района недоступна. Выделен более широкий регион, а не точное место встречи.", "vi": "Chưa có ranh giới quận. Vùng tô màu là khu vực rộng hơn, không phải điểm gặp cụ thể."},
+  "Map unavailable. Please use the area name or open the map below.": {"ru": "Карта недоступна. Проверьте название района или откройте ссылку ниже.", "vi": "Không tải được bản đồ. Xem tên khu vực hoặc mở liên kết bên dưới."},
+
   "Read-only channel": {"ru": "Только чтение", "vi": "Kênh chỉ đọc"},
   "Updates from your neighborhood, all in one place.": {"ru": "Все новости вашего района в одном месте.", "vi": "Tin khu phố của bạn tại một nơi."},
   "Share a little. Connect a little closer.": {"ru": "Делитесь новостями и знакомьтесь с соседями.", "vi": "Chia sẻ để gần gũi hàng xóm hơn."},
