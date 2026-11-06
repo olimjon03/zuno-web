@@ -14,3 +14,10 @@
 .zuno-homepage .hero-band{background:transparent}
 .zuno-homepage .site-header{background:transparent}
 .zuno-homepage .listing-card{background:#fff;border-radius:16px}
+
+/* Keep the location selector distinct from the sky canvas. */
+.zuno-homepage .site-header .location-control {
+  background-color: #fff;
+  border-color: #a9ced3;
+  box-shadow: 0 2px 6px #315b6810;
+}
