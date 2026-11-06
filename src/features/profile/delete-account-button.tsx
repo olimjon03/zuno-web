@@ -25,7 +25,7 @@ export function DeleteAccountButton({ accountId }: { accountId: string }) {
         onClose={() => setConfirmation("")}
       >
         <h2 id="delete-account-title"><Text>{"Delete account"}</Text></h2>
-        <p><Text>{"Your profile, listings, conversations and uploaded files will be permanently deleted."}</Text></p>
+        <p><Text>{"Your profile and listings will be permanently deleted. Messages and shared chat files remain available to the other participant under Deleted account."}</Text></p>
         <form action={action} aria-busy={pending}>
           <input type="hidden" name="account" value={accountId} />
           <label htmlFor="delete-account-confirmation"><Text>{"Type DELETE to confirm."}</Text></label>

@@ -1,5 +1,11 @@
 import type { Language } from "./catalog";
 export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi">, string>> = {
+  "Deleted account": {"uz": "O‘chirilgan hisob", "ko": "탈퇴한 계정"},
+  "This account has been deleted.": {"uz": "Bu hisob o‘chirilgan.", "ko": "이 계정은 탈퇴했습니다."},
+  "Your profile and listings will be permanently deleted. Messages and shared chat files remain available to the other participant under Deleted account.": {"uz": "Profil va e’lonlaringiz butunlay o‘chiriladi. Xabarlar va ulashilgan chat fayllari suhbatdoshda O‘chirilgan hisob nomi ostida saqlanadi.", "ko": "프로필과 판매 글이 영구 삭제됩니다. 메시지와 공유 파일은 상대방에게 탈퇴한 계정으로 남습니다."},
+  "Admin accounts must have their admin membership removed before account deletion.": {"uz": "Hisobni o‘chirishdan oldin admin a’zoligini olib tashlash kerak.", "ko": "관리자 계정은 관리자 권한 등록을 해제한 후 삭제할 수 있습니다."},
+  "Account deletion is in progress. Try again to continue cleanup.": {"uz": "Hisobni o‘chirish davom etmoqda. Tozalashni davom ettirish uchun yana urinib ko‘ring.", "ko": "계정 삭제가 진행 중입니다. 정리를 계속하려면 다시 시도하세요."},
+
   "Continue with Telegram": {"uz": "Telegram orqali davom etish", "ko": "Telegram으로 계속하기"},
   "Continue with Kakao": {"uz": "Kakao orqali davom etish", "ko": "카카오로 계속하기"},
   "Connecting to Telegram…": {"uz": "Telegram’ga ulanmoqda…", "ko": "Telegram에 연결 중…"},

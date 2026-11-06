@@ -45,6 +45,12 @@ export function subscribeToMessageChanges(
         if (active) callbacks.reads();
       },
     )
+    .on("postgres_changes", { event: "UPDATE", schema: "public", table: "conversations", filter: `buyer_id=eq.${userId}` }, payload => {
+      if (active && typeof payload.new.id === "string") callbacks.message(payload.new.id);
+    })
+    .on("postgres_changes", { event: "UPDATE", schema: "public", table: "conversations", filter: `seller_id=eq.${userId}` }, payload => {
+      if (active && typeof payload.new.id === "string") callbacks.message(payload.new.id);
+    })
     .subscribe((status) => {
       if (active) callbacks.status(status);
     });

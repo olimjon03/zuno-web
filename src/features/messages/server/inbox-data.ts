@@ -2,7 +2,7 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { InboxEntry } from "../types";
 type InboxRow = {
-  id:string;listing_id:string|null;listing_title:string;other_id:string;other_name:string;
+  id:string;listing_id:string|null;listing_title:string;other_id:string|null;other_name:string;
   avatar_path:string|null;neighborhood:string|null;last_message:string|null;last_message_at:string;thumbnail_id:string|null;
 };
 export async function getInbox(db: SupabaseClient, userId: string): Promise<InboxEntry[]> {
