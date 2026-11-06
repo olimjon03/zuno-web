@@ -1,5 +1,7 @@
 import type { ListingInput } from "../types";
 export type ListingRow = {
+  meeting_lat?: number | null;
+  meeting_lng?: number | null;
   id: string;
   title: string;
   description: string;

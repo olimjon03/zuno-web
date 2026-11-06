@@ -1,4 +1,5 @@
 "use client";
+import { ListingMeetingMap } from "./listing-meeting-map";
 import { Text, useT } from "@/features/language/provider";
 
 import { ListingViewTracker } from "./listing-view-tracker";
@@ -178,9 +179,7 @@ export function ListingDetail({
         >
           <h2 id="description-title"><Text>{"About this item"}</Text></h2>
           <p>{details.description}</p>
-          <h2><Text>{"Meet nearby"}</Text></h2>
-          <p>
-            <Text>{"Pickup in"}</Text>{formatLocationLabel(listing)}<Text>{". Agree on a public meeting place and inspect the item before exchanging. Exact addresses are not displayed."}</Text></p>
+          <ListingMeetingMap listing={listing}/>
         </section>
         {real && details.sellerId && <SafetyControls userId={details.sellerId} name={details.seller} listingId={listing.id}/>}
       </main>
