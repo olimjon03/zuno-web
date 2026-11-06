@@ -1,5 +1,10 @@
 // Interface copy only. Never translate user-authored content.
 export const additionalMessages:Record<string,{ru:string;vi:string}> = {
+  "Read-only channel": {"ru": "Только чтение", "vi": "Kênh chỉ đọc"},
+  "Updates from your neighborhood, all in one place.": {"ru": "Все новости вашего района в одном месте.", "vi": "Tin khu phố của bạn tại một nơi."},
+  "Share a little. Connect a little closer.": {"ru": "Делитесь новостями и знакомьтесь с соседями.", "vi": "Chia sẻ để gần gũi hàng xóm hơn."},
+  "Your district channel": {"ru": "Канал вашего района", "vi": "Kênh khu vực của bạn"},
+  "Posts are shared automatically from Neighborhood posts.": {"ru": "Публикации из раздела постов района появляются автоматически.", "vi": "Bài đăng khu phố tự động xuất hiện tại đây."},
   "Read-only district channel. Neighborhood posts appear here automatically.": {"ru": "Канал района только для чтения. Посты района появляются автоматически.", "vi": "Kênh khu vực chỉ đọc. Bài đăng khu phố tự động hiển thị tại đây."},
   "Read neighborhood posts from your district.": {"ru": "Читайте посты своего района.", "vi": "Đọc bài đăng khu phố trong khu vực của bạn."},
   "This district channel is read-only.": {"ru": "Этот канал доступен только для чтения.", "vi": "Kênh khu vực này chỉ cho phép đọc."},

@@ -1,5 +1,8 @@
 import "server-only";
 
+import { CommunityLayout, CommunityPost } from "../community-layout";
+import { Icon } from "@/components/ui/icon";
+import { resolveLocation } from "@/features/locations/catalog";
 import Link from "next/link";
 import { Text } from "@/features/language/provider";
 import { LanguageSelector } from "@/features/language/language-selector";
@@ -11,7 +14,7 @@ import { getExploreSession } from "./explore-session";
 
 type Session = Awaited<ReturnType<typeof getExploreSession>>;
 type Listing = { id: string; title: string };
-type Post = { id: string; author_id: string; title: string; body: string; starts_at: string | null };
+type Post = { id: string; author_id: string; title: string; body: string; starts_at: string | null; created_at: string };
 
 function rows<T>(result: { data: T[] | null; error: unknown }): T[] {
   if (result.error) throw new Error("Explore data could not be loaded");
@@ -33,12 +36,40 @@ function AreaLink() {
 async function LocalPosts({ session, feature }: { session: Session; feature: string }) {
   const { db, user, profile } = session;
   const channel = feature === "local-events";
+  const community = channel || feature === "neighborhood-posts";
   const event = feature === "meetups";
-  let query = db.from("explore_posts").select("id,author_id,title,body,starts_at")
+  let query = db.from("explore_posts").select("id,author_id,title,body,starts_at,created_at")
     .eq("kind", channel ? "neighborhood-posts" : feature);
-  if (channel) query = query.eq("neighborhood_id", profile.neighborhood_id ?? 0);
+  if (community) query = query.eq("neighborhood_id", profile.neighborhood_id ?? 0);
   const posts = rows<Post>(await query.order("created_at", { ascending: false }).limit(80));
-  const area = channel && profile.neighborhood_id ? await db.from("neighborhoods").select("name").eq("id", profile.neighborhood_id).maybeSingle() : null;
+  const area = community && profile.neighborhood_id ? await db.from("neighborhoods").select("name,region_code").eq("id", profile.neighborhood_id).maybeSingle() : null;
+  if (community) {
+    const authorsResult = posts.length ? await db.rpc("get_community_authors", {p_ids:[...new Set(posts.map(post=>post.author_id))]}) : null;
+    const authors = new Map<string,{display_name:string;avatar_path:string|null}>((authorsResult?.data??[]).map((author:{id:string;display_name:string;avatar_path:string|null})=>[author.id,author]));
+    const areaName=area?.data?.name??"Choose your neighborhood";
+    const timeZone=resolveLocation(areaName,area?.data?.region_code).countryCode==="UZ"?"Asia/Tashkent":"Asia/Seoul";
+    return <CommunityLayout channel={channel} area={areaName}>
+      {!profile.neighborhood_id ? <AreaLink/> : !channel && <details className="community-composer">
+        <summary><Icon name="pencil"/><Text>Create a post</Text></summary>
+        <ExploreForm feature={feature} account={user.id} label="Publish"><LocalPostFields event={false}/></ExploreForm>
+      </details>}
+      {posts.length===0 && <p className="community-empty"><Text>Nothing here yet.</Text></p>}
+      {posts.map((post,index)=>{
+        const day=new Intl.DateTimeFormat("en-CA",{timeZone}).format(new Date(post.created_at));
+        const divider=index===0 || day!==new Intl.DateTimeFormat("en-CA",{timeZone}).format(new Date(posts[index-1].created_at));
+        return <div className="community-post-group" key={post.id}>
+          {divider&&<div className="community-day"><span>{new Intl.DateTimeFormat("en",{dateStyle:"medium",timeZone}).format(new Date(post.created_at))}</span></div>}
+          <CommunityPost post={post} author={authors.get(post.author_id)} area={areaName} timeZone={timeZone}>
+            {!channel&&post.author_id===user.id&&<details className="community-manage">
+              <summary><Text>Manage post</Text></summary>
+              <ExploreForm feature={feature} account={user.id} id={post.id} label="Save changes"><LocalPostFields event={false} post={post}/></ExploreForm>
+              <ExploreForm feature={feature} account={user.id} id={post.id} intent="remove" label="Remove post"/>
+            </details>}
+          </CommunityPost>
+        </div>;
+      })}
+    </CommunityLayout>;
+  }
   const ownsProfile = feature === "business-profile" && posts.some(post => post.author_id === user.id);
   return <>
     {channel && area?.data?.name && <h2>{area.data.name}</h2>}
