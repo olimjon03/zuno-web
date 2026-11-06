@@ -15,15 +15,33 @@ Telegram supplies no email. Do not fabricate an email or try to link accounts by
 
 Sources: [Telegram Login](https://core.telegram.org/bots/telegram-login), [Supabase custom OAuth/OIDC](https://supabase.com/docs/guides/auth/custom-oauth-providers), [Supabase Telegram example](https://supabase.com/docs/guides/self-hosting/self-hosted-custom-oauth-providers#example-telegram). The latter's protocol example applies here; do not run its self-hosted Docker configuration against the hosted project.
 
-## Kakao
+## Kakao — no-email OIDC setup (replaces built-in Kakao)
 
-1. Create a ZUNO application in [Kakao Developers](https://developers.kakao.com/). Configure its web platform/domain for `https://zuno-web-wine.vercel.app` and enable Kakao Login.
-2. Register the Supabase callback `https://jkqeqsorcsarzgwxaozy.supabase.co/auth/v1/callback` as the Kakao Login redirect URI (confirm it in Supabase).
-3. Obtain the **REST API key** (client ID) and Kakao Login **Client Secret**. Supabase → Authentication → Sign In / Providers → Kakao: enter them and enable/save the provider. Do not use the JavaScript key as the REST API key.
-4. Configure permitted profile consent items. If requesting account email, enable the applicable consent item in Kakao (availability may depend on app status). Otherwise enable **Allow users without an email** in Supabase Kakao settings; do not force an email scope your app is not permitted to request.
-5. Keep the same app `/auth/callback` in Supabase redirect URLs. No Kakao secret needs to be added to browser code.
+The built-in Kakao adapter automatically requests `account_email`. Enabling Email optional changes callback acceptance, not those requested scopes. For apps with Unauthorized email consent / KOE205, use **custom:kakao** instead. Adding SDK `scopes` to the built-in adapter is not a fix: that adapter appends its defaults. This branch intentionally changes the Kakao button to `custom:kakao`; configure it before testing/deploying.
 
-Source: [Supabase Kakao setup](https://supabase.com/docs/guides/auth/social-sign-in/auth-kakao).
+1. Keep your existing ZUNO app, REST API key and active Kakao Login Client Secret in [Kakao Developers](https://developers.kakao.com/). Under Kakao Login enable both **Kakao Login** and **OpenID Connect**. Profile nickname/image consent items should remain configured; email consent is not required for this flow.
+2. Supabase → Authentication → Sign In / Providers → Custom Providers → New Provider → **Auto-discovery (OIDC)**. Configure:
+
+   | Field | Value |
+   | --- | --- |
+   | Identifier | `custom:kakao` |
+   | Name | `Kakao` |
+   | Issuer | `https://kauth.kakao.com` |
+   | Client ID | Your existing Kakao **REST API key** |
+   | Client Secret | Your existing Kakao Login **Client Secret** |
+   | Scopes | Exactly `openid`, `profile_nickname`, `profile_image` |
+   | Allow users without an email / email_optional | **ON / true** |
+   | PKCE | **ON** |
+   | Skip nonce check | **OFF** |
+
+   Remove any default `email`, `account_email` or generic `profile` scope from this custom provider. Scope-entry UI may show separate chips; enter the three scope names separately. Kakao uses the two profile-specific scope names, not generic `profile`.
+3. Copy the custom provider's displayed Callback URL into Kakao's **App → Platform Key → REST API key → Redirect URI** and save. On the default project domain it should be `https://jkqeqsorcsarzgwxaozy.supabase.co/auth/v1/callback`; the displayed custom-provider URL is authoritative.
+4. Create/enable/save the custom provider. Keep `https://zuno-web-wine.vercel.app/auth/callback` in Supabase's app redirect allow-list. No new Vercel variable or SQL is needed; secrets stay in Supabase.
+5. Merge/deploy this code and start a **new** Continue with Kakao attempt from ZUNO, not the previously failed browser URL. Confirm the Kakao authorization request contains only `openid profile_nickname profile_image` and no `account_email`. Complete consent, confirm `/welcome`, profile/member number, logout and repeated sign-in.
+
+Creating the custom provider is not performed by this code. Live authentication remains unverified until operator setup. If the built-in Kakao provider already has users, treat the new custom provider as a different identity namespace: do not assume existing accounts will be linked, and plan a verified identity migration first. Do not disable/delete old provider identities as a cleanup shortcut. Google and Telegram are unchanged.
+
+Sources: [Kakao OIDC endpoints and claims](https://developers.kakao.com/docs/en/kakaologin/rest-api), [Supabase custom OAuth/OIDC settings](https://supabase.com/docs/guides/auth/custom-oauth-providers), [built-in Kakao adapter defaults](https://github.com/supabase/auth/blob/master/internal/api/provider/kakao.go). Reviewed November 7, 2026. Public Kakao discovery verified issuer `https://kauth.kakao.com`, token method `client_secret_post`, RS256 and S256 PKCE support; this is discovery verification, not a completed real-user login.
 
 ## Verification after setup
 

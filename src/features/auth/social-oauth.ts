@@ -2,7 +2,7 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { getSiteUrl, getSupabaseConfig } from "@/lib/supabase/config";
 
-export type SocialProvider = "kakao" | "custom:telegram";
+export type SocialProvider = "custom:kakao" | "custom:telegram";
 export async function startSocialOAuth(provider: SocialProvider): Promise<{ destination?: string; error?: string }> {
   try {
     const supabase = await createClient();
