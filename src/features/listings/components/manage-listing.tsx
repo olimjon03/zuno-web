@@ -1,4 +1,5 @@
 "use client";
+import { PriceInput } from "./price-input";
 import { Text, useT } from "@/features/language/provider";
 
 import Link from "next/link";
@@ -74,7 +75,7 @@ export function ManageListing({item,categories,neighborhoods}:{item:OwnedListing
    <form className="sell-form owned-edit-form" onSubmit={submit}>
     <fieldset disabled={pending}><legend className="sr-only">Edit {item.title}</legend>
      <div className="sell-field"><label htmlFor={`${item.id}-title`}><Text>{"Title"}</Text></label><input id={`${item.id}-title`} name="title" value={draft.title} onChange={e=>update("title",e.target.value)} required minLength={3} maxLength={120}/></div>
-     <div className="sell-field"><label htmlFor={`${item.id}-price`}><Text>{"Price ("}</Text>{priceLabel(country)})</label><input id={`${item.id}-price`} name="price" type="number" inputMode="numeric" min={0} max={1000000000000} step={1} required value={draft.price} onChange={e=>update("price",e.target.value)}/></div>
+     <div className="sell-field"><label htmlFor={`${item.id}-price`}><Text>{"Price ("}</Text>{priceLabel(country)})</label><PriceInput id={`${item.id}-price`} value={draft.price} onValueChange={value=>update("price",value)}/></div>
      <EditListingPhotos key={orderedPhotos.map(p=>`${p.id}:${p.sort_order}`).join(",")} ref={photoEditor} listingId={item.id} initial={orderedPhotos} disabled={pending}/>
      <div className="sell-fields">
       <div className="sell-field"><label htmlFor={`${item.id}-condition`}><Text>{"Condition"}</Text></label><select id={`${item.id}-condition`} name="condition" value={draft.condition} onChange={e=>update("condition",e.target.value)}>{conditions.map(c=><option key={c} value={c}><Text>{conditionLabels[c]}</Text></option>)}</select></div>

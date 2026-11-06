@@ -1,4 +1,5 @@
 "use client";
+import { PriceInput } from "./price-input";
 import { Text, useT } from "@/features/language/provider";
 
 import { MeetingPointPicker, type MeetingPoint } from "./meeting-point-picker";
@@ -116,17 +117,7 @@ export function CreateListingForm({
         <div className="sell-fields">
           <div className="sell-field">
             <label htmlFor="listing-price"><Text>{"Price ("}</Text>{priceLabel(country)})</label>
-            <input
-              id="listing-price"
-              name="price"
-              type="number"
-              inputMode="numeric"
-              required
-              min={0}
-              max={1000000000000}
-              step={1}
-              placeholder="0"
-            />
+            <PriceInput id="listing-price"/>
             <p className="auth-hint"><Text>{"Use 0 if you’re giving it away. Currency follows the selected country; amounts are not converted."}</Text></p>
           </div>
           <div className="sell-field">
