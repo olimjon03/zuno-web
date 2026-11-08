@@ -9,3 +9,29 @@
 .site-header .account-icon-link .unread-badge{position:absolute;top:-2px;right:-3px;margin:0;min-width:18px;height:18px;font-size:10px;pointer-events:none}
 @media(min-width:701px){.site-header:has(.explore-launcher) .account-icon-link{padding:0}}
 @media(max-width:700px){.site-header .header-brand-group{grid-column:1;grid-row:1;justify-self:start;gap:8px}.site-header .account-icon-link{grid-column:3;grid-row:1;width:40px;height:40px;min-height:40px}.site-header .account-icon-link>svg{width:28px;height:28px}}
+
+/* Mobile search replaces only the upper account shortcut, not bottom navigation. */
+.site-header .mobile-search-toggle,
+.site-header .search .mobile-search-close { display: none; }
+@media (max-width: 700px) {
+  .site-header > .account-icon-link { display: none; }
+  .site-header > .mobile-search-toggle {
+    display: grid;
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .site-header .search { display: none; }
+  .site-header .search.mobile-search-open {
+    display: flex;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    min-width: 0;
+  }
+  .site-header .search .mobile-search-close {
+    display: grid;
+    place-items: center;
+    flex: none;
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
