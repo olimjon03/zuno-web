@@ -4,6 +4,7 @@ import { Text } from "@/features/language/provider";
 import { useEffect, useRef, useState } from "react";
 import type { Map as LeafletMap, CircleMarker } from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { kakaoMapEnabled, loadKakaoMaps, mountKakaoPointMap } from "./kakao-map";
 
 export type MeetingPoint = { lat: number; lng: number };
 export function MeetingPointPicker({ country, value, onChange }: {
@@ -11,13 +12,14 @@ export function MeetingPointPicker({ country, value, onChange }: {
 }) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<LeafletMap | null>(null);
+  const kakaoMap = useRef<ReturnType<typeof mountKakaoPointMap> | null>(null);
   const marker = useRef<CircleMarker | null>(null);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
     let cancelled = false;
     let observer: ResizeObserver | undefined;
-    import("leaflet").then(L => {
+    const mountLeaflet = () => import("leaflet").then(L => {
       if (cancelled || !container.current) return;
       const instance = L.map(container.current).setView(country === "UZ" ? [41.31, 69.24] : [37.56, 126.98], 7);
       map.current = instance;
@@ -30,14 +32,29 @@ export function MeetingPointPicker({ country, value, onChange }: {
       observer = new ResizeObserver(() => instance.invalidateSize());
       observer.observe(container.current);
       setReady(true);
-    }).catch(() => setError("Map unavailable. Enter coordinates below or try again later."));
-    return () => { cancelled = true; observer?.disconnect(); map.current?.remove(); map.current = null; marker.current = null; };
+    }).catch(() => {
+      if (!cancelled) setError("Map unavailable. Enter coordinates below or try again later.");
+    });
+    if (country === "KR" && kakaoMapEnabled) {
+      void loadKakaoMaps().then(maps => {
+        if (cancelled || !container.current) return;
+        kakaoMap.current = mountKakaoPointMap(maps, container.current, { lat: 37.56, lng: 126.98 }, onChange);
+        setReady(true);
+      }).catch(mountLeaflet);
+    } else {
+      void mountLeaflet();
+    }
+    return () => { cancelled = true; kakaoMap.current?.dispose(); kakaoMap.current = null; observer?.disconnect(); map.current?.remove(); map.current = null; marker.current = null; };
   }, [country, onChange]);
   useEffect(() => {
-    if (!ready || !map.current || !marker.current) return;
-    if (!value || !Number.isFinite(value.lat) || !Number.isFinite(value.lng) || Math.abs(value.lat)>90 || Math.abs(value.lng)>180) { marker.current.remove(); return; }
-    marker.current.setLatLng([value.lat, value.lng]).addTo(map.current);
-    map.current.setView([value.lat, value.lng], Math.max(map.current.getZoom(), 14));
+    if (!ready) return;
+    const point = value && Number.isFinite(value.lat) && Number.isFinite(value.lng)
+      && Math.abs(value.lat) <= 90 && Math.abs(value.lng) <= 180 ? value : null;
+    if (kakaoMap.current) { kakaoMap.current.setPoint(point); return; }
+    if (!map.current || !marker.current) return;
+    if (!point) { marker.current.remove(); return; }
+    marker.current.setLatLng([point.lat, point.lng]).addTo(map.current);
+    map.current.setView([point.lat, point.lng], Math.max(map.current.getZoom(), 14));
   }, [value, ready]);
 
   return <fieldset style={{ border: 0, padding: 0, minWidth: 0 }}>
