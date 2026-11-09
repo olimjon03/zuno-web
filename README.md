@@ -20,6 +20,16 @@ Next.js App Router, React, TypeScript, Tailwind CSS, Supabase (Postgres, Auth, S
 
 The App Router serves the marketplace and account pages. Supabase stores accounts, listings, conversations, and uploaded media. Database migrations in [`supabase/migrations/`](supabase/migrations/) define the schema and access policies. ZUNO Admin uses the same marketplace data through a separate staff application.
 
+## Architecture
+
+```mermaid
+flowchart LR
+    Web["ZUNO Web · Marketplace"] --> Backend["Supabase · Auth, Postgres, Storage, Realtime"]
+    Admin["ZUNO Admin · Staff console"] --> Backend
+```
+
+Both apps use the same Supabase project. Access to staff tools requires an authorized staff role and multi-factor authentication.
+
 ## Run locally
 
 1. Run `npm ci`.
