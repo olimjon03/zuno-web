@@ -18,11 +18,14 @@ async function Sell() {
   // Browser/session-only reuse; never a shared production server cache.
   cacheLife({ stale: 30 });
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login?notice=session");
-  const options = await getListingOptions();
+  const [auth, listingOptions] = await Promise.allSettled([
+    supabase.auth.getUser(),
+    getListingOptions(),
+  ]);
+  if (auth.status === "rejected") throw auth.reason;
+  if (auth.value.error || !auth.value.data.user) redirect("/login?notice=session");
+  if (listingOptions.status === "rejected") throw listingOptions.reason;
+  const options = listingOptions.value;
   return (
     <>
       <header className="shell detail-header">
