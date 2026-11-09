@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ZUNO Web
 
-## Getting Started
+**Buy · Sell · Connect Locally**
 
-First, run the development server:
+ZUNO is a neighborhood marketplace for buying and selling second-hand goods in Uzbekistan and South Korea. Buyers can browse by district, save items, and message sellers to arrange a local meetup.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+[Live marketplace](https://zuno-web-wine.vercel.app/) · [ZUNO Admin](https://github.com/olimjon03/zuno-admin)
+
+## Features
+
+- **Local discovery** — country, region, and district filters, category browsing, search, and prices in UZS or KRW.
+- **Listing management** — publish listings with photos, optionally mark a location on a map, and manage active, reserved, or sold items.
+- **Messaging** — listing-specific conversations with photo and file attachments, unread indicators, and trade updates.
+- **Account tools** — saved listings, profiles, buyer and seller feedback, and per-listing statistics.
+- **Community and safety** — neighborhood posts, local event feeds, reporting, and blocking.
+
+## Built with
+
+Next.js App Router, React, TypeScript, Tailwind CSS, Supabase (Postgres, Auth, Storage, and Realtime), Leaflet, and Sharp.
+
+The App Router serves the marketplace and account pages. Supabase stores accounts, listings, conversations, and uploaded media. Database migrations in [`supabase/migrations/`](supabase/migrations/) define the schema and access policies. ZUNO Admin uses the same marketplace data through a separate staff application.
+
+## Run locally
+
+1. Run `npm ci`.
+2. Copy [`.env.example`](.env.example) to `.env.local`. Set the Supabase URL and publishable key for a development project. Set the local site URL to `http://localhost:3000`.
+3. Apply the SQL migrations in filename order to that development database. Configure OAuth providers and callback URLs for the sign-in options you intend to test.
+4. Run `npm run dev` and open [localhost:3000](http://localhost:3000).
+
+The environment template also lists optional settings for account deletion, the assistant, and Turnstile. Keep server secrets out of Git and browser-exposed variables.
+
+## Checks
+
+```sh
+npm run lint
+npm test
+npm run build
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
