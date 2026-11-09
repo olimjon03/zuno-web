@@ -23,7 +23,7 @@ export function ListingMeetingMap({listing}:{listing:Listing}) {
     {!point && <p><Text>{"The seller has not selected a map pin. This map shows the listed area."}</Text></p>}
     {point ? (
       useKakao ? <KakaoListingPoint lat={point.lat} lng={point.lng} fallback={googleMap}/> : googleMap
-    ) : <ListingAreaMap regionCode={listing.regionCode} districtCode={listing.districtCode} neighborhood={listing.neighborhood}/>}
+    ) : <ListingAreaMap useKakao={useKakao} regionCode={listing.regionCode} districtCode={listing.districtCode} neighborhood={listing.neighborhood}/>}
     <a href={mapUrl} target="_blank" rel="noopener noreferrer"><Text>{"Open map"}</Text></a>
   </section>;
 }

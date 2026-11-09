@@ -1,5 +1,9 @@
+import type { Geometry } from "geojson";
+
 type LatLng = { getLat(): number; getLng(): number };
+type Bounds = { extend(point: LatLng): void };
 type MapInstance = {
+  setBounds(bounds: Bounds, padding: number): void;
   relayout(): void;
   setCenter(point: LatLng): void;
   setLevel(level: number): void;
@@ -11,6 +15,15 @@ type Maps = {
   load(callback: () => void): void;
   LatLng: new (lat: number, lng: number) => LatLng;
   Map: new (element: HTMLElement, options: { center: LatLng; level: number; scrollwheel?: boolean }) => MapInstance;
+  LatLngBounds: new () => Bounds;
+  Polygon: new (options: {
+    path: LatLng[][];
+    strokeWeight: number;
+    strokeColor: string;
+    strokeOpacity: number;
+    fillColor: string;
+    fillOpacity: number;
+  }) => { setMap(map: MapInstance | null): void };
   Marker: new (options: { position: LatLng }) => Marker;
   event: {
     addListener(map: MapInstance, name: "click", callback: Click): void;
@@ -77,5 +90,44 @@ export function mountKakaoPointMap(
       marker.setMap(null);
       container.replaceChildren();
     },
+  };
+}
+
+export function mountKakaoAreaMap(maps: Maps, container: HTMLElement, geometry: Geometry) {
+  const polygons = geometry.type === "Polygon" ? [geometry.coordinates]
+    : geometry.type === "MultiPolygon" ? geometry.coordinates : [];
+  const first = polygons[0]?.[0]?.[0];
+  if (!first) throw new Error("Area boundary unavailable");
+
+  const map = new maps.Map(container, {
+    center: new maps.LatLng(first[1], first[0]),
+    level: 8,
+    scrollwheel: false,
+  });
+  const bounds = new maps.LatLngBounds();
+  const overlays = polygons.map(polygon => {
+    const path = polygon.map(ring => ring.map(([lng, lat]) => {
+      const point = new maps.LatLng(lat, lng);
+      bounds.extend(point);
+      return point;
+    }));
+    const overlay = new maps.Polygon({
+      path,
+      strokeWeight: 2,
+      strokeColor: "#007f73",
+      strokeOpacity: 1,
+      fillColor: "#00a893",
+      fillOpacity: 0.28,
+    });
+    overlay.setMap(map);
+    return overlay;
+  });
+  map.setBounds(bounds, 18);
+  const observer = new ResizeObserver(() => map.relayout());
+  observer.observe(container);
+  return () => {
+    observer.disconnect();
+    overlays.forEach(overlay => overlay.setMap(null));
+    container.replaceChildren();
   };
 }

@@ -4,9 +4,10 @@ import { Text } from "@/features/language/provider";
 import { regions } from "@/features/locations/catalog";
 import { selectAreaBoundary, type AreaBoundaries } from "@/features/locations/area-boundary";
 import "leaflet/dist/leaflet.css";
+import { loadKakaoMaps, mountKakaoAreaMap } from "./kakao-map";
 
-type Props = { regionCode?: string; districtCode?: string; neighborhood: string };
-export function ListingAreaMap({ regionCode, districtCode, neighborhood }: Props) {
+type Props = { useKakao?: boolean; regionCode?: string; districtCode?: string; neighborhood: string };
+export function ListingAreaMap({ regionCode, districtCode, neighborhood, useKakao = false }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState("Loading map…");
   useEffect(() => {
@@ -14,15 +15,25 @@ export function ListingAreaMap({ regionCode, districtCode, neighborhood }: Props
     let dispose: (() => void) | undefined;
     const known = Object.values(regions).flat().some(region => region.code === regionCode);
     if (!known) return;
+    const provider = useKakao ? loadKakaoMaps().catch(() => null) : Promise.resolve(null);
     Promise.all([
-      import("leaflet"),
+      provider,
       fetch(`/maps/areas/${regionCode}.json`, { signal: abort.signal }).then(response => {
         if (!response.ok) throw new Error("Boundary unavailable");
         return response.json() as Promise<AreaBoundaries>;
       }),
-    ]).then(([L, data]) => {
+    ]).then(async ([kakao, data]) => {
       if (abort.signal.aborted || !container.current) return;
       const selected = selectAreaBoundary(data, { regionCode, districtCode, neighborhood });
+      const description = selected.district ? "The shaded area is the listing’s district, not an exact meeting point." :
+        "District boundary unavailable. The shaded area shows the wider region, not an exact meeting point.";
+      if (kakao) {
+        dispose = mountKakaoAreaMap(kakao, container.current, selected.geometry);
+        setStatus(description);
+        return;
+      }
+      const L = await import("leaflet");
+      if (abort.signal.aborted || !container.current) return;
       const map = L.map(container.current, { scrollWheelZoom: false });
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · <a href="https://www.geoboundaries.org/">geoBoundaries</a>',
@@ -36,11 +47,10 @@ export function ListingAreaMap({ regionCode, districtCode, neighborhood }: Props
       const observer = new ResizeObserver(() => map.invalidateSize());
       observer.observe(container.current);
       dispose = () => { observer.disconnect(); map.remove(); };
-      setStatus(selected.district ? "The shaded area is the listing’s district, not an exact meeting point." :
-        "District boundary unavailable. The shaded area shows the wider region, not an exact meeting point.");
+      setStatus(description);
     }).catch(() => { if (!abort.signal.aborted) setStatus("Map unavailable. Please use the area name or open the map below."); });
     return () => { abort.abort(); dispose?.(); };
-  }, [regionCode, districtCode, neighborhood]);
+  }, [regionCode, districtCode, neighborhood, useKakao]);
   const known = Object.values(regions).flat().some(region => region.code === regionCode);
   return <>
     {known && <div ref={container} role="region" aria-label="Listing area map" style={{ height: 300, width: "100%", borderRadius: 16, overflow: "hidden", position: "relative", zIndex: 0 }} />}
