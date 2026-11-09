@@ -6,13 +6,15 @@ import type { Map as LeafletMap, CircleMarker } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { kakaoMapEnabled, loadKakaoMaps, mountKakaoPointMap } from "./kakao-map";
 
+import { loadYandexMaps, mountYandexPointMap, yandexMapEnabled } from "./yandex-map";
+
 export type MeetingPoint = { lat: number; lng: number };
 export function MeetingPointPicker({ country, value, onChange }: {
   country: string; value: MeetingPoint | null; onChange: (point: MeetingPoint | null) => void;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<LeafletMap | null>(null);
-  const kakaoMap = useRef<ReturnType<typeof mountKakaoPointMap> | null>(null);
+  const providerMap = useRef<ReturnType<typeof mountKakaoPointMap> | null>(null);
   const marker = useRef<CircleMarker | null>(null);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState("");
@@ -35,22 +37,28 @@ export function MeetingPointPicker({ country, value, onChange }: {
     }).catch(() => {
       if (!cancelled) setError("Map unavailable. Enter coordinates below or try again later.");
     });
-    if (country === "KR" && kakaoMapEnabled) {
-      void loadKakaoMaps().then(maps => {
+    const useYandex = country === "UZ" && yandexMapEnabled;
+    const mount = useYandex
+      ? loadYandexMaps().then(maps => mountYandexPointMap.bind(null, maps))
+      : country === "KR" && kakaoMapEnabled
+        ? loadKakaoMaps().then(maps => mountKakaoPointMap.bind(null, maps))
+        : null;
+    if (mount) {
+      void mount.then(mountPoint => {
         if (cancelled || !container.current) return;
-        kakaoMap.current = mountKakaoPointMap(maps, container.current, { lat: 37.56, lng: 126.98 }, onChange);
+        providerMap.current = mountPoint(container.current, useYandex ? { lat: 41.31, lng: 69.24 } : { lat: 37.56, lng: 126.98 }, onChange);
         setReady(true);
       }).catch(mountLeaflet);
     } else {
       void mountLeaflet();
     }
-    return () => { cancelled = true; kakaoMap.current?.dispose(); kakaoMap.current = null; observer?.disconnect(); map.current?.remove(); map.current = null; marker.current = null; };
+    return () => { cancelled = true; providerMap.current?.dispose(); providerMap.current = null; observer?.disconnect(); map.current?.remove(); map.current = null; marker.current = null; };
   }, [country, onChange]);
   useEffect(() => {
     if (!ready) return;
     const point = value && Number.isFinite(value.lat) && Number.isFinite(value.lng)
       && Math.abs(value.lat) <= 90 && Math.abs(value.lng) <= 180 ? value : null;
-    if (kakaoMap.current) { kakaoMap.current.setPoint(point); return; }
+    if (providerMap.current) { providerMap.current.setPoint(point); return; }
     if (!map.current || !marker.current) return;
     if (!point) { marker.current.remove(); return; }
     marker.current.setLatLng([point.lat, point.lng]).addTo(map.current);
