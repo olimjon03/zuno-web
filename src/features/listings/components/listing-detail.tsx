@@ -123,17 +123,11 @@ export function ListingDetail({
             </p>
             <h1 id="listing-title">{listing.title}</h1>
             <p className="detail-price">{formatPrice(listing.price, listing.countryCode ?? resolveLocation(listing.neighborhood, listing.regionCode).countryCode)}</p>
-            <dl className="detail-facts">
-              <div>
-                <dt><Text>{"Condition"}</Text></dt>
-                <dd><Text>{details.condition}</Text></dd>
-              </div>
-              <div>
-                <dt><Text>{"Category"}</Text></dt>
-                <dd>{listing.category}</dd>
-              </div>
-            </dl>
-            <div className="detail-actions">
+            <section className="detail-description detail-item-description" aria-labelledby="description-title">
+              <h2 id="description-title"><Text>{"About this item"}</Text></h2>
+              <p>{details.description}</p>
+            </section>
+            <div className="detail-actions" role="group" aria-label={t("Listing actions")}>
               {real ? (
                 <ContactSeller listingId={listing.id} />
               ) : (
@@ -164,14 +158,9 @@ export function ListingDetail({
             </p>
           </section>
         </div>
-        <section
-          className="detail-description"
-          aria-labelledby="description-title"
-        >
-          <h2 id="description-title"><Text>{"About this item"}</Text></h2>
-          <p>{details.description}</p>
+        <div className="detail-description">
           <ListingMeetingMap listing={listing}/>
-        </section>
+        </div>
         {real && details.sellerId && <SafetyControls userId={details.sellerId} name={details.seller} listingId={listing.id}/>}
       </main>
       <footer className="shell footer">
