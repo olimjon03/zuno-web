@@ -577,6 +577,10 @@ export const additionalMessages:Record<string,{ru:string;vi:string}> = {
     "ru": "Сортировка",
     "vi": "Sắp xếp theo"
   },
+  "Shuffled": {
+    "ru": "В случайном порядке",
+    "vi": "Thứ tự ngẫu nhiên"
+  },
   "Newest first": {
     "ru": "Сначала новые",
     "vi": "Mới nhất trước"
