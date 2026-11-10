@@ -47,11 +47,6 @@ export function ListingDetail({
         </Link><BackHomeNav/></header>
       <main id="listing-detail" className="shell detail-page">
         {real && <ListingViewTracker id={listing.id}/>}
-        <nav aria-label={t("Breadcrumb")} className="detail-breadcrumb">
-          <Link href="/"><Text>{"Marketplace"}</Text></Link>
-          <span aria-hidden="true">/</span>
-          <span>{listing.category}</span>
-        </nav>
         {listing.status && listing.status !== "active" && (
           <p className="listing-status" role="status">
             {listing.status === "sold"
@@ -59,11 +54,11 @@ export function ListingDetail({
               : <Text>{"This item is reserved."}</Text>}
           </p>
         )}
-        <p className="detail-demo">
-          {real
-            ? <Text>{"Local pickup · Inspect the item before exchanging."}</Text>
-            : <Text>{"Sample listing · Explore the demo. No purchases or messages are sent."}</Text>}
-        </p>
+        {!real && (
+          <p className="detail-demo">
+            <Text>{"Sample listing · Explore the demo. No purchases or messages are sent."}</Text>
+          </p>
+        )}
         <div className="detail-grid">
           <section aria-label={t("Listing photos")} className="detail-gallery">
             <button
@@ -107,6 +102,19 @@ export function ListingDetail({
                 ))}
               </div>
             )}
+            <div className="detail-seller">
+              <span className="seller-avatar" aria-hidden="true">
+                {details.seller.charAt(0)}
+              </span>
+              <div>
+                <h2>{details.sellerId ? <Link href={`/neighbors/${details.sellerId}`}>{details.seller} <Text>{"· View profile"}</Text></Link> : details.seller}</h2>
+                <p>
+                  {real
+                    ? <Text>{"Local seller"}</Text>
+                    : `Sample seller · Joined ${details.joined}`}
+                </p>
+              </div>
+            </div>
           </section>
           <section className="detail-summary" aria-labelledby="listing-title">
             <p className="listing-location">
@@ -123,10 +131,6 @@ export function ListingDetail({
               <div>
                 <dt><Text>{"Category"}</Text></dt>
                 <dd>{listing.category}</dd>
-              </div>
-              <div>
-                <dt><Text>{"Exchange"}</Text></dt>
-                <dd><Text>{"Local pickup"}</Text></dd>
               </div>
             </dl>
             <div className="detail-actions">
@@ -158,19 +162,6 @@ export function ListingDetail({
                   ? <Text>{"Save this find to your account."}</Text>
                   : <Text>{"Save a sample for this visit."}</Text>}
             </p>
-            <div className="detail-seller">
-              <span className="seller-avatar" aria-hidden="true">
-                {details.seller.charAt(0)}
-              </span>
-              <div>
-                <h2>{details.sellerId ? <Link href={`/neighbors/${details.sellerId}`}>{details.seller} <Text>{"· View profile"}</Text></Link> : details.seller}</h2>
-                <p>
-                  {real
-                    ? <Text>{"Local seller"}</Text>
-                    : `Sample seller · Joined ${details.joined}`}
-                </p>
-              </div>
-            </div>
           </section>
         </div>
         <section
