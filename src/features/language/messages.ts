@@ -485,6 +485,9 @@ export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi
     "uz": "Aralash tartib",
     "ko": "무작위 순서"
   },
+  "Share listing": { "uz": "E’lonni ulashish", "ko": "판매 글 공유" },
+  "Link copied": { "uz": "Havola nusxalandi", "ko": "링크가 복사되었습니다" },
+  "Copy listing link": { "uz": "E’lon havolasini nusxalash", "ko": "판매 글 링크 복사" },
   "Newest first": {
     "uz": "Eng yangilari",
     "ko": "최신순"

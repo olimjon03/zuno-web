@@ -1,7 +1,8 @@
 import type { SVGProps } from "react";
 
-export type IconName = "medal" | "globe" | "user-circle" | "sliders" | "grid" | "eye" | "bookmark" | "pencil" | "trash" | "clock" | "bag-check" | "check-circle" | "image" | "mail" | "heart" | "search" | "pin" | "arrow" | "plus" | "close" | "home" | "user" | "chat" | "settings" | "list" | "help" | "chevron" | "calendar" | "briefcase" | "bell" | "shield" | "book" | "store" | "chart" | "people";
+export type IconName = "share" | "medal" | "globe" | "user-circle" | "sliders" | "grid" | "eye" | "bookmark" | "pencil" | "trash" | "clock" | "bag-check" | "check-circle" | "image" | "mail" | "heart" | "search" | "pin" | "arrow" | "plus" | "close" | "home" | "user" | "chat" | "settings" | "list" | "help" | "chevron" | "calendar" | "briefcase" | "bell" | "shield" | "book" | "store" | "chart" | "people";
 const paths: Record<IconName, React.ReactNode> = {
+  share: <><path d="M12 15V3m-4 4 4-4 4 4M7 10H5v11h14V10h-2"/></>,
   medal: <><path d="m5 3 4 8m10-8-4 8M5 3h4l3 6 3-6h4"/><circle cx="12" cy="16" r="5"/><path d="M12 14v4"/></>,
   globe: <><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></>,
   "user-circle": <><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><circle cx="12" cy="8.5" r="3" fill="#fff" stroke="none"/><path d="M6 18a6 6 0 0 1 12 0v.5H6Z" fill="#fff" stroke="none"/></>,
