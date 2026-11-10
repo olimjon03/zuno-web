@@ -12,7 +12,7 @@ import { mobileMenuItems, isNavigationActive } from "./navigation";
 export function MobileNav() {
   const t = useT();
   const path = usePathname();
-  if (path === "/welcome" || path === "/account/settings" || path === "/login" || path === "/signup" || path.startsWith("/auth/") || path.startsWith("/messages/")) return null;
+  if (path === "/welcome" || path === "/account/settings" || path === "/login" || path === "/signup" || path.startsWith("/auth/") || path.startsWith("/messages/") || /^\/listings\/[^/]+\/?$/.test(path)) return null;
 
   return (
     <nav className={`mobile-bottom-nav ${path === "/account" ? "nav-dark" : ""}`} aria-label={t("Main navigation")}>
