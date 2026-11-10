@@ -6,12 +6,14 @@ import { Text, useT } from "@/features/language/provider";
 import { Icon } from "@/components/ui/icon";
 import { exploreGroups } from "./explore-catalog";
 
+const hiddenGroups = new Set(["Community", "Local services", "For business"]);
+
 export function ExploreMenu({ onNavigate }: { onNavigate?: () => void }) {
   const t = useT();
   const titleId = useId();
   const [query, setQuery] = useState("");
   const term = query.trim().toLocaleLowerCase();
-  const groups = exploreGroups.map(group => ({
+  const groups = exploreGroups.filter(group => !hiddenGroups.has(group.title)).map(group => ({
     ...group,
     entries: group.entries.filter(({ title }) =>
       [group.title, t(group.title), title, t(title)].some(label => label.toLocaleLowerCase().includes(term)),
