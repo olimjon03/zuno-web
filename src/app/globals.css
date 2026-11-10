@@ -632,6 +632,33 @@ h2 {
   gap: 48px;
   align-items: start;
 }
+.detail-photo-frame {
+  position: relative;
+}
+.detail-share {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: #fff;
+  color: #0f766e;
+  box-shadow: 0 2px 8px #0002;
+}
+.detail-share-feedback,
+.detail-share-link {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+}
+.detail-share-link input {
+  display: block;
+  width: 100%;
+}
 .detail-photo {
   display: block;
   position: relative;

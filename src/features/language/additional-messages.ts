@@ -581,6 +581,9 @@ export const additionalMessages:Record<string,{ru:string;vi:string}> = {
     "ru": "В случайном порядке",
     "vi": "Thứ tự ngẫu nhiên"
   },
+  "Share listing": { "ru": "Поделиться объявлением", "vi": "Chia sẻ tin đăng" },
+  "Link copied": { "ru": "Ссылка скопирована", "vi": "Đã sao chép liên kết" },
+  "Copy listing link": { "ru": "Скопировать ссылку на объявление", "vi": "Sao chép liên kết tin đăng" },
   "Newest first": {
     "ru": "Сначала новые",
     "vi": "Mới nhất trước"

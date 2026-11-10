@@ -31,12 +31,36 @@ export function ListingDetail({
   const [dialog, setDialog] = useState<"photo" | "contact" | null>(null);
   const { favorites, toggleFavorite } = useFavorites();
   const saved = favorites.includes(listing.id);
+  const [shareFeedback, setShareFeedback] = useState("");
+  const [manualShareUrl, setManualShareUrl] = useState("");
   const [selectedPhoto, setSelectedPhoto] = useState(0);
   const photos = listing.photos?.length
     ? listing.photos
     : [{ src: listing.image, alt: listing.imageAlt }];
   const photo = photos[selectedPhoto] ?? photos[0];
   const real = listing.source === "database";
+  async function shareListing() {
+    const url = new URL(`/listings/${encodeURIComponent(listing.id)}`, window.location.origin).href;
+    setShareFeedback("");
+    setManualShareUrl("");
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: listing.title, url });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareFeedback("Link copied");
+    } catch {
+      setManualShareUrl(url);
+    }
+  }
+
   return (
     <>
       <a className="skip-link" href="#listing-detail">
@@ -61,21 +85,32 @@ export function ListingDetail({
         )}
         <div className="detail-grid">
           <section aria-label={t("Listing photos")} className="detail-gallery">
-            <button
-              className="detail-photo"
-              aria-label={`Enlarge photo of ${listing.title}`}
-              onClick={() => setDialog("photo")}
-            >
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                unoptimized={real}
-                sizes="(max-width: 767px) 100vw, 60vw"
-                loading="eager"
-                fetchPriority="high"
-              />
-            </button>
+            <div className="detail-photo-frame">
+              <button
+                className="detail-photo"
+                aria-label={`Enlarge photo of ${listing.title}`}
+                onClick={() => setDialog("photo")}
+              >
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  unoptimized={real}
+                  sizes="(max-width: 767px) 100vw, 60vw"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </button>
+              <button type="button" className="detail-share" onClick={shareListing}
+                aria-label={t("Share listing")} title={t("Share listing")}>
+                <Icon name="share" />
+              </button>
+            </div>
+            {shareFeedback && <p className="detail-share-feedback" role="status"><Text>{shareFeedback}</Text></p>}
+            {manualShareUrl && <label className="detail-share-link">
+              <Text>{"Copy listing link"}</Text>
+              <input readOnly value={manualShareUrl} onFocus={event => event.currentTarget.select()} />
+            </label>}
             <div className="photo-caption">
               <span>
                 {photos.length} {photos.length === 1 ? "photo" : "photos"}
