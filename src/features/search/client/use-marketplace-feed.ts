@@ -3,6 +3,7 @@ import { useEffect,useMemo,useRef,useState,useSyncExternalStore } from "react";
 import type { FeedPage,FeedFilters } from "../types";
 import { feedIssue,feedParams,parseFeedFilters } from "../validation";
 import { mergeFeedItems } from "../pagination";
+import { shuffleListings, useShuffleSeed } from "./shuffle-order";
 const eventName="zuno:feed-url";
 function subscribe(callback:()=>void){window.addEventListener("popstate",callback);window.addEventListener(eventName,callback);return()=>{window.removeEventListener("popstate",callback);window.removeEventListener(eventName,callback);};}
 function snapshot(){return window.location.search;}
@@ -17,8 +18,9 @@ export function useMarketplaceFeed(initialSearch:string,initialPage:FeedPage,ini
  const search=useSyncExternalStore(subscribe,snapshot,()=>initialSearch);
  const filters=useMemo(()=>parseFeedFilters(new URLSearchParams(search)),[search]);
  const key=feedParams(filters).toString();const issue=feedIssue(filters);
+ const seed=useShuffleSeed();
  const [version,setVersion]=useState(0);
- const [state,setState]=useState(()=>({...initialPage,key:feedParams(parseFeedFilters(new URLSearchParams(initialSearch))).toString(),version:0,error:initialError??""}));
+ const [state,setState]=useState(()=>({...initialPage,key:feedParams(parseFeedFilters(new URLSearchParams(initialSearch))).toString(),version:0,pageStarts:[0],error:initialError??""}));
  const moreController=useRef<AbortController|null>(null);
  const [loadingMore,setLoadingMore]=useState(false);
  const changing=state.key!==key||state.version!==version;
@@ -28,9 +30,9 @@ export function useMarketplaceFeed(initialSearch:string,initialPage:FeedPage,ini
   const controller=new AbortController();
   const timer=setTimeout(()=>{
    void readPage(new URLSearchParams(key),controller.signal).then(result=>{
-    if(!controller.signal.aborted)setState({...result,key,version,error:""});
+    if(!controller.signal.aborted)setState({...result,key,version,pageStarts:[0],error:""});
    }).catch(()=>{
-    if(!controller.signal.aborted)setState(current=>({items:current.key===key?current.items:[],nextCursor:current.key===key?current.nextCursor:null,key,version,error:"Listings could not be loaded. Please try again."}));
+    if(!controller.signal.aborted)setState(current=>({items:current.key===key?current.items:[],nextCursor:current.key===key?current.nextCursor:null,pageStarts:current.key===key?current.pageStarts:[0],key,version,error:"Listings could not be loaded. Please try again."}));
    });
   },300);
   return()=>{clearTimeout(timer);controller.abort();moreController.current?.abort();};
@@ -49,9 +51,12 @@ export function useMarketplaceFeed(initialSearch:string,initialPage:FeedPage,ini
   try{
    const params=new URLSearchParams(key);params.set("cursor",state.nextCursor);
    const result=await readPage(params,controller.signal);
-   if(!controller.signal.aborted)setState(current=>current.key===key?{...current,items:mergeFeedItems(current.items,result.items),nextCursor:result.nextCursor,error:""}:current);
+   if(!controller.signal.aborted)setState(current=>current.key===key?{...current,items:mergeFeedItems(current.items,result.items),pageStarts:[...current.pageStarts,current.items.length],nextCursor:result.nextCursor,error:""}:current);
   }catch(error){if(!controller.signal.aborted)setState(current=>({...current,error:error instanceof Error?error.message:"Could not load more listings."}));}
   finally{if(moreController.current===controller){moreController.current=null;setLoadingMore(false);}}
  }
- return {filters,update,items:state.items,nextCursor:state.nextCursor,error:state.key===key?state.error:"",issue,changing:changing&&!issue,loadingMore,loadMore,retry:()=>setVersion(v=>v+1)};
+ const shuffledItems=useMemo(() => state.pageStarts.flatMap((start,index) =>
+  shuffleListings(state.items.slice(start,state.pageStarts[index+1]),seed)
+ ),[state.items,state.pageStarts,seed]);
+ return {filters,update,items:state.items,shuffledItems,nextCursor:state.nextCursor,error:state.key===key?state.error:"",issue,changing:changing&&!issue,loadingMore,loadMore,retry:()=>setVersion(v=>v+1)};
 }

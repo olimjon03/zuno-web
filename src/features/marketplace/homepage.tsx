@@ -23,20 +23,23 @@ import { CategoryNav } from "@/features/categories/components/category-nav";
 import { ListingCard } from "@/features/listings/components/listing-card";
 export function Homepage({initialSearch,initialPage,initialError}:{initialSearch:string;initialPage:FeedPage;initialError?:string}) {
   const t = useT();
+  const [shuffle, setShuffle] = useState(true);
   const [pricesOpen, setPricesOpen] = useState(true);
   const priceId = useId();
   const filterPanelId = useId();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const country=useCountry();
-  const {filters,update,items:listings,nextCursor,error,issue,changing,loadingMore,loadMore,retry}=useMarketplaceFeed(initialSearch,initialPage,initialError);
+  const {filters,update,items,shuffledItems,nextCursor,error,issue,changing,loadingMore,loadMore,retry}=useMarketplaceFeed(initialSearch,initialPage,initialError);
+  const sort = filters.sort === "newest" && shuffle ? "shuffle" : filters.sort;
+  const listings = sort === "shuffle" ? shuffledItems : items;
   const {category,query,minPrice,maxPrice,availableOnly}=filters;
-  const activeFilterCount = Number(Boolean(minPrice)) + Number(Boolean(maxPrice)) + Number(availableOnly) + Number(filters.sort !== "newest");
+  const activeFilterCount = Number(Boolean(minPrice)) + Number(Boolean(maxPrice)) + Number(availableOnly) + Number(sort !== "shuffle");
   const location={country:country||filters.country,region:filters.region,district:filters.district};
   const {setSelection}=useLocation();
   useEffect(()=>{if(window.location.pathname==="/"&&country&&filters.country!==country)update({country,region:"",district:undefined,minPrice:"",maxPrice:""},true);},[country,filters.country,update]);
   useEffect(()=>{setSelection({country:filters.country,region:filters.region});},[setSelection,filters.country,filters.region]);
   const {favorites,toggleFavorite}=useFavorites();
-  function resetFilters(){update({...parseFeedFilters(new URLSearchParams()),country:country||filters.country});}
+  function resetFilters(){setShuffle(true);update({...parseFeedFilters(new URLSearchParams()),country:country||filters.country});}
   return (
     <div className="zuno-homepage">
       <a className="skip-link" href="#marketplace">
@@ -69,7 +72,11 @@ export function Homepage({initialSearch,initialPage,initialError}:{initialSearch
               <label><span><Text>{"Max price ("}</Text>{location.country ? priceLabel(location.country) : <Text>{"local currency"}</Text>})</span><input type="number" inputMode="numeric" min="0" max="1000000000000" step="1" value={maxPrice} onChange={e=>update({maxPrice:e.target.value},true)} disabled={!location.country}/></label>
             </div>
             <label className="remove-confirm"><input type="checkbox" checked={availableOnly} onChange={e=>update({availableOnly:e.target.checked})}/><Text>{"Available only"}</Text></label>
-            <label className="feed-sort"><span className="sr-only"><Text>{"Sort by"}</Text></span><select aria-label={t("Sort by")} value={filters.sort} onChange={event=>update({sort:event.target.value as FeedFilters["sort"]})}><option value="newest"><Text>{"Newest first"}</Text></option><option value="price-asc" disabled={!location.country}><Text>{"Price: low to high"}</Text></option><option value="price-desc" disabled={!location.country}><Text>{"Price: high to low"}</Text></option></select></label>
+            <label className="feed-sort"><span className="sr-only"><Text>{"Sort by"}</Text></span><select aria-label={t("Sort by")} value={sort} onChange={event=>{
+              const value=event.target.value;
+              setShuffle(value==="shuffle");
+              update({sort:value==="shuffle" ? "newest" : value as FeedFilters["sort"]});
+            }}><option value="shuffle"><Text>{"Shuffled"}</Text></option><option value="newest"><Text>{"Newest first"}</Text></option><option value="price-asc" disabled={!location.country}><Text>{"Price: low to high"}</Text></option><option value="price-desc" disabled={!location.country}><Text>{"Price: high to low"}</Text></option></select></label>
             <button type="button" className="filter-clear" aria-label={t("Clear filters")} title={t("Clear filters")} onClick={resetFilters}><Icon name="close"/><span><Text>{"Clear filters"}</Text></span></button>
             {!location.country && <p className="auth-hint filter-country-hint"><Text>{"Choose a country to filter and sort prices in its local currency."}</Text></p>}
           </div>

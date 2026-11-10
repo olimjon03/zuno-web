@@ -481,6 +481,10 @@ export const messages: Record<string, Record<Exclude<Language, "en" | "ru" | "vi
     "uz": "Saralash",
     "ko": "정렬"
   },
+  "Shuffled": {
+    "uz": "Aralash tartib",
+    "ko": "무작위 순서"
+  },
   "Newest first": {
     "uz": "Eng yangilari",
     "ko": "최신순"
