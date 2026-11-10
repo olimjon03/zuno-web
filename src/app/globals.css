@@ -612,19 +612,11 @@ h2 {
   font-size: 14px;
 }
 .detail-back:hover,
-.detail-breadcrumb a:hover,
 .listing-card h3 a:hover {
   text-decoration: underline;
 }
 .detail-page {
   padding-block: 26px 16px;
-}
-.detail-breadcrumb {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  font-size: 13px;
-  color: var(--muted);
 }
 .detail-demo {
   margin: 20px 0 26px;
